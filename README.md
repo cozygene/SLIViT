@@ -14,7 +14,7 @@ A code snippet with an example of how to load a pre-trained SLIViT model and run
 
 # Installation
 
-To run the "slivit.ipynb" notebook, please create a virtual environment using the following command:
+To run the SLIViT.ipynb notebook, please create a virtual environment using the following command:
 
 
 ```bash
