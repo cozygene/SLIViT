@@ -7,3 +7,8 @@ We present SLIViT, a deep-learning framework that accurately measures disease-re
 Notably, compared to existing approaches, SLIViT can be applied even when only a small number of annotated training samples is available, which is often a constraint in medical applications. 
 
 
+<img src="figures/SLIViT.jpg" width="900px"/>
+
+
+
+
