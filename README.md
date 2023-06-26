@@ -1,7 +1,7 @@
 # SLIViT: a general AI framework for medical-feature diagnosis from limited 3D biomedical-imaging data
 
 
-<img src="figures/SLIViT3.png" width="900px"/>
+<img src="SLIViT.png" width="900px"/>
 
 
 SLIViT is a deep-learning framework that accurately measures disease-related risk factors in volumetric biomedical imaging, such as magnetic resonance imaging (MRI) scans, optical coherence tomography (OCT) scans, and ultrasound videos. 
