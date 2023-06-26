@@ -11,3 +11,5 @@ In order to run SLIViT, please make sure all the relevant packages listed in req
 A pre-trained backbone is provided (see backbone.pth.zip) although one may wish to train the model from scratch.
 
 A code snippet with an example of how to load a pre-trained SLIViT model and run inference on a given volume is provided at the end of the SLIViT.ipynb notebook.
+
+# Installation
