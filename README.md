@@ -8,7 +8,7 @@ SLIViT is a deep-learning framework that accurately measures disease-related ris
 
 Before running SLIViT.ipynb, please make sure to have an appropriate Python environment with the relevant packages (listed in requirements.txt) properly installed:
 ```bash
-conda create --name slivit -c conda-forge -c bioconda --file requirements.txt
+conda create --name slivit --file requirements.txt
 ```
 
 A pre-trained backbone is provided (see backbone.pth.zip) although one may wish to train the model from scratch.
