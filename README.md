@@ -8,4 +8,4 @@ A pre-trained backbone is also provided (see backbone.pth.zip) although one may 
 
 A code snippet with an example of how to load a pre-trained SLIViT model and run inference on a given volume is provided at the end of the Jupyter Notebook (see SLIViT.ipynb).
 
-<img src="figures/SLIViT3.png" width="900px"/>
+<img src="figures/SLIViT2.png" width="900px"/>
