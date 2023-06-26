@@ -13,3 +13,10 @@ A pre-trained backbone is provided (see backbone.pth.zip) although one may wish 
 A code snippet with an example of how to load a pre-trained SLIViT model and run inference on a given volume is provided at the end of the SLIViT.ipynb notebook.
 
 # Installation
+
+To run the "slivit.ipynb" notebook, please create a virtual environment using the following command:
+
+
+```bash
+conda create --name slivit -c conda-forge -c bioconda --file requirements.txt
+```
