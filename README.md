@@ -15,4 +15,7 @@ A pre-trained backbone is provided (see backbone.pth.zip) although one may wish 
 
 A code snippet with an example of loading a pre-trained SLIViT model and running inference on a given volume is provided at the end of the SLIViT.ipynb notebook.
 
-Feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach out</a> regarding any concerns/issues you are experiencing with SLIViT.
+#Acknowledgements
+Part of codes are taken from the <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach out</a>. Thanks to Caron et al. for the codes of DINO.
+
+Feel free to <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>.
