@@ -16,7 +16,7 @@ A pre-trained backbone is provided (see backbone.pth.zip) although one may wish 
 A code snippet with an example of loading a pre-trained SLIViT model and running inference on a given volume is provided at the end of the SLIViT.ipynb notebook.
 
 # Acknowledgements
-Parts of the code are taken from the <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>. Pytorch implementation for <a href="https://arxiv.org/abs/2010.11929">"An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"</a> by Dosovitskiy A., et al., The International Conference on Learning Representations (ICLR) 2021
+Parts of the code are taken from the <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>. Pytorch implementation for <a href="https://arxiv.org/abs/2010.11929">"An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"</a> by Dosovitskiy A., et al., The International Conference on Learning Representations (ICLR) 2021.
 
 Feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach out</a> regarding any concerns/issues you are experiencing with SLIViT.
 
