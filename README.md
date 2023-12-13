@@ -4,7 +4,7 @@
 <img src="SLIViT.png" width="900px"/>
 
 
-SLIViT is a deep-learning framework that accurately measures disease-related risk factors in volumetric biomedical imaging, such as magnetic resonance imaging (MRI) scans, optical coherence tomography (OCT) scans, and ultrasound videos. 
+SLIViT is a deep-learning framework that accurately measures disease-related risk factors in volumetric biomedical imaging, such as magnetic resonance imaging (MRI) scans, optical coherence tomography (OCT) scans, and ultrasound videos (for further details please refer to <a href="https://doi.org/10.21203/rs.3.rs-3044914/v2">our manuscript</a>). 
 
 Before running SLIViT.ipynb, please make sure to have an appropriate Python environment with the relevant packages (listed in requirements.txt) properly installed:
 ```bash
