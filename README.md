@@ -17,7 +17,7 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 # Convnext Backbone Pre-Training
 
-|F_Name | Path | CNV  ( Pathology 1 ) | DME <br /> ( Pathology 2 ) | Drusen  ( Pathology 3 ) | Normal  ( Pathology 4 ) | 
+|F_Name | Path | Pathology 1  |  Pathology 2  | Pathology 3  | Pathology 4  | 
 |--- | --- | --- | --- |--- |--- |
 | CNV-6116901-21.jpeg  | /path/to/data_dir/train/CNV/CNV-6116901-21.jpeg| 1.0 | 0.0   |  0.0  |   0.0| 
 | DME-4616882-33.jpeg  |   /path/to/data_dir/train/DME/DME-4616882-33.jpeg| 0.0 | 1.0  |   0.0   |  0.0| 
