@@ -16,6 +16,7 @@ A pre-trained backbone is provided (see backbone.pth.zip) although one may wish 
 A code snippet with an example of loading a pre-trained SLIViT model and running inference on a given volume is provided at the end of the SLIViT.ipynb notebook.
 
 # ConvNeXt Backbone Pre-Training
+Split 2D Medical Scans into `train`, `val`, `test`
 
 Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
 
