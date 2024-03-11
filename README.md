@@ -17,7 +17,7 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 # Convnext Backbone Pre-Training
 ```bash
-python bb_train.py --pathologies CNV,Drusen,DME,Normal --b_size 4 --gpu_id 1 --n_cpu=32
+python bb_train.py --meta_csv /path/to/meta.csv --pathologies CNV,Drusen,DME,Normal --out_dir /output/dir/to/pretrained_bb.pth --b_size 4 --gpu_id 1 --n_cpu=32
 ```
 
 
