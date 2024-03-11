@@ -32,6 +32,7 @@ Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
 
 In the above table, `F_Name` denotes the file name for 2D medical scan files, `Path` indicates the directory to these files, and `Drusen`, `DME`, `CNV`, and `Normal` represent binary classes for the respective pathologies.
 
+After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
 
 ```bash
 python bb_train.py --meta_csv /path/to/meta.csv --pathologies CNV,Drusen,DME,Normal --out_dir /output/dir/to/pretrained_bb.pth --b_size 4 --gpu_id 1 --n_cpu=32
