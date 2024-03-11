@@ -21,13 +21,13 @@ Generate the  ```meta.csv``` file as illustrated below:
 
 |F_Name | Path | Pathology 1  |  Pathology 2  | Pathology 3  | Pathology 4  | 
 |--- | --- | --- | --- |--- |--- |
-| CNV-6116901-21.jpeg  | /path/to/data_dir/train/CNV/CNV-6116901-21.jpeg| 1.0 | 0.0   |  0.0  |   0.0| 
-| DME-4616882-33.jpeg  |   /path/to/data_dir/train/DME/DME-4616882-33.jpeg| 0.0 | 1.0  |   0.0   |  0.0| 
-| CNV-7907754-23.jpeg  |  /path/to/data_dir/train/CNV/CNV-7907754-23.jpeg | 1.0 | 0.0   |  0.0    | 0.0| 
-| NORMAL-3757443-31.jpeg | /path/to/data_dir/train/NORMAL/NORMAL-3757443-31.jpeg | 0.0  |0.0  |   0.0   |  1.0
-| NORMAL-6434323-2.jpeg |  /path/to/data_dir/train/NORMAL/NORMAL-6434323-2.jpeg  |0.0|  0.0   |  0.0 |    1.0|
-| NORMAL-910422-8.jpeg | /path/to/data_dir/train/NORMAL/NORMAL-910422-8.jpeg | 0.0 | 0.0  |   0.0   |  1.0|
-| DRUSEN-8086850-28.jpeg | /path/to/data_dir/train/DRUSEN/DRUSEN-8086850-28.jpeg | 0.0 | 0.0   |  1.0   |  0.0|
+| CNV-6116901-21.jpeg  | /data_dir/train/CNV/CNV-6116901-21.jpeg| 1.0 | 0.0   |  0.0  |   0.0| 
+| DME-4616882-33.jpeg  |   /data_dir/train/DME/DME-4616882-33.jpeg| 0.0 | 1.0  |   0.0   |  0.0| 
+| CNV-7907754-23.jpeg  |  /data_dir/train/CNV/CNV-7907754-23.jpeg | 1.0 | 0.0   |  0.0    | 0.0| 
+| NORMAL-3757443-31.jpeg | /data_dir/train/NORMAL/NORMAL-3757443-31.jpeg | 0.0  |0.0  |   0.0   |  1.0
+| NORMAL-6434323-2.jpeg |  /data_dir/train/NORMAL/NORMAL-6434323-2.jpeg  |0.0|  0.0   |  0.0 |    1.0|
+| NORMAL-910422-8.jpeg | /data_dir/train/NORMAL/NORMAL-910422-8.jpeg | 0.0 | 0.0  |   0.0   |  1.0|
+| DRUSEN-8086850-28.jpeg | /data_dir/train/DRUSEN/DRUSEN-8086850-28.jpeg | 0.0 | 0.0   |  1.0   |  0.0|
 
 In the above table, `F_Name` denotes the file name for 2D medical scan files, `Path` indicates the directory to these files, and `Pathology 1`, `Pathology 2`, `Pathology 3`, and `Pathology 4` represent binary classes for the respective pathologies.
 
