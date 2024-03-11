@@ -37,7 +37,7 @@ After creating ```meta.csv``` file, ConvNeXt backbone can be trained with follow
 ```bash
 python bb_train.py --meta_csv /path/to/meta.csv --pathologies CNV,Drusen,DME,Normal --out_dir /output/dir/to/pretrained_bb.pth --b_size 4 --gpu_id 1 --n_cpu=32
 ```
-- ```--meta_csv``` is the directory to the created meta CSV.
+- ```--meta_csv``` is the directory to the created ```meta.csv```.
 - ```--pathologies``` is a comma-separated list of pathologies for pre-training.
 - ```--out_dir```  is the output directory for saving the pre-trained backbone.
 - ```--b_size``` denotes the batch size for training.
