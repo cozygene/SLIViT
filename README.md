@@ -29,6 +29,8 @@ Generate the  ```meta.csv``` file as illustrated below:
 | NORMAL-910422-8.jpeg | /path/to/data_dir/train/NORMAL/NORMAL-910422-8.jpeg | 0.0 | 0.0  |   0.0   |  1.0|
 | DRUSEN-8086850-28.jpeg | /path/to/data_dir/train/DRUSEN/DRUSEN-8086850-28.jpeg | 0.0 | 0.0   |  1.0   |  0.0|
 
+In above table F_Name shows the file name for 2D medical scan file, Path shows the directory to this file, pathology 1,2,3,4 show binary class for given pathology.
+
 
 ```bash
 python bb_train.py --meta_csv /path/to/meta.csv --pathologies CNV,Drusen,DME,Normal --out_dir /output/dir/to/pretrained_bb.pth --b_size 4 --gpu_id 1 --n_cpu=32
