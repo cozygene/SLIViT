@@ -17,7 +17,7 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 # Convnext Backbone Pre-Training
 
-Create  ```meta.csv``` file as 
+Create  ```meta.csv``` file as shown below:
 
 |F_Name | Path | Pathology 1  |  Pathology 2  | Pathology 3  | Pathology 4  | 
 |--- | --- | --- | --- |--- |--- |
