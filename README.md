@@ -19,9 +19,9 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 F_Name | Path | CNV ( Pathology 1 ) | DME ( Pathology 2 ) | Drusen ( Pathology 3 ) | Normal ( Pathology 4 ) | 
 --- | --- | --- | --- |--- |--- |
- CNV-6116901-21.jpeg  | /data/slivit/Kermany/train/CNV/CNV-6116901-21.... | 1.0 | 0.0   |  0.0  |   0.0|
-     DME-4616882-33.jpeg  |   /data/slivit/Kermany/train/DME/DME-4616882-33.... | 0.0 | 1.0  |   0.0   |  0.0|
-     CNV-7907754-23.jpeg  |  /data/slivit/Kermany/train/CNV/CNV-7907754-23.... | 1.0 | 0.0   |  0.0    | 0.0|
+ CNV-6116901-21.jpeg  | /data/slivit/Kermany/train/CNV/CNV-6116901-21.... | 1.0 | 0.0   |  0.0  |   0.0| \\
+     DME-4616882-33.jpeg  |   /data/slivit/Kermany/train/DME/DME-4616882-33.... | 0.0 | 1.0  |   0.0   |  0.0| \\
+     CNV-7907754-23.jpeg  |  /data/slivit/Kermany/train/CNV/CNV-7907754-23.... | 1.0 | 0.0   |  0.0    | 0.0| \\
   NORMAL-3757443-31.jpeg  | /data/slivit/Kermany/train/NORMAL/NORMAL-37574... | 0.0  |0.0  |   0.0   |  1.0
    NORMAL-6434323-2.jpeg |  /data/slivit/Kermany/train/NORMAL/NORMAL-64343...  |0.0|  0.0   |  0.0 |    1.0|
     NORMAL-910422-8.jpeg | /data/slivit/Kermany/train/NORMAL/NORMAL-91042... | 0.0 | 0.0  |   0.0   |  1.0|
