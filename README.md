@@ -15,6 +15,15 @@ A pre-trained backbone is provided (see backbone.pth.zip) although one may wish 
 
 A code snippet with an example of loading a pre-trained SLIViT model and running inference on a given volume is provided at the end of the SLIViT.ipynb notebook.
 
+# Convnext Backbone Pre-Training
+```bash
+python bb_train.py --pathologies CNV,Drusen,DME,Normal --b_size 16 --gpu_id 1 --n_cpu=12 
+```
+
+
+
+
+
 Feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach out</a> regarding any concerns/issues you are experiencing with SLIViT.
 
 # Acknowledgements
