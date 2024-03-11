@@ -19,7 +19,7 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
 
-|F_Name | Path | Pathology 1  |  Pathology 2  | Pathology 3  | Pathology 4  | 
+|F_Name | Path | Drusen  |  DME   |  CNV  | Normal  | 
 |--- | --- | --- | --- |--- |--- |
 | CNV-6116901-21.jpeg  | /data_dir/train/CNV/CNV-6116901-21.jpeg| 1.0 | 0.0   |  0.0  |   0.0| 
 | DME-4616882-33.jpeg  |   /data_dir/train/DME/DME-4616882-33.jpeg| 0.0 | 1.0  |   0.0   |  0.0| 
