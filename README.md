@@ -17,7 +17,7 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 # ConvNeXt Backbone Pre-Training
 
-## Kermany Pre-Training
+## 2D OCT Pre-Training - Kermany Dataset
 
 ## Custom 2D Dataset Pre-Training
 To commence pre-training with 2D Medical Scans, split the data into `train`, `validation`, `test` sets. Create three folders named `train`, `val`, `test`, and move the scans accordingly.
