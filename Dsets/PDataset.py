@@ -4,7 +4,7 @@ import torch
 from fastai.vision.augment import aug_transforms
 from torch.utils.data import Dataset
 from fastai.vision import *
-from ptrain_auxiliaries import *
+from utils.pretrain_auxiliaries import *
 
 
 default_transform = Compose(
@@ -18,7 +18,7 @@ default_transform = Compose(
 )
 
 class PDataset(Dataset):
-    def __init__(self, metafile_path, annotations_path, pathologies, transform=default_transform,
+    def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform,
                  data_format='jpeg'):
         self.metadata = pd.read_csv(metafile_path)
         self.annotations = pd.read_csv(annotations_path)
@@ -33,13 +33,14 @@ class PDataset(Dataset):
         self.label_reader = get_labels
         self.labels=[self.label_reader(self.samples[i], self.annotations, self.pathologies)[0][0] for i in range(len(self.samples))]
         self.labels=torch.FloatTensor(self.labels)
+        self.data_dir=data_dir
 
     def __len__(self):
         return len(self.samples)
     
     def __getitem__(self, idx):
-        sample = self.samples[idx]
-        imgs = self.data_reader(sample)
+        sample = self.samples[idx[0]]
+        imgs = self.data_reader(sample,self.data_dir)
         labels = self.label_reader(sample, self.annotations, self.pathologies) 
         labels = torch.FloatTensor(labels)
         t_imgs=self.t(imgs)
