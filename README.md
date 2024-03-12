@@ -17,9 +17,9 @@ Before using SLIViT, please make sure to have an appropriate Python environment 
 ```bash
 conda create --name slivit --file requirements.txt
 ```
-#### Pre-training
+##Pre-training
 
-##### 2D OCT pre-training ( Kermany Dataset )
+### 2D OCT pre-training ( Kermany Dataset )
 
 Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018">Kermany dataset</a>.
 
@@ -27,12 +27,9 @@ Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2
 python bb_train.py --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
-##### 2D CT pre-training  ( Organ MNIST Dataset )
-
-##### 2D X-ray pre-training  ( Chest MNIST Dataset )
 
 
-##### 2D Custom Dataset Pre-Training
+### 2D Custom Dataset Pre-Training
 To commence pre-training with 2D Medical Scans, split the data into `train`, `validation`, `test` sets. Create three folders named `train`, `val`, `test`, and move the scans accordingly.
 
 Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
