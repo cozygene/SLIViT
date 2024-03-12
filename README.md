@@ -25,7 +25,7 @@ conda create --name slivit --file requirements.txt
 Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018">Kermany dataset</a>.
 
 ```bash
-python bb_train.py --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
+python bb_train.py --data_dir /path/to/data --meta_csv kermany_meta_mock.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
 
