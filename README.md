@@ -1,4 +1,4 @@
-## SLIViT: a general AI framework for clinical-feature diagnosis from limited 3D biomedical-imaging data
+# SLIViT: a general AI framework for clinical-feature diagnosis from limited 3D biomedical-imaging data
 
 
 <img src="SLIViT.png" width="900px"/>
