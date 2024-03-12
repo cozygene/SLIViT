@@ -18,7 +18,7 @@ Before using SLIViT, please make sure to have an appropriate Python environment 
 conda create --name slivit --file requirements.txt
 ```
 
-## 2D Pre-training
+## Pre-training
 
 ### 2D OCT pre-training ( Kermany Dataset )
 
@@ -65,7 +65,7 @@ python bb_train.py --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathol
 
 ## Fine-tuning
 
-### 3D Medical Image Diagnosis
+### 3D CT Classification
 
 ## Evaluating
 
