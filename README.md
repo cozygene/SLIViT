@@ -18,7 +18,7 @@ Before using SLIViT, please make sure to have an appropriate Python environment 
 conda create --name slivit --file requirements.txt
 ```
 
-## Pre-training
+## 2D Pre-training
 
 ### 2D OCT pre-training ( Kermany Dataset )
 
