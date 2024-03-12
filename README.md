@@ -19,6 +19,11 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 ## 2D OCT Pre-Training - Kermany Dataset
 
+## 2D CT Pre-Training - Organ MNIST Dataset
+
+## 2D X-ray Pre-Training - Chest MNIST Dataset
+
+
 ## 2D Custom Dataset Pre-Training
 To commence pre-training with 2D Medical Scans, split the data into `train`, `validation`, `test` sets. Create three folders named `train`, `val`, `test`, and move the scans accordingly.
 
