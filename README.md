@@ -59,9 +59,9 @@ python bb_train.py --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathol
 - ```--out_dir``` specifies the GPU ID for training.
 - ```--n_cpu``` indicates the number of CPUs for data loading.
 
-#### Fine-tuning
+## Fine-tuning
 
-#### Evaluating
+## Evaluating
 
 Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further details and feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach out</a> regarding any concerns/issues you are experiencing with SLIViT.
 
