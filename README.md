@@ -19,7 +19,7 @@ A code snippet with an example of loading a pre-trained SLIViT model and running
 
 ## 2D OCT Pre-Training ( Kermany Dataset )
 
-Download 2D OCT Kermany dataset from this  <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018"> link</a> 
+Download 2D OCT Kermany dataset from following  <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018"> link</a> 
 
 ```bash
 python bb_train.py --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ --b_size 16 --gpu_id 1 --n_cpu=32
