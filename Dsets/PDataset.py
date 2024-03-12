@@ -18,7 +18,7 @@ default_transform = Compose(
 )
 
 class PDataset(Dataset):
-    def __init__(self, metafile_path, annotations_path, pathologies, transform=transform_new,
+    def __init__(self, metafile_path, annotations_path, pathologies, transform=default_transform,
                  data_format='jpeg'):
         self.metadata = pd.read_csv(metafile_path)
         self.annotations = pd.read_csv(annotations_path)
