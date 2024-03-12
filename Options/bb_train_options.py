@@ -21,7 +21,6 @@ class TrainOptions():
     def gather_options(self):
         parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser = self.initialize(parser)
-        # get the basic options
         opt, _ = parser.parse_known_args()
         self.parser = parser
         return parser.parse_args()
