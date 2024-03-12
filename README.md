@@ -28,6 +28,7 @@ Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2
 python bb_train.py --data_dir /path/to/data --meta_csv kermany_meta_mock.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
+### 2D X-ray pre-training ( ChestMNIST  )
 
 
 ### 2D Custom Dataset Pre-Training
