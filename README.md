@@ -56,7 +56,7 @@ python bb_train.py --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathol
 - ```--pathologies``` is a comma-separated list of pathologies for pre-training.
 - ```--out_dir```  is the output directory for saving the pre-trained backbone.
 - ```--b_size``` denotes the batch size for training.
-- ```--out_dir``` pecifies the GPU ID for training.
+- ```--out_dir``` specifies the GPU ID for training.
 - ```--n_cpu``` indicates the number of CPUs for data loading.
 
 #### Fine-tuning
