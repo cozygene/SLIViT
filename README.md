@@ -31,6 +31,9 @@ python bb_train.py --data_dir /path/to/data --meta_csv kermany_meta_mock.csv --p
 
 
 ### 2D Custom Dataset Pre-Training
+
+Supported image formats : `tiff`, `jpeg`, `png`, `jpg`
+
 To commence pre-training with 2D Medical Scans, split the data into `train`, `validation`, `test` sets. Create three folders named `train`, `val`, `test`, and move the scans accordingly.
 
 Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
