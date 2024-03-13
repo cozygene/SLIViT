@@ -15,9 +15,15 @@ A checkpoint of the pre-trained backbone is available <a href="TODO">here</a> al
 Our model is implemented using PyTorch, and this repository supports PyTorch GPU and CPU implementation.
 ## Setting up the environment
 
-### CPU Training Enviroment
+### CPU Training
 
-### GPU Training Enviroment
+Following instructions will set up a conda enviroment for pre-training using CPUs :
+
+
+### GPU Training
+
+Following instructions will set up a conda enviroment for pre-training using GPU :
+
 Before using SLIViT, please make sure to have an appropriate Python environment with the relevant packages (listed in requirements.txt) properly installed:
 ```bash
 conda create --name slivit --file requirements.txt
