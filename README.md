@@ -12,7 +12,7 @@ SLIViT preprocesses volumes into 2D images and then combines two 2D-based deep-v
 A checkpoint of the pre-trained backbone is available <a href="TODO">here</a> although one may wish to train the model from scratch. A step-by-step procedure that includes pre-training, fine-tuning, and evaluating SLIViT is provided, along with a specific case study using 3D CT volumes (classifying nodule malignancy in the NoduleMNIST dataset). 
 
 # Usage instructions
-Our model is implemented using PyTorch, and this repository supports PyTorch GPU and CPU implementation.
+Before using SLIViT, please make sure to have an appropriate Python environment with the relevant packages properly installed. Our model is implemented using PyTorch, and this repository supports PyTorch GPU and CPU implementation.
 ## Setting up the environment
 
 ### CPU Training
@@ -24,7 +24,7 @@ Following instructions will set up a conda enviroment for pre-training using CPU
 
 Following instructions will set up a conda enviroment for pre-training using GPU :
 
-Before using SLIViT, please make sure to have an appropriate Python environment with the relevant packages (listed in requirements.txt) properly installed:
+
 ```bash
 conda create --name slivit --file requirements.txt
 ```
