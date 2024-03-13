@@ -22,7 +22,7 @@ Following instructions will set up a conda enviroment for pre-training using CPU
 
 ```bash
 conda create --name slivit_trial python=3.8.5
-conda install pytorch torchvision torchaudio cpuonly -c pytorch
+conda install pytorch torchvision cpuonly -c pytorch
 ```
 
 ### GPU Training
@@ -32,7 +32,7 @@ Following instructions will set up a conda enviroment for pre-training using GPU
 
 ```bash
 conda create --name slivit_trial python=3.8.5
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
 
 ## Pre-training
