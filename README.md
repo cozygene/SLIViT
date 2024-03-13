@@ -41,6 +41,8 @@ conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 
 ### 2D OCT pre-training ( Kermany Dataset )
 
+<br><br><img src="Figs/Kermany_OCTs.png" width="900px"/><br><br>
+
 Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018">Kermany dataset</a>.
 
 ```bash
