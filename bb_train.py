@@ -14,9 +14,7 @@ if __name__ == '__main__':
     from torch.utils.data import Subset
     from fastai.vision.all import *
     from fastai.data.transforms import TrainTestSplitter
-    from fastai.callback.wandb import *
     from Dsets.PDataset import PDataset
-    from fastai.callback.wandb import *
     from transformers import AutoModelForImageClassification
     import torchvision.models as tmodels
     dataset = PDataset(opt.meta_csv,
