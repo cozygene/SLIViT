@@ -20,6 +20,11 @@ Before using SLIViT, please make sure to have an appropriate conda environment w
 Following instructions will set up a conda enviroment for pre-training using CPUs :
 
 
+```bash
+conda create --name slivit_trial python=3.8.5
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+```
+
 ### GPU Training
 
 Following instructions will set up a conda enviroment for pre-training using GPU :
