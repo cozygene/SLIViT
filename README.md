@@ -49,6 +49,7 @@ python bb_train.py --data_dir /path/to/data --meta_csv kermany_meta.csv --pathol
 ```
 
 ### 2D X-ray pre-training ( ChestMNIST  )
+<br><br><img src="Figs/ChestMNIST_Xrays.png" width="600px"/><br><br>
 
 
 ### 2D Custom Dataset Pre-Training
