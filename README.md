@@ -37,7 +37,7 @@ conda activate slivit
 conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
 
-## Pre-training
+## Backbone Pre-training
 
 ### 2D OCT pre-training ( Kermany Dataset )
 <br><br><img src="Figs/Kermany_OCTs.png" width="600px"/><br><br>
