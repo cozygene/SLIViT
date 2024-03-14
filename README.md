@@ -22,7 +22,7 @@ Following instructions will set up a conda enviroment for pre-training using CPU
 
 ```bash
 conda create --name slivit_cpu python=3.8.5
-conda activate slivit
+conda activate slivit_cpu
 conda install pytorch torchvision cpuonly -c pytorch
 ```
 
