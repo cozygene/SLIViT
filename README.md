@@ -15,8 +15,7 @@ pre-trained weights. These weights are obtained by pre-training a ConvNeXt first
 biomedical-imaging dataset. The pre-trained network can be fine-tuned for different diagnostic tasks in
 volumetric-biomedical-imaging-data using a relatively small training set (few hundreds of samples).
 
-A checkpoint of the pre-trained backbone is available <a href="TODO">here</a> although one may wish to train the model
-from scratch. A step-by-step procedure that includes pre-training, fine-tuning, and evaluating SLIViT is provided, along
+A step-by-step procedure that includes pre-training, fine-tuning, and evaluating SLIViT is provided, along
 with a specific case study using 3D CT volumes (classifying nodule malignancy in the NoduleMNIST dataset).
 
 # Usage instructions
