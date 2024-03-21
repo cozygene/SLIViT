@@ -58,12 +58,16 @@ pip install pandas transformers
 Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018">Kermany dataset</a>.
 
 ```bash
-python bb_train.py --data_dir /path/to/data --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
+python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
 ### 2D X-ray Pre-training ( ChestMNIST  Dataset )
 
 <br><br><img src="Figs/ChestMNIST_Xrays.png" width="450px"/><br><br>
+
+```bash
+python bb_train.py --dataset chestmnist --out_dir /output/dir/to/save_pretrained_model/ 
+```
 
 ### 2D Custom Dataset Pre-Training
 
@@ -91,7 +95,7 @@ pathologies.
 After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
 
 ```bash
-python bb_train.py --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathology-2,Pathology-3,Pathology-4 --out_dir /output/dir/to/save_pretrained_model/ --b_size 16 --gpu_id 1 --n_cpu=32
+python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathology-2,Pathology-3,Pathology-4 --out_dir /output/dir/to/save_pretrained_model/ --b_size 16 --gpu_id 1 --n_cpu=32
 ```
    
 - ```--data_dir``` is the root directory for the created `train`, `validation`, `test` set folders.
