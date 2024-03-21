@@ -107,6 +107,9 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 
 ### 3D CT Classification
 
+### 3D Custom Data
+
+
 ## Evaluating
 
 Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further
