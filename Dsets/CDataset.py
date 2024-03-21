@@ -25,7 +25,7 @@ default_transform = Compose(
 class CDataset(Dataset):
 
     def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform,
-                 data_format='jpeg'):
+                 data_format='2dim'):
         
         #Initialize meta_csv, pathologies 
         self.metadata = pd.read_csv(metafile_path)
