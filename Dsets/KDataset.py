@@ -20,7 +20,7 @@ default_transform = Compose(
 
 class KDataset(Dataset):
     def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform,
-                 data_format='jpeg'):
+                 data_format='2dim'):
         self.metadata = pd.read_csv(metafile_path)
         self.annotations = pd.read_csv(annotations_path)
         self.pathologies = pathologies
