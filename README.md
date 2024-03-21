@@ -101,6 +101,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 - ```--b_size``` denotes the batch size for training.
 - ```--out_dir``` specifies the GPU ID for training.
 - ```--n_cpu``` indicates the number of CPUs for data loading.
+- ```--n_epochs``` indicates the number of epochs to train.
 
 ## Fine-tuning
 
