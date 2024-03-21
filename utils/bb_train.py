@@ -20,7 +20,7 @@ if __name__ == '__main__':
     from torch.utils.data import Subset
     from fastai.vision.all import *
     from fastai.data.transforms import TrainTestSplitter
-    from Dsets.PDataset import PDataset
+    from utils.PDataset import PDataset
     from transformers import AutoModelForImageClassification
 
     pathologies = get_pathologies(args.meta_csv)
