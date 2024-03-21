@@ -5,9 +5,6 @@ from fastai.vision import *
 from utils.pretrain_auxiliaries import *
 from torchvision.transforms import (Compose,
 ToTensor)
-
-
-
 default_transform = Compose(
     [
         tf.ToPILImage(),
