@@ -59,7 +59,7 @@ python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv kermany
 ```
 
 ### 2D X-ray Pre-training ( ChestMNIST  Dataset )
-<br><br><img src="Figs/ChestMNIST_Xrays.png" width="450px"/><br><br>
+<br><img src="Figs/ChestMNIST_Xrays.png" width="450px"/><br>
 ```bash
 python bb_train.py --dataset chestmnist --out_dir /output/dir/to/save_pretrained_model/ 
 ```
