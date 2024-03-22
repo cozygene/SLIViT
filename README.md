@@ -106,7 +106,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 ## Fine-tuning
 
 ### 3D Lung CT (Nodule MNIST)
-<br><img src="Figs/nodulemnist.gif" width="450px"/><br>
+<img src="Figs/nodulemnist.gif" width="450px"/>
 
 ### 3D Custom Data
 
