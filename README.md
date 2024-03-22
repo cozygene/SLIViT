@@ -52,7 +52,7 @@ pip install pandas transformers
 ## Backbone Pre-training
 
 ### 2D OCT Pre-training ( Kermany Dataset )
-<br><br><img src="Figs/Kermany_OCTs.png" width="600px"/><br><br>
+<br><img src="Figs/Kermany_OCTs.png" width="600px"/><br>
 Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018">Kermany dataset</a>.
 ```bash
 python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
