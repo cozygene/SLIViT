@@ -52,14 +52,14 @@ pip install pandas transformers
 ## Backbone Pre-training
 
 ### 2D OCT Pre-training ( Kermany Dataset )
-<img src="Figs/Kermany_OCTs.png" width="600px"/>
+<img src="Figs/Kermany_OCTs.png" width="600px"/><br>
 Download the <a href="https://www.kaggle.com/datasets/paultimothymooney/kermany2018">Kermany dataset</a>.
 ```bash
 python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
 ### 2D X-ray Pre-training ( ChestMNIST  Dataset )
-<img src="Figs/ChestMNIST_Xrays.png" width="450px"/>
+<img src="Figs/ChestMNIST_Xrays.png" width="450px"/><br>
 ```bash
 python bb_train.py --dataset chestmnist --out_dir /output/dir/to/save_pretrained_model/ 
 ```
@@ -106,7 +106,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 ## Fine-tuning
 
 ### 3D Lung CT (Nodule MNIST)
-<img src="Figs/nodulemnist.gif" width="450px"/>
+<img src="Figs/nodulemnist.gif" width="450px"/><br>
 
 ### 3D Custom Data
 
