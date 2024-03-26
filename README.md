@@ -40,7 +40,7 @@ conda install pytorch torchvision cpuonly -c pytorch
 ### GPU Enviroment
 -->
 
-Following instructions will set up a conda enviroment for pre-training using GPU :
+Following instructions will copy the repository and set up a conda enviroment for pre-training using GPU :
 
 ```bash
 git clone https://github.com/berkindurmus/SLIViT
