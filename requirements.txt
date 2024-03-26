@@ -1,0 +1,8 @@
+fastai  
+scikit-image
+pandas 
+medmnist
+wandb
+pandas
+transformers
+batchgenerators
