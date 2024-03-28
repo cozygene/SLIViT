@@ -5,8 +5,10 @@ class TrainOptions():
     def initialize(self, parser):
         self.parser = parser
         parser = BaseOptions.initialize(self, parser) 
+        parser.add_argument('--dataset3d',type=str, help='nodulemnist, mri, or custom3d')
         parser.add_argument('--bbpath',type=str, default='./Pre-trained_Backbones/backbone.pth',  help='Path to pre-rained Convnext Backbone')
         parser.add_argument('--pathology',type=str,  help='Label to predict for 3D Fine-tuning')
+        parser.add_argument('--task',type=str,  help='3D Fine-tuning task (classification or regression)')
         parser.add_argument('--depth', type=int, default=3, help='ViT depth')
         parser.add_argument('--dim', type=int, default=64, help='ViT depth')
         parser.add_argument('--nslc', type=int, default=28, help='# of slices to use for 3D Fine-tuning')
