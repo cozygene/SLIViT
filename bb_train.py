@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 
-
+import os
 
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
