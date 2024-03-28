@@ -140,6 +140,16 @@ pathologies.
 
 After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
 
+- ```--dataset``` is the dataset for pre-training (`kermany`, `chestmnist`, `custom` ) 
+- ```--data_dir``` is the root directory for the created `train`, `validation`, `test` set folders.
+- ```--meta_csv``` is the directory to the created ```meta.csv```.
+- ```--pathologies``` is a comma-separated list of pathologies for pre-training.
+- ```--out_dir```  is the output directory for saving the pre-trained backbone.
+- ```--b_size``` denotes the batch size for training.
+- ```--out_dir``` specifies the GPU ID for training.
+- ```--n_cpu``` indicates the number of CPUs for data loading.
+- ```--n_epochs``` indicates the number of epochs to train.
+
 
 ## Evaluating
 
