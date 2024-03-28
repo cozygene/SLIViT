@@ -122,7 +122,7 @@ python slivit_train.py --dataset ukbb --meta_csv ./Dsets/ukbb_meta.csv --task re
 
 Supported 3D formats : `tiff`, `dcm`
 
-Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
+Generate the  ```meta.csv``` file for 3D fine-tuning data as illustrated below:
 
 |pid | path | Pathology  | Split | 
 | --- | --- | --- | ---  |
