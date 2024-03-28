@@ -137,7 +137,7 @@ Supported 3D formats : `tiff`, `dcm`
 Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
 
 |pid | path | Pathology  | Split | 
-|--- | --- | --- | --- |--- |--- |
+| --- | --- | --- | ---  |
 | 1754715 | /scratch/avram/MRI/liver/dcm/with_annotations/5628597 | 1.4107 | train | 
 | 4501528 | /scratch/avram/MRI/liver/dcm/with_annotations/4501528 | 3.6272 | valid | 
 | 2161445 | /scratch/avram/MRI/liver/dcm/with_annotations/2161445 | 14.128 | valid | 
