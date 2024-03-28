@@ -6,7 +6,7 @@ class BaseOptions():
         self.parser = parser
         
         parser.add_argument('--data_dir', type=str, default='./', help='Root path to the data')
-        parser.add_argument('--meta_csv', type=str,  default='./Dsets/kermany_meta_mock.csv',help='Path to meta csv file')
+        parser.add_argument('--meta_csv', type=str,  default='./Dsets/kermany_meta.csv',help='Path to meta csv file')
         parser.add_argument('--out_dir', type=str, default='./', help='Output directory to save the trained model')
         parser.add_argument('--gpu_id', type=int ,default=0, help='GPU ID for training')
         parser.add_argument('--b_size', type=int ,default=16, help='Batch size for training')
