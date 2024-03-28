@@ -101,7 +101,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 - ```--pathologies``` is a comma-separated list of pathologies for pre-training.
 - ```--out_dir```  is the output directory for saving the pre-trained backbone.
 - ```--b_size``` denotes the batch size for training.
-- ```--out_dir``` specifies the GPU ID for training.
+- ```--gpu_id``` specifies the GPU ID for training.
 - ```--n_cpu``` indicates the number of CPUs for data loading.
 - ```--n_epochs``` indicates the number of epochs to train.
 
@@ -140,15 +140,18 @@ pathologies.
 
 After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
 
-- ```--dataset``` is the dataset for pre-training (`kermany`, `chestmnist`, `custom` ) 
-- ```--data_dir``` is the root directory for the created `train`, `validation`, `test` set folders.
-- ```--meta_csv``` is the directory to the created ```meta.csv```.
-- ```--pathologies``` is a comma-separated list of pathologies for pre-training.
-- ```--out_dir```  is the output directory for saving the pre-trained backbone.
-- ```--b_size``` denotes the batch size for training.
-- ```--out_dir``` specifies the GPU ID for training.
-- ```--n_cpu``` indicates the number of CPUs for data loading.
-- ```--n_epochs``` indicates the number of epochs to train.
+- ```--dataset3d``` is the dataset for pre-training (`nodulemnist`, `ukbb`, `custom3d` ) 
+- ```--meta_csv``` is the directory to the created ```meta.csv```
+- ```--pathology``` is pathology for 3D fine-tuning
+- ```--bbpath``` is the path to pre-rained Convnext Backbone
+- ```--task``` is the 3D Fine-tuning task (classification or regression)
+- ```--nslc``` is the number of slices to use for 3D Fine-tuning
+- ```--depth``` is the Vision Transformer depth
+- ```--heads``` is the number of heads for multihead attention
+- ```--dim``` is the 3D Fine-tuning task (classification or regression)
+- ```--dropout``` is the dropout rate
+- ```--emb_dropout``` is the embeding dropout rate
+
 
 
 ## Evaluating
