@@ -134,14 +134,14 @@ Generate the  ```meta.csv``` file for 3D fine-tuning data as illustrated below:
 | 1754715 | /scratch/avram/MRI/liver/dcm/with_annotations/1754715 | 5.2235 | train |
 | 4986672 | /scratch/avram/MRI/liver/dcm/with_annotations/4986672 | 3.1356 | test  |
 
-In the above table, `F_Name` denotes the file name for 2D medical scan files, `Path` indicates the directory to these
+In the above table, `pid` denotes the unique patient ID  for 3D medical volume, `Path` indicates the directory to these
 files, and `Pathology-1`, `Pathology-2`, `Pathology-3`, and `Pathology-4` represent binary classes for the respective
 pathologies.
 
 After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
 
-- ```--dataset3d``` is the dataset for pre-training (`nodulemnist`, `ukbb`, `custom3d` ) 
-- ```--meta_csv``` is the directory to the created ```meta.csv```
+- ```--dataset3d``` is the dataset for 3D fine-tuning (`nodulemnist`, `ukbb`, `custom3d` ) 
+- ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--bbpath``` is the path to pre-rained Convnext Backbone
 - ```--task``` is the 3D Fine-tuning task (classification or regression)
