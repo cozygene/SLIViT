@@ -122,18 +122,6 @@ python slivit_train.py --dataset ukbb --meta_csv ./Dsets/ukbb_meta.csv --task re
 
 Supported 3D formats : `tiff`, `dcm`
 
-1754715,/scratch/avram/MRI/liver/dcm/with_annotations/1754715,5.2235,train
-4986672,/scratch/avram/MRI/liver/dcm/with_annotations/4986672,3.1356,test
-
-5628597,/scratch/avram/MRI/liver/dcm/with_annotations/5628597,1.4107,train
-4501528,/scratch/avram/MRI/liver/dcm/with_annotations/4501528,3.6272,valid
-2161445,/scratch/avram/MRI/liver/dcm/with_annotations/2161445,14.1282,valid
-5364532,/scratch/avram/MRI/liver/dcm/with_annotations/5364532,1.3523,train
-2653392,/scratch/avram/MRI/liver/dcm/with_annotations/2653392,2.6253,test
-
-
-
-
 Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
 
 |pid | path | Pathology  | Split | 
