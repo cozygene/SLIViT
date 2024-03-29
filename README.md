@@ -120,7 +120,7 @@ python slivit_train.py --dataset ukbb --meta_csv ./Dsets/ukbb_meta.csv --task re
 ```
 ### 3D Custom Data
 
-Supported 3D formats : `tiff`, `dcm`
+Supported 3D volume formats : 2D slice files as `tiff` or  `dcm`
 
 Generate the  ```meta.csv``` file for 3D fine-tuning data as illustrated below:
 
