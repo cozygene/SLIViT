@@ -92,7 +92,7 @@ pathologies.
 After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
 
 ```bash
-python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathology-2,Pathology-3,Pathology-4 --out_dir /output/dir/to/save_pretrained_model/ --b_size 16 --gpu_id 1 --n_cpu=32
+python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathology-2,Pathology-3,Pathology-4 --out_dir /output/dir/to/save_pretrained_model/ --b_size 16 --gpu_id 0 --n_cpu=32
 ```
 
 - ```--dataset``` is the dataset for pre-training (`kermany`, `chestmnist`, `custom` ) 
