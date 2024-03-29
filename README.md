@@ -111,13 +111,13 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 <img src="Figs/nodulemnist.gif" width="450px"/><br>
 
 ```bash
-python slivit_train.py --dataset nodulemnist --task classification --bbpath /path/to/pretrained/backbone --depth 3 --dim 16 --nslc 28 --heads 10 --out_dir /output/dir/to/save_finetuned_slivit/ 
+python slivit_train.py --dataset3d nodulemnist --task classification --bbpath /path/to/pretrained/backbone --depth 3 --dim 16 --nslc 28 --heads 10 --out_dir /output/dir/to/save_finetuned_slivit/ 
 ```
 ### 3D Liver MRI (UKBB)
 <img src="Figs/ukbb.gif" width="12000px"/><br>
 
 ```bash
-python slivit_train.py --dataset ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./convnext_bb_kermany.pth --depth 5 --dim 64 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
+python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./convnext_bb_kermany.pth --depth 5 --dim 64 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
 ```
 ### 3D Custom Data
 
@@ -138,6 +138,10 @@ Generate the  ```meta.csv``` file for 3D fine-tuning data as illustrated below:
 In the above table, `pid` denotes the unique patient ID  for 3D medical volume, `Path` indicates the directory to folder which contains 2D slice files for the correspoding volume, and `Pathology` represent pathology score or binary pathology class.
 
 After creating ```meta.csv``` file, SLIViT can be fine tuned with following bash script:
+
+```bash
+python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/pretrained/convnext_bb.pth --task regression --pathology Pathology --out_dir /output/dir/to/save_pretrained_model/ 
+```
 
 - ```--dataset3d``` is the dataset for 3D fine-tuning (`nodulemnist`, `ukbb`, `custom3d` ) 
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
