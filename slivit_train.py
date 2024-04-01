@@ -1,6 +1,9 @@
 from Options.slivit_train_options import TrainOptions
 from utils.load_backbone import load_backbone
 import os
+#Uncomment this line for result reproducibility
+#set Seed
+
 
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
