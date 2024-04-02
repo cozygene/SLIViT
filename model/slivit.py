@@ -5,9 +5,6 @@ from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from sklearn.metrics import precision_recall_curve
 from auxiliaries import *
-
-
-
 import cv2
 from tqdm import tqdm
 import os
@@ -20,10 +17,6 @@ from torchvision.transforms import (
     ToTensor,
 )
 from torchvision import transforms as tf
-
-
-
-
 import torch
 from transformers import AutoModelForImageClassification
 from torch import nn
