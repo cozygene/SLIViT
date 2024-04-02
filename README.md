@@ -151,7 +151,8 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 - ```--nslc``` is the number of slices to use for 3D Fine-tuning
 - ```--depth``` is the Vision Transformer depth
 - ```--heads``` is the number of heads for multihead attention
-- ```--dim``` is the 3D Fine-tuning task (classification or regression)
+- ```--dim``` specifies the dimension for encoding transformer input
+- ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
 - ```--dropout``` is the dropout rate
 - ```--emb_dropout``` is the embeding dropout rate
 
@@ -168,11 +169,13 @@ python slivit_test.py --dataset3d ukbb --checkpoint /path/to/fine-tuned/model.pt
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--task``` is the 3D Fine-tuning task (classification or regression)
+-  ```--metric``` is the score metric for evaluation
 - ```--checkpoint``` is the path to fine-tuned slivit
 - ```--nslc``` is the number of slices to use for 3D Fine-tuning
 - ```--depth``` is the Vision Transformer depth
 - ```--heads``` is the number of heads for multihead attention
-- ```--dim``` is the 3D Fine-tuning task (classification or regression)
+- ```--dim``` specifies the dimension for encoding transformer input
+- ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
 
 
 Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further
