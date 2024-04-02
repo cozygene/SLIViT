@@ -160,7 +160,7 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 ## Evaluating
 
 ```bash
-python slivit_test.py --dataset3d ukbb --task regression --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
+python slivit_test.py --dataset3d ukbb --checkpoint /path/to/fine-tuned/model.pth --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
 ```
 
 Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further
