@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     backbone=load_backbone(gpu_id=opt.gpu_id)
     model = SLIViT(backbone=backbone, image_size=(768, 64), patch_size=64, num_classes=1, dim=opt.dim, depth=opt.depth, heads=opt.heads,
-                    mlp_dim=opt.dim, channels=opt.nslc, dropout=opt.dropout, emb_dropout=opt.emb_dropout)
+                    mlp_dim=opt.mlp_dim, channels=opt.nslc, dropout=opt.dropout, emb_dropout=opt.emb_dropout)
     model.to(device='cuda')
 
     if opt.metric =='roc-auc' or opt.metric =='pr-auc':
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     elif opt.metric =='r2':
         learner.metrics =  [R2Score(),ExplainedVariance(),PearsonCorrCoef()]
 
-    t_model = learner.load('./slivit'  )
+    t_model = learner.load('./slivit_ukbb')
     valid_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of Test batches is {len(valid_loader)}')
     res = learner.get_preds(dl=valid_loader)
