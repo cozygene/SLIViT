@@ -11,7 +11,7 @@ class ConvNext(nn.Module):
 
             return x
 
-def load_backbone(bb_path,gpu_id):
+def load_backbone(gpu_id,bb_path='./Pre-trained_Backbones/backbone.pth'):
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id) 
 
