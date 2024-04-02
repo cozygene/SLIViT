@@ -114,7 +114,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 python slivit_train.py --dataset3d nodulemnist --task classification --bbpath /path/to/pretrained/backbone --nslc 28 --depth 3 --dim 16 --heads 10 --out_dir /output/dir/to/save_finetuned_slivit/ 
 ```
 ### 3D Liver MRI (UKBB)
-<img src="Figs/ukbb.gif" width="900px"/><br>
+<img src="Figs/ukbb.gif" width="600px"/><br>
 
 ```bash
 python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./convnext_bb_kermany.pth --depth 5 --dim 64 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
