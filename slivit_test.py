@@ -92,10 +92,10 @@ if __name__ == '__main__':
     if opt.metric =='roc-auc':
         score = sklearn.metrics.roc_auc_score(res[1], act(res[0]))
     elif opt.metric =='pr-auc':
-        score = sklearn.metrics.roc_auc_score(res[1], act(res[0]))
+        score = sklearn.metrics.average_precision_score(res[1], act(res[0]))
     elif opt.metric =='r2':
         score = sklearn.metrics.r2_score(res[1], res[0])
-    print('  Performance: ' + str(score))
+    print(opt.metric+ ' score : ' + str(score))
 
 
 
