@@ -7,14 +7,9 @@ if __name__ == '__main__':
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id) 
     from fastai.vision.all import *
-    from fastai.callback.wandb import *
     from Dsets.NDataset import NDataset
-    from fastai.callback.wandb import *
     from torch.utils.data import Subset
-    from fastai.vision.all import *
-    from fastai.callback.wandb import *
     from model.slivit import SLIViT
-    from fastai.callback.wandb import *
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
     import torch
