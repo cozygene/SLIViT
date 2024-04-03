@@ -169,7 +169,7 @@ python slivit_test.py --dataset3d ukbb --checkpoint /path/to/fine-tuned/model.pt
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--task``` is the 3D Fine-tuning task (classification or regression)
--  ```--metric``` is the score metric for evaluation
+-  ```--metric``` is the score metric for evaluation (`roc-auc`, `pr-auc`, `r2` ) 
 - ```--checkpoint``` is the path to fine-tuned slivit
 - ```--nslc``` is the number of slices to use for 3D Fine-tuning
 - ```--depth``` is the Vision Transformer depth
