@@ -50,6 +50,7 @@ conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 cd SLIViT
 pip install -r requirements.txt
 ```
+<a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">Download</a> pre-trained and fine-tuned models and move the files to `Checkpoints` folder.
 
 ## Backbone Pre-training
 
