@@ -17,10 +17,8 @@ def get_labels(sample, labels, pathologies):
 
 def get_samples(metadata, labels, pathologies):
     samples = []
-    #label_to_count = {p: {} for p in pathologies}
-    for sample in metadata.path.values: #-2
+    for sample in metadata.path.values:
         samples.append(sample)
-    #print(f'Label counts is: {}')
     return samples
 class pil_contrast_strech(object):
 
@@ -34,7 +32,7 @@ class pil_contrast_strech(object):
         return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
 
 
-def load_dcm(path): ##/scratch/avram/Amish/tiff
+def load_dcm(path):
     vol=[]
     img_paths = os.listdir(path)
     filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
