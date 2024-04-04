@@ -17,8 +17,10 @@ def get_labels(sample, labels, pathologies):
 
 def get_samples(metadata, labels, pathologies):
     samples = []
-    for sample in metadata.path.values:
+    #label_to_count = {p: {} for p in pathologies}
+    for sample in metadata.path.values: #-2
         samples.append(sample)
+    #print(f'Label counts is: {}')
     return samples
 class pil_contrast_strech(object):
 
@@ -32,12 +34,13 @@ class pil_contrast_strech(object):
         return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
 
 
-def load_dcm(path):
+def load_dcm(path,nslc):
     vol=[]
+    path="/scratch/avram/MRI/liver/old/dcm/with_annotations/"+path.split('/')[-1]
     img_paths = os.listdir(path)
     filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
     img_paths = list(filtered)
-    if len(img_paths)<37:
+    if len(img_paths) < nslc:
         for img_name in img_paths:
             img=dicom.dcmread(f'{path}/{img_name}')
             vol.append(totensor(img.pixel_array.astype(np.float64)))
@@ -45,6 +48,6 @@ def load_dcm(path):
         for img_name in img_paths:
             img=dicom.dcmread(f'{path}/{img_name}')
             vol.append(totensor(img.pixel_array.astype(np.float64)))
-        idx_smpl=np.linspace(0, len(img_paths)-1, 36).astype(int)
+        idx_smpl=np.linspace(0, len(img_paths)-1, nslc).astype(int)
         vol = (np.array(vol)[idx_smpl]).tolist()
     return vol
