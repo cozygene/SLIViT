@@ -40,7 +40,7 @@ conda install pytorch torchvision cpuonly -c pytorch
 ### GPU Enviroment
 -->
 
-Following instructions will clone the repository and create conda enviroment: 
+Clone the repository and create conda enviroment: 
 ```bash
 git clone https://github.com/berkindurmus/SLIViT
 conda create --name slivit python=3.8
