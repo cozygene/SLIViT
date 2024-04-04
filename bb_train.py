@@ -3,8 +3,6 @@ import numpy as np
 import pandas as pd
 import os
 
-import os
-
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
 
@@ -13,10 +11,8 @@ if __name__ == '__main__':
     from medmnist import ChestMNIST
     from torch.utils.data import Subset
     from fastai.vision.all import *
-    from fastai.callback.wandb import *
     from Dsets.KDataset import KDataset
     from Dsets.XDataset import XDataset
-    from fastai.callback.wandb import *
     from transformers import AutoModelForImageClassification
     batch_size = opt.b_size
     num_workers = opt.n_cpu
@@ -28,7 +24,7 @@ if __name__ == '__main__':
         dataset = KDataset(opt.meta_csv,
                             opt.meta_csv,
                             opt.data_dir,
-                            data_format='jpeg',
+                            data_format='2dim',
                             pathologies= [p for p in opt.pathologies.split(',')] )
         df=pd.read_csv(opt.meta_csv)
         splts=[p.split('/')[1] for p in df['Path'].values]
@@ -54,7 +50,7 @@ if __name__ == '__main__':
         dataset = CDataset(opt.meta_csv,
                             opt.meta_csv,
                             opt.data_dir,
-                            data_format='jpeg',
+                            data_format='2dim',
                             pathologies= [p for p in opt.pathologies.split(',')] )
         df=pd.read_csv(opt.meta_csv)
         splts=[p.split('/')[1] for p in df['Path'].values]
