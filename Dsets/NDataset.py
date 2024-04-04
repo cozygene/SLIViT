@@ -6,7 +6,7 @@ import torch
 from fastai.vision.augment import aug_transforms
 from torch.utils.data import Dataset
 from fastai.vision import *
-from auxiliaries import *
+from utils.slivit_auxiliaries import *
 from torchvision.transforms import (
     Compose,
     Normalize,
