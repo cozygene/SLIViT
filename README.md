@@ -162,7 +162,7 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 ## Evaluating
 
 ```bash
-python slivit_test.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --checkpoint /path/to/fine-tuned/model.pth --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
+python slivit_test.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --checkpoint ./Checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
 ```
 
 - ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `custom3d` ) 
