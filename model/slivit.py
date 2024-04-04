@@ -4,7 +4,7 @@ from torch import nn
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from sklearn.metrics import precision_recall_curve
-from auxiliaries import *
+from utils.slivit_auxiliaries import *
 import cv2
 from tqdm import tqdm
 import os
