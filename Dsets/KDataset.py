@@ -19,18 +19,13 @@ default_transform = Compose(
 )
 
 class KDataset(Dataset):
-    def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform,
-                 data_format='2dim'):
+    def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform):
         self.metadata = pd.read_csv(metafile_path)
         self.annotations = pd.read_csv(annotations_path)
         self.pathologies = pathologies
         self.samples = get_samples(self.metadata, self.annotations, pathologies)
         self.t = default_transform
-   
-        self.data_reader = dict(
-            jpeg=load_2dim
-        )[data_format]
-
+        self.data_reader =load_2dim
         self.label_reader = get_labels
         self.labels=[self.label_reader(self.samples[i], self.annotations, self.pathologies)[0][0] for i in range(len(self.samples))]
         self.labels=torch.FloatTensor(self.labels)
