@@ -7,9 +7,14 @@ if __name__ == '__main__':
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id) 
     from fastai.vision.all import *
+    from fastai.callback.wandb import *
     from Dsets.NDataset import NDataset
+    from fastai.callback.wandb import *
     from torch.utils.data import Subset
+    from fastai.vision.all import *
+    from fastai.callback.wandb import *
     from model.slivit import SLIViT
+    from fastai.callback.wandb import *
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
     import torch
@@ -78,7 +83,7 @@ if __name__ == '__main__':
     elif opt.metric =='r2':
         learner.metrics =  [R2Score(),ExplainedVariance(),PearsonCorrCoef()]
 
-    t_model = learner.load('./slivit_ukbb')
+    t_model = learner.load(opt.checkpoint)
     valid_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of Test batches is {len(valid_loader)}')
     res = learner.get_preds(dl=valid_loader)
