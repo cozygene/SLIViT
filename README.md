@@ -116,7 +116,7 @@ python slivit_train.py --dataset3d nodulemnist --task classification --bbpath /p
 ```
 ### 3D Liver MRI (UKBB)
 <img src="Figs/ukbb.gif" width="750px"/><br>
-UKBB MRI dataset available <a href="https://www.ukbiobank.ac.uk">here</a>. After downloading the data, replace the paths in  `./Dsets/ukbb_meta.csv` with corresponding path to the downloaded scans.
+UKBB MRI dataset available <a href="https://www.ukbiobank.ac.uk">here</a>. After downloading the data, replace the paths in  `./Dsets/ukbb_meta.csv` with corresponding paths to the downloaded scans.
 
 ```bash
 python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./convnext_bb_kermany.pth --depth 5 --dim 256 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
