@@ -8,9 +8,6 @@ from torchvision import transforms as tf
 from PIL import Image
 import torchvision.transforms as transforms
 
-
-
-
 gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
 totensor = tf.Compose([
     tf.ToTensor(),
