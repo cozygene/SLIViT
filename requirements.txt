@@ -6,3 +6,4 @@ wandb
 pandas
 transformers
 batchgenerators
+pydicom
