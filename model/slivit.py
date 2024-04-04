@@ -32,20 +32,6 @@ class ConvNext(nn.Module):
 
         return x
 
-
-def load_backbone(model_name):
-    kermany_pretrained_weights = "./Pre-trained_Backbones/backbone.pth"
-    model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
-                                                                num_labels=4, ignore_mismatched_sizes=True)
-    model = ConvNext(model2)
-    model_weights = kermany_pretrained_weights
-    model.load_state_dict(torch.load(model_weights, map_location=torch.device("cuda")))
-    model_tmp = list(model.children())[0]
-    model = torch.nn.Sequential(
-        *[list(list(model_tmp.children())[0].children())[0], list(list(model_tmp.children())[0].children())[1]])
-    return model
-
-
 def pair(t):
     return t if isinstance(t, tuple) else (t, t)
 gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
