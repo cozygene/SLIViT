@@ -40,11 +40,11 @@ def load_dcm(path):
     if len(img_paths)<37:
         for img_name in img_paths:
             img=dicom.dcmread(f'{path}/{img_name}')
-            vol.append(totensor(img.pixel_array.astype(np.float)))
+            vol.append(totensor(img.pixel_array.astype(np.float64)))
     else:
         for img_name in img_paths:
             img=dicom.dcmread(f'{path}/{img_name}')
-            vol.append(totensor(img.pixel_array.astype(np.float)))
+            vol.append(totensor(img.pixel_array.astype(np.float64)))
         idx_smpl=np.linspace(0, len(img_paths)-1, 36).astype(int)
         vol = (np.array(vol)[idx_smpl]).tolist()
     return vol
