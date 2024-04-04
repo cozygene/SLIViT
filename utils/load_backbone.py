@@ -21,7 +21,6 @@ def load_backbone(gpu_id,bb_path='./Pre-trained_Backbones/backbone.pth'):
     
         
     kermany_pretrained_weights = bb_path
-    #"./Pre-trained_Backbones/backbone.pth"
     model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
                                                                 num_labels=4, ignore_mismatched_sizes=True)
     model = ConvNext(model2)
