@@ -31,8 +31,7 @@ class KDataset(Dataset):
         return len(self.samples)
     
     def __getitem__(self, idx):
-        #sample = self.samples[idx[0]]
-        sample = self.samples[idx]
+        sample = self.samples[idx[0]]
         imgs = self.data_reader(sample,self.data_dir)
         labels = self.label_reader(sample, self.annotations, self.pathologies) 
         labels = torch.FloatTensor(labels)
