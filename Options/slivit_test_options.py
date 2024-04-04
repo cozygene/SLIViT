@@ -11,7 +11,7 @@ class TestOptions():
         parser.add_argument('--dim', type=int, default=256, help='ViT dim')
         parser.add_argument('--mlp_dim', type=int, default=512, help='fc dim')
         parser.add_argument('--nslc', type=int, default=28, help='# of slices to use for 3D Fine-tuning')
-        parser.add_argument('--heads', type=int, default=10, help='# of heads for multihead attention')
+        parser.add_argument('--heads', type=int, default=20, help='# of heads for multihead attention')
         parser.add_argument('--dropout', type=float, default=0)
         parser.add_argument('--emb_dropout', type=float, default=0)
         parser.add_argument('--pathology',type=str,  help='Label to predict')
