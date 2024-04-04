@@ -5,9 +5,6 @@ from fastai.vision import *
 from utils.pretrain_auxiliaries import *
 from torchvision.transforms import (Compose,
 ToTensor)
-
-
-
 default_transform = Compose(
     [
         tf.ToPILImage(),
@@ -17,7 +14,6 @@ default_transform = Compose(
         gray2rgb
     ]
 )
-
 class KDataset(Dataset):
     def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform):
         self.metadata = pd.read_csv(metafile_path)
