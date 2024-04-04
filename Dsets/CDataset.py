@@ -35,10 +35,7 @@ class CDataset(Dataset):
         self.t = default_transform
 
         #Initialize data reader, current load2dim supports jpeg, bmp, png format
-        self.data_reader = dict(
-            jpeg=load_2dim
-        )[data_format]
-
+        self.data_reader = load_2dim
         self.label_reader = get_labels
         self.labels=[self.label_reader(self.samples[i], self.annotations, self.pathologies)[0][0] for i in range(len(self.samples))]
         self.labels=torch.FloatTensor(self.labels)
