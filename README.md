@@ -45,6 +45,8 @@ Following instructions will copy the repository and set up a conda enviroment fo
 ```bash
 git clone https://github.com/berkindurmus/SLIViT
 conda create --name slivit python=3.8
+```
+```bash
 conda activate slivit
 conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 cd SLIViT
