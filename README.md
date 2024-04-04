@@ -21,7 +21,7 @@ with a specific case study using 3D CT volumes (classifying nodule malignancy in
 # Usage instructions
 
 Before using SLIViT, please make sure to have an appropriate conda environment with the relevant packages properly
-installed. Our model is implemented using PyTorch, and this repository supports PyTorch GPU implementation. 
+installed. Pre-trained and fine-tuned models can be downloaded from <a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">here.</a> Our model is implemented using PyTorch, and this repository supports PyTorch GPU implementation. 
 
 ## Setting up the environment
 
