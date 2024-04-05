@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 import os
 
+
+
+
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
 
@@ -11,9 +14,13 @@ if __name__ == '__main__':
     from medmnist import ChestMNIST
     from torch.utils.data import Subset
     from fastai.vision.all import *
+    from fastai.callback.wandb import *
     from Dsets.KDataset import KDataset
     from Dsets.XDataset import XDataset
+    from Dsets.CDataset import CDataset
+    from fastai.callback.wandb import *
     from transformers import AutoModelForImageClassification
+    
     batch_size = opt.b_size
     num_workers = opt.n_cpu
     print(f'Num of cpus is {opt.n_cpu}')
@@ -24,13 +31,21 @@ if __name__ == '__main__':
         dataset = KDataset(opt.meta_csv,
                             opt.meta_csv,
                             opt.data_dir,
+                            data_format='jpeg',
                             pathologies= [p for p in opt.pathologies.split(',')] )
         df=pd.read_csv(opt.meta_csv)
         splts=[p.split('/')[1] for p in df['Path'].values]
+        splitter = TrainTestSplitter(test_size=0.1, random_state=42)
+
+        train_indices, valid_indices2 = splitter(dataset)  # , stratify=True)
+        valid_dataset = Subset(dataset, valid_indices2)
+
+
+        train_dataset = Subset(dataset, train_indices)
         
-        valid_dataset = Subset(dataset,np.argwhere(np.array(splts)=='test') )
-        train_dataset = Subset(dataset, np.argwhere(np.array(splts)=='train'))
-        model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-base-224",return_dict=False,num_labels=len(opt.pathologies.split(',')),
+        #valid_dataset = Subset(dataset,np.argwhere(np.array(splts)=='test') )
+        #train_dataset = Subset(dataset, np.argwhere(np.array(splts)!='test'))
+        model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224",return_dict=False,num_labels=4,
                                                             ignore_mismatched_sizes=True)
     elif opt.dataset == 'chestmnist':
         opt.meta_csv='NA'
@@ -42,20 +57,21 @@ if __name__ == '__main__':
         valid_dataset= ChestMNIST(split="val", download=True)
         train_dataset = XDataset(train_dataset)
         valid_dataset = XDataset(valid_dataset)
-        model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-base-224",return_dict=False,num_labels=14,
+        model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224",return_dict=False,num_labels=14,
                                                             ignore_mismatched_sizes=True)
     else:
 
         dataset = CDataset(opt.meta_csv,
                             opt.meta_csv,
                             opt.data_dir,
+                            data_format='jpeg',
                             pathologies= [p for p in opt.pathologies.split(',')] )
         df=pd.read_csv(opt.meta_csv)
         splts=[p.split('/')[1] for p in df['Path'].values]
         
         valid_dataset = Subset(dataset,np.argwhere(np.array(splts)=='test') )
         train_dataset = Subset(dataset, np.argwhere(np.array(splts)=='train'))
-        model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-base-224",return_dict=False,num_labels=len(opt.pathologies.split(',')),
+        model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224",return_dict=False,num_labels=len(opt.pathologies.split(',')),
                                                             ignore_mismatched_sizes=True)
 
 
@@ -81,9 +97,12 @@ if __name__ == '__main__':
     model.to(device='cuda')
     learner = Learner(dls, model, model_dir=opt.out_dir,
                     loss_func=torch.nn.BCEWithLogitsLoss())
+    #fp16 = MixedPrecision()
+    learner = learner.to_fp16()
     
     learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
+    
 
-    learner.fit_one_cycle(n_epoch=opt.n_epochs, cbs=SaveModelCallback(fname='convnext_bb_'+opt.dataset))
+    learner.fit(lr=1e-5,n_epoch=opt.n_epochs, cbs=SaveModelCallback(fname='convnext_bb_'+opt.dataset))
 
 
