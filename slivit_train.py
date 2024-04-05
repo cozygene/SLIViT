@@ -1,5 +1,4 @@
 from Options.slivit_train_options import TrainOptions
-from utils.load_backbone import load_backbone
 import os
 
 if __name__ == '__main__':
@@ -14,6 +13,7 @@ if __name__ == '__main__':
     from fastai.vision.all import *
     from fastai.callback.wandb import *
     from model.slivit import SLIViT
+    from utils.load_backbone import load_backbone
     from fastai.callback.wandb import *
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
 
-    backbone=load_backbone(opt.gpu_id,opt.bbpath)
+    backbone=load_backbone(opt.gpu_id,opt.bbpath,opt.nObb_feat)
     model = SLIViT(backbone=backbone, image_size=(768, 64), patch_size=64, num_classes=1, dim=opt.dim, depth=opt.depth, heads=opt.heads,
                     mlp_dim=opt.dim, channels=opt.nslc, dropout=opt.dropout, emb_dropout=opt.emb_dropout)
     model.to(device='cuda')
