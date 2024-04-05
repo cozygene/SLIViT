@@ -1,11 +1,10 @@
+transformers==4.31.0
 fastai  
 scikit-image
 pandas 
 medmnist
 wandb
 pandas
-transformers
-batchgenerators
 pydicom
 vit_pytorch
 opencv-python
