@@ -20,19 +20,19 @@ class UKBBDataset(Dataset):
         self.annotations = pd.read_csv(annotations_path)
         self.pathologies = pathologies
         self.samples = get_samples(self.metadata, self.annotations, pathologies)
-        self.t = default_transform_gray
+        self.t = transform
         self.data_reader = load_dcm
         self.label_reader = get_labels
         self.labels=[self.label_reader(self.samples[i], self.annotations, self.pathologies) for i in range(len(self.samples))]
         self.labels=torch.FloatTensor(self.labels)
-        self.nlsc=nslc
+        self.nslc=nslc
 
     def __len__(self):
         return len(self.samples)
 
     def __getitem__(self, idx):
         sample = self.samples[idx[0]]
-        imgs = self.data_reader(sample,self.nlsc)
+        imgs = self.data_reader(sample,self.nslc)
         labels = self.label_reader(sample, self.annotations, self.pathologies)  
         labels = torch.FloatTensor(labels)
         t_imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
