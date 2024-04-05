@@ -8,4 +8,4 @@ pandas
 pydicom
 vit_pytorch
 opencv-python
-transformers==4.31.0
+transformers
