@@ -1,5 +1,6 @@
 transformers==4.31.0
-fastai  
+fastai
+batchgenerators
 scikit-image
 pandas 
 medmnist
