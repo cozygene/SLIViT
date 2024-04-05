@@ -64,7 +64,7 @@ if __name__ == '__main__':
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
 
-    backbone=load_backbone(gpu_id=opt.gpu_id)
+    backbone=load_backbone(gpu_id=opt.gpu_id,nOfeat=opt.nObb_feat)
     model = SLIViT(backbone=backbone, image_size=(768, 64), patch_size=64, num_classes=1, dim=opt.dim, depth=opt.depth, heads=opt.heads,
                     mlp_dim=opt.mlp_dim, channels=opt.nslc, dropout=opt.dropout, emb_dropout=opt.emb_dropout)
     model.to(device='cuda')
