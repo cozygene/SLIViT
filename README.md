@@ -151,7 +151,7 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--bbpath``` is the path to pre-rained Convnext Backbone
-- ```--nObb_feat``` is the number of features that Backbone Extracts ( `kermany backbone : 4` , `chestmnist backbone : 14` )
+- ```--nObb_feat``` is the number of features that Backbone Extracts ( Kermany backbone : `4` , ChestMNIST backbone : `14` )
 - ```--task``` is the 3D Fine-tuning task (classification or regression)
 - ```--nslc``` is the number of slices to use for 3D Fine-tuning
 - ```--depth``` is the Vision Transformer depth
