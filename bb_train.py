@@ -2,10 +2,6 @@ from Options.bb_train_options import TrainOptions
 import numpy as np
 import pandas as pd
 import os
-
-
-
-
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
 
@@ -73,16 +69,12 @@ if __name__ == '__main__':
         model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224",return_dict=False,num_labels=len(opt.pathologies.split(',')),
                                                             ignore_mismatched_sizes=True)
 
-
-
     train_loader = DataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of train batches is {len(train_loader)}')
     valid_loader = DataLoader(valid_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True) 
     print(f'# of validation batches is {len(valid_loader)}')
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
-
-    
     class ConvNext(nn.Module):
         def __init__(self, model):
             super(ConvNext, self).__init__()
@@ -96,7 +88,6 @@ if __name__ == '__main__':
     model.to(device='cuda')
     learner = Learner(dls, model, model_dir=opt.out_dir,
                     loss_func=torch.nn.BCEWithLogitsLoss())
-    #fp16 = MixedPrecision()
     learner = learner.to_fp16()
     
     learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
