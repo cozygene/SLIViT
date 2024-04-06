@@ -48,5 +48,6 @@ def load_dcm(path,nslc):
             img=dicom.dcmread(f'{path}/{img_name}')
             vol.append(totensor(img.pixel_array.astype(np.float64)))
         idx_smpl=np.linspace(0, len(img_paths)-1, nslc).astype(int)
-        return (np.array(vol)[idx_smpl]).tolist()
+        return (np.asarray(vol)[idx_smpl]).tolist()
+        #return (vol[idx_smpl]).tolist()
     return vol
