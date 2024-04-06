@@ -166,7 +166,7 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 ## Evaluating
 ### Nodule MNIST
 ```bash
-python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_noduleMNIST --metric roc-auc --depth 5 --dim 64 --nslc 28 -mlp_dim 64 --heads 20
+python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_noduleMNIST --metric roc-auc --depth 5 --dim 64 --nslc 28 --mlp_dim 64 --heads 20
 ```
 ### UKBB
 
