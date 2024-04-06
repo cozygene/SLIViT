@@ -11,17 +11,12 @@ class ConvNext(nn.Module):
 
             return x
 
-def load_backbone(gpu_id,bb_path='./Pre-trained_Backbones/backbone.pth',nOfeat=4):
+def load_backbone(gpu_id,bb_path='./Checkpoints/convnext_bb_kermany.pth',nOfeat=4):
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id) 
-
     import torch
-    
     from transformers import AutoModelForImageClassification
-    
-        
     kermany_pretrained_weights = bb_path
-    #"./Pre-trained_Backbones/backbone.pth"
     model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
                                                                 num_labels=nOfeat, ignore_mismatched_sizes=True)
     model = ConvNext(model2)
