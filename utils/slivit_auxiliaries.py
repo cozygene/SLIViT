@@ -38,9 +38,10 @@ def load_dcm(path,nslc):
     vol=[]
     #path="/scratch/avram/MRI/liver/old/dcm/with_annotations/"+path.split('/')[-1]
     img_paths = os.listdir(path)
-    print(len(img_paths))
+    #print(len(img_paths))
     filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
     img_paths = list(filtered)
+    print(len(img_paths))
     if len(img_paths) < nslc:
         for img_name in img_paths:
             img=dicom.dcmread(f'{path}/{img_name}')
