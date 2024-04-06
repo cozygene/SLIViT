@@ -40,6 +40,7 @@ if __name__ == '__main__':
         valid_indices = np.argwhere(meta['Split'].values=='valid')
         dataset = UKBBDataset(opt.meta_csv,
                             opt.meta_csv,
+                            nslc=opt.nslc,
                             pathologies='PDFF')
         train_dataset = Subset(dataset, train_indices)
         valid_dataset = Subset(dataset, valid_indices)
