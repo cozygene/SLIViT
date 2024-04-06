@@ -42,7 +42,7 @@ def load_dcm(path,nslc):
     filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
     img_paths = list(filtered)
     print(len(img_paths))
-    if len(img_paths) < nslc:
+    if len(img_paths) == nslc:
         for img_name in img_paths:
             img=dicom.dcmread(f'{path}/{img_name}')
             vol.append(totensor(img.pixel_array.astype(np.float64)))
