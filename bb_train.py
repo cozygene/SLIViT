@@ -31,7 +31,6 @@ if __name__ == '__main__':
         dataset = KDataset(opt.meta_csv,
                             opt.meta_csv,
                             opt.data_dir,
-                            data_format='jpeg',
                             pathologies= [p for p in opt.pathologies.split(',')] )
         df=pd.read_csv(opt.meta_csv)
         splts=[p.split('/')[1] for p in df['Path'].values]
