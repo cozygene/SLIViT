@@ -218,5 +218,5 @@ capacity. Proper credit supports and recognizes the original creators' efforts.
 ## Acknowledgement
 
 Parts of the code are taken from the <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>
-repository.
+repository. Kermany and X-ray dataset figures are taken from [1],[2],respectively.
 </div>
