@@ -218,7 +218,8 @@ capacity. Proper credit supports and recognizes the original creators' efforts.
 ## Acknowledgement
 
 Parts of the code are taken from the <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>
-repository. Kermany and X-ray dataset figures are taken from [1] and [2], respectively.
+repository. The figures depicting Kermany and the X-ray dataset are sourced from [1] and [2] respectively.
+
 [1] 
 
 [2] Wang, X., Peng, Y., Lu, L., Lu, Z., Bagheri, M., & Summers, R. (2017). ChestX-Ray8: Hospital-Scale Chest X-Ray Database and Benchmarks on Weakly-Supervised Classification and Localization of Common Thorax Diseases. In 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR). IEEE.
