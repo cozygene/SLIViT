@@ -28,7 +28,7 @@ transform_new = tf.Compose(
     [
         tf.ToPILImage(),
         tf.Resize((256, 256)),
-        pil_contrast_strech(),
+        #pil_contrast_strech(),
         #RandomResizedCrop((256,256)),
         #RandomHorizontalFlip(),
         ToTensor(),
