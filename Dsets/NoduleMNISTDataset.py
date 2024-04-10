@@ -34,7 +34,7 @@ transform_new = tf.Compose(
         ToTensor(),
         gray2rgb
     ])
-class NDataset(Dataset):
+class NoduleMNISTDataset(Dataset):
     def __init__(self,dataset,chs):
         super()
         self.dataset=dataset
