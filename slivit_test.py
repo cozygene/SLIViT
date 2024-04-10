@@ -18,6 +18,7 @@ if __name__ == '__main__':
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
     from Dsets.CustomDataset import CustomDataset
+    from Dsets.USDataset import USDataset
     import torch
     import sklearn
     
@@ -46,6 +47,19 @@ if __name__ == '__main__':
         train_dataset = Subset(dataset, train_indices)
         valid_dataset = Subset(dataset, valid_indices)
         test_dataset = Subset(dataset, test_indices)
+
+    elif opt.dataset3d == 'ultrasound':
+        meta=pd.read_csv(opt.meta_csv)
+        train_indices =np.argwhere(meta['Split'].values=='TRAIN')
+        test_indices = np.argwhere(meta['Split'].values=='TEST')
+        valid_indices = np.argwhere(meta['Split'].values=='VAL')
+        dataset = USDataset(opt.meta_csv,
+                            opt.meta_csv,
+                            nslc=opt.nslc,
+                            pathologies='EF_b')
+        train_dataset = Subset(dataset, train_indices)
+        valid_dataset = Subset(dataset, valid_indices)
+        test_dataset = Subset(dataset, test_indices)   
   
     elif opt.dataset3d == 'custom3d':
         test_dataset = CustomDataset(opt.test_dir,opt.nslc)
