@@ -8,7 +8,7 @@ if __name__ == '__main__':
     os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id) 
     from fastai.vision.all import *
     from fastai.callback.wandb import *
-    from Dsets.NDataset import NDataset
+    from Dsets.NoduleMNISTDataset import NoduleMNISTDataset
     from fastai.callback.wandb import *
     from torch.utils.data import Subset
     from fastai.vision.all import *
@@ -17,6 +17,7 @@ if __name__ == '__main__':
     from fastai.callback.wandb import *
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
+    from Dsets.CustomDataset import CustomDataset
     import torch
     import sklearn
     
@@ -30,9 +31,9 @@ if __name__ == '__main__':
         train_dataset = NoduleMNIST3D(split="train", download=True)
         valid_dataset = NoduleMNIST3D(split="val", download=True)
 
-        test_dataset = NDataset(test_dataset,opt.nslc)
-        train_dataset = NDataset(train_dataset,opt.nslc)
-        valid_dataset = NDataset(valid_dataset,opt.nslc)
+        test_dataset = NoduleMNISTDataset(test_dataset,opt.nslc)
+        train_dataset = NoduleMNISTDataset(train_dataset,opt.nslc)
+        valid_dataset = NoduleMNISTDataset(valid_dataset,opt.nslc)
     elif opt.dataset3d == 'ukbb':   
         meta=pd.read_csv(opt.meta_csv)
         train_indices =np.argwhere(meta['Split'].values=='train')
@@ -47,9 +48,9 @@ if __name__ == '__main__':
         test_dataset = Subset(dataset, test_indices)
   
     elif opt.dataset3d == 'custom3d':
-        test_dataset = NDataset(opt.test_dir,opt.nslc)
-        train_dataset = NDataset(opt.train_dir,opt.nslc)
-        valid_dataset = NDataset(opt.valid_dir,opt.nslc)
+        test_dataset = CustomDataset(opt.test_dir,opt.nslc)
+        train_dataset = CustomDataset(opt.train_dir,opt.nslc)
+        valid_dataset = CustomDataset(opt.valid_dir,opt.nslc)
 
 
     print()
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     t_model = learner.load(opt.checkpoint)
     valid_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of Test batches is {len(valid_loader)}')
-    res = t_model.get_preds(dl=valid_loader)
+    res = learner.get_preds(dl=valid_loader)
     act=nn.Sigmoid()
 
     if opt.metric =='roc-auc':
