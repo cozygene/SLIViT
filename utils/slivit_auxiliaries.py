@@ -4,12 +4,12 @@ import numpy as np
 from skimage import exposure
 from torchvision import transforms as tf
 import pydicom as dicom
+from PIL import Image
 
 gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
 totensor = tf.Compose([
     tf.ToTensor(),
 ])
-
 
 def get_labels(sample, labels, pathologies):
     label=labels[(labels.path==sample)][pathologies].values
@@ -32,23 +32,3 @@ class pil_contrast_strech(object):
         img = np.array(img)
         plow, phigh = np.percentile(img, (self.low, self.high))
         return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
-
-
-def load_dcm(path,nslc):
-    vol=[]
-    img_paths = os.listdir(path)
-    filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
-    img_paths = list(filtered)
-    if len(img_paths) == nslc:
-        for img_name in img_paths:
-            img=dicom.dcmread(f'{path}/{img_name}')
-            vol.append(totensor(img.pixel_array.astype(np.float64)))
-    else:
-        i=0
-        idx_smpl=np.linspace(0, len(img_paths)-1, nslc).astype(int)
-        for img_name in img_paths:
-            if i in idx_smpl:
-                img=dicom.dcmread(f'{path}/{img_name}')
-                vol.append(totensor(img.pixel_array.astype(np.float64)))
-            i+=1
-    return vol
