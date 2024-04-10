@@ -51,7 +51,7 @@ if __name__ == '__main__':
     elif opt.dataset3d == 'ultrasound':
         meta=pd.read_csv(opt.meta_csv)
         train_indices =np.argwhere(meta['Split'].values=='TRAIN')
-        test_indices = np.argwhere(meta['Split'].values=='TEST')[:-6]
+        test_indices = np.argwhere(meta['Split'].values=='TEST')
         valid_indices = np.argwhere(meta['Split'].values=='VAL')
         dataset = USDataset(opt.meta_csv,
                             opt.meta_csv,
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     learner = Learner(dls, model, model_dir=opt.out_dir ,
                 loss_func=loss_f )
-    fp16 = MixedPrecision()
+    #fp16 = MixedPrecision()
     
     if opt.metric =='roc-auc' or opt.metric =='pr-auc':
         learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
