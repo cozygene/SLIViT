@@ -37,7 +37,7 @@ class USDataset(Dataset):
         t_imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
         return t_imgs, labels
     
-    def load_tiff(path,nslc):
+    def load_tiff(self,path,nslc):
         vol=[]
         img_paths = os.listdir(path)
         filtered = filter(lambda img_path: img_path.split('.')[-1] == 'tiff', img_paths)
