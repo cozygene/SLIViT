@@ -105,6 +105,8 @@ if __name__ == '__main__':
     act=nn.Sigmoid()
 
     if opt.metric =='roc-auc':
+        print(res)
+        print(res[1])
         score = sklearn.metrics.roc_auc_score(res[1], act(res[0]))
     elif opt.metric =='pr-auc':
         score = sklearn.metrics.average_precision_score(res[1], act(res[0]))
