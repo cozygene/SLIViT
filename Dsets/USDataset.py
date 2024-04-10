@@ -42,7 +42,7 @@ class USDataset(Dataset):
         img_paths = os.listdir(path)
         filtered = filter(lambda img_path: img_path.split('.')[-1] == 'tiff', img_paths)
         img_paths = list(filtered)
-        slc_idxs=np.linspace(0, len(img_paths)-1, nslc).astype(int)
+        slc_idxs=np.linspace(0, len(img_paths), nslc+1).astype(int)
         for img_name in img_paths:
             try:
                 if int(img_name.split('.')[0]) in slc_idxs  :
@@ -52,4 +52,4 @@ class USDataset(Dataset):
                 print(f'Error reading {img_name}')
                 continue
         return vol
-
+    
