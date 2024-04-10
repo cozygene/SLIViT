@@ -56,7 +56,7 @@ if __name__ == '__main__':
         dataset = USDataset(opt.meta_csv,
                             opt.meta_csv,
                             nslc=opt.nslc,
-                            pathologies='EF_b')
+                            pathologies='EF')
         train_dataset = Subset(dataset, train_indices)
         valid_dataset = Subset(dataset, valid_indices)
         test_dataset = Subset(dataset, test_indices)   
@@ -101,11 +101,11 @@ if __name__ == '__main__':
     t_model = learner.load(opt.checkpoint)
     valid_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of Test batches is {len(valid_loader)}')
-    res = learner.get_preds(dl=valid_loader)
+    res = t_model.get_preds(dl=valid_loader)
     act=nn.Sigmoid()
 
     if opt.metric =='roc-auc':
-        score = sklearn.metrics.roc_auc_score(res[1], act(res[0]))
+        score = sklearn.metrics.roc_auc_score(res[1]<50, act(res[0]))
     elif opt.metric =='pr-auc':
         score = sklearn.metrics.average_precision_score(res[1], act(res[0]))
     elif opt.metric =='r2':
