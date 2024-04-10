@@ -179,6 +179,11 @@ python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_
 ```bash
 python slivit_test.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --checkpoint ./Checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
 ```
+### Ultrasound
+
+```bash
+python slivit_test.py --dataset3d ultrasound --meta_csv ./Dsets/ukbb_ultrasound.csv --checkpoint ./Checkpoints/slivit_ultrasound --metric roc-auc --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32
+```
 
 - ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom3d` ) 
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
