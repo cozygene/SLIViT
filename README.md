@@ -121,8 +121,14 @@ python slivit_train.py --dataset3d nodulemnist --task classification --bbpath /p
 UKBB MRI dataset available <a href="https://www.ukbiobank.ac.uk">here</a>. After downloading the data, replace the paths in  `./Dsets/ukbb_meta.csv` with corresponding paths to the downloaded scans.
 
 ```bash
-python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath /path/to/pretrained/convnext_bb_chestmnist.pth --nObb_feat 14 --depth 5 --dim 256 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
+python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --depth 5 --dim 256 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
 ```
+### Ultrasound Videos
+```bash
+python slivit_train.py --dataset3d ultrasound --task classification --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32
+```
+Ultrasound videos are available <a href="https://echonet.github.io/dynamic/index.html#dataset">here</a>. After downloading the data, replace the paths in  `./Dsets/ultrasound_meta.csv` with corresponding paths to the downloaded videos.
+
 ### 3D Custom Data
 
 Supported 3D volume formats : 2D slice files as `tiff` or  `dcm`
