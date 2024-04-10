@@ -21,7 +21,7 @@ class UKBBDataset(Dataset):
         self.pathologies = pathologies
         self.samples = get_samples(self.metadata, self.annotations, pathologies)
         self.t = transform
-        self.data_reader = load_dcm
+        self.data_reader = self.load_dcm
         self.label_reader = get_labels
         self.labels=[self.label_reader(self.samples[i], self.annotations, self.pathologies) for i in range(len(self.samples))]
         self.labels=torch.FloatTensor(self.labels)
@@ -37,6 +37,25 @@ class UKBBDataset(Dataset):
         labels = torch.FloatTensor(labels)
         t_imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
         return t_imgs, labels.squeeze()
+    
+    def load_dcm(path,nslc):
+        vol=[]
+        img_paths = os.listdir(path)
+        filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
+        img_paths = list(filtered)
+        if len(img_paths) == nslc:
+            for img_name in img_paths:
+                img=dicom.dcmread(f'{path}/{img_name}')
+                vol.append(totensor(img.pixel_array.astype(np.float64)))
+        else:
+            i=0
+            idx_smpl=np.linspace(0, len(img_paths)-1, nslc).astype(int)
+            for img_name in img_paths:
+                if i in idx_smpl:
+                    img=dicom.dcmread(f'{path}/{img_name}')
+                    vol.append(totensor(img.pixel_array.astype(np.float64)))
+                i+=1
+        return vol
 
 
 
