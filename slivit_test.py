@@ -56,7 +56,7 @@ if __name__ == '__main__':
         dataset = USDataset(opt.meta_csv,
                             opt.meta_csv,
                             nslc=opt.nslc,
-                            pathologies='EF')
+                            pathologies='EF_b')
         train_dataset = Subset(dataset, train_indices)
         valid_dataset = Subset(dataset, valid_indices)
         test_dataset = Subset(dataset, test_indices)   
