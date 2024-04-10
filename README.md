@@ -180,7 +180,7 @@ python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_
 python slivit_test.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --checkpoint ./Checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
 ```
 
-- ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `custom3d` ) 
+- ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom3d` ) 
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--nObb_feat``` is the number of features that Backbone Extracts ( Kermany: `4` , ChestMNIST: `14` )
