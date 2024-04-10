@@ -51,7 +51,7 @@ if __name__ == '__main__':
     elif opt.dataset3d == 'ultrasound':
         meta=pd.read_csv(opt.meta_csv)
         train_indices =np.argwhere(meta['Split'].values=='TRAIN')
-        test_indices = np.argwhere(meta['Split'].values=='TEST')
+        test_indices = np.argwhere(meta['Split'].values=='TEST')[:-6]
         valid_indices = np.argwhere(meta['Split'].values=='VAL')
         dataset = USDataset(opt.meta_csv,
                             opt.meta_csv,
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     act=nn.Sigmoid()
 
     if opt.metric =='roc-auc':
-        score = sklearn.metrics.roc_auc_score(res[1]<50, act(res[0]))
+        score = sklearn.metrics.roc_auc_score(res[1], act(res[0]))
     elif opt.metric =='pr-auc':
         score = sklearn.metrics.average_precision_score(res[1], act(res[0]))
     elif opt.metric =='r2':
