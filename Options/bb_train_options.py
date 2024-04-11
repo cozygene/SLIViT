@@ -7,6 +7,8 @@ class TrainOptions():
         parser = BaseOptions.initialize(self, parser) 
         parser.add_argument('--dataset', type=str, default='kermany', help='kermany,chestmnist,custom')
         parser.add_argument('--pathologies',type=str, default='CNV,Drusen,DME,Normal',  help='Comma Spreaded List of Labels to predict for Pre-training')
+        parser.add_argument('--min_delta', type=float, default=0.1, help='minimum delta between the last monitor value and the best monitor value for early stopping')
+        parser.add_argument('--patience', type=float, default=20,help='patience for early stopping')
         return self.parser
     
     def parse(self):
