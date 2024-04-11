@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     learner = Learner(dls, model, model_dir=opt.out_dir ,
                 loss_func=loss_f )
-    #fp16 = MixedPrecision()
+    fp16 = MixedPrecision()
     
     if opt.metric =='roc-auc' or opt.metric =='pr-auc':
         learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     t_model = learner.load(opt.checkpoint)
     valid_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of Test batches is {len(valid_loader)}')
-    res = t_model.get_preds(dl=valid_loader)
+    res = learner.get_preds(dl=valid_loader)
     act=nn.Sigmoid()
 
     if opt.metric =='roc-auc':

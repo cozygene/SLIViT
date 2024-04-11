@@ -1,3 +1,6 @@
+#Set seed for reproducibility
+import random
+random.seed(10)
 from Options.slivit_train_options import TrainOptions
 import os
 
