@@ -18,7 +18,7 @@ default_transform = Compose(
     ]
 )
 
-class KDataset(Dataset):
+class KermanyDataset(Dataset):
     def __init__(self, metafile_path, annotations_path, data_dir,pathologies, transform=default_transform):
         self.metadata = pd.read_csv(metafile_path)
         self.annotations = pd.read_csv(annotations_path)
