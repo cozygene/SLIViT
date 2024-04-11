@@ -98,5 +98,5 @@ if __name__ == '__main__':
     elif opt.task == 'regression':
         learner.metrics =  [R2Score(),ExplainedVariance(),PearsonCorrCoef()]
 
-    learner.fit(lr=1e-5,n_epoch=opt.n_epochs, cbs=SaveModelCallback(fname='slivit'))
+    learner.fit(lr=1e-4,n_epoch=opt.n_epochs, cbs=SaveModelCallback(fname='slivit'))
 
