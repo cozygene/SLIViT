@@ -57,14 +57,20 @@ pip install -r requirements.txt
 ## Backbone Pre-training
 
 ### 2D OCT Pre-training ( Kermany Dataset )
-<img src="Figs/Kermany_OCTs.png" width="600px"/><br>
+<img src="Figs/Kermany_OCTs.png" width="600px"/>
+<h6>(The figure was borrowed from Kermany, et al., 2018 [1])</h6>
+<br>
+
 Download the <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">Kermany dataset</a>
 ```bash
 python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv ./Dsets/kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
 ### 2D X-ray Pre-training ( ChestMNIST  Dataset )
-<img src="Figs/ChestMNIST_Xrays.png" width="450px"/><br>
+<img src="Figs/ChestMNIST_Xrays.png" width="450px"/>
+<h6>(The figure was borrowed from Wang, et al., 2017 [2])</h6>
+<br>
+
 ```bash
 python bb_train.py --dataset chestmnist --out_dir /output/dir/to/save_pretrained_model/ 
 ```
@@ -127,7 +133,7 @@ python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task 
 ```
 ### Ultrasound Videos
 <img src="Figs/ultrasound.gif" width="750px"/><br>
-Ultrasound videos are available <a href="https://echonet.github.io/dynamic/index.html#dataset">here</a>. After downloading the data, replace the paths in  `./Dsets/ultrasound_meta.csv` with corresponding paths to the downloaded videos.
+Ultrasound videos are available <a href="https://stanfordaimi.azurewebsites.net/datasets/834e1cd1-92f7-4268-9daa-d359198b310a">here</a>. After downloading the data, replace the paths in  `./Dsets/ultrasound_meta.csv` with corresponding paths to the downloaded videos.
 ```bash
 python slivit_train.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32
 ```
