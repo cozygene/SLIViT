@@ -102,5 +102,7 @@ if __name__ == '__main__':
     elif opt.task == 'regression':
         learner.metrics =  [R2Score(),ExplainedVariance(),PearsonCorrCoef()]
 
-    learner.fit(lr=1e-4,n_epoch=opt.n_epochs, cbs=SaveModelCallback(fname='slivit'))
+    learner.fit(lr=1e-4,n_epoch=opt.n_epochs, cbs=[SaveModelCallback(fname='slivit_'+opt.dataset3d),EarlyStoppingCallback(monitor='valid_loss', min_delta=opt.min_delta
+                        , patience=opt.patience)])
+    
 
