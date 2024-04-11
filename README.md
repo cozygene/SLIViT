@@ -168,6 +168,7 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 - ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
 - ```--dropout``` is the dropout rate
 - ```--emb_dropout``` is the embeding dropout rate
+- ```--patience``` is the number of epochs to await without improvement before initiating early stopping
 
 
 
