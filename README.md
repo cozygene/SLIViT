@@ -153,7 +153,7 @@ After creating ```meta.csv``` file, SLIViT can be fine tuned with following bash
 python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/pretrained/convnext_bb.pth --task regression --pathology Pathology --out_dir /output/dir/to/save_pretrained_model/ 
 ```
 
-- ```--dataset3d``` is the dataset for 3D fine-tuning (`nodulemnist`, `ukbb`, `custom3d` ) 
+- ```--dataset3d``` is the dataset for 3D fine-tuning (`nodulemnist`, `ukbb`, `ultrasound`,`custom3d` ) 
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--bbpath``` is the path to pre-rained Convnext Backbone
