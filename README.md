@@ -70,6 +70,7 @@ python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv ./Dsets
 <img src="Figs/ChestMNIST_Xrays.png" width="450px"/>
 <h6>(The figure was borrowed from Wang, et al., 2017 [2])</h6>
 <br>
+
 ```bash
 python bb_train.py --dataset chestmnist --out_dir /output/dir/to/save_pretrained_model/ 
 ```
