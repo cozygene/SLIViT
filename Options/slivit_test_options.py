@@ -16,7 +16,7 @@ class TestOptions():
         parser.add_argument('--dropout', type=float, default=0)
         parser.add_argument('--emb_dropout', type=float, default=0)
         parser.add_argument('--pathology',type=str,  help='Label to predict')
-        parser.add_argument('--metric',type=str,  help='ROC-AUC,PR-AUC,R2')
+        parser.add_argument('--metric',type=str, default='roc-auc', help='ROC-AUC,PR-AUC,R2')
         return self.parser
     
     def parse(self):
