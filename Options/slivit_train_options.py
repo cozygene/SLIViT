@@ -9,7 +9,7 @@ class TrainOptions():
         parser.add_argument('--bbpath',type=str, default='./Pre-trained_Backbones/backbone.pth',  help='Path to pre-rained Convnext Backbone')
         parser.add_argument('--nObb_feat',type=int, default=4,  help='# of features backbone extracts')
         parser.add_argument('--pathology',type=str,  help='Label to predict for 3D Fine-tuning')
-        parser.add_argument('--task',type=str, deafault='classification', help='3D Fine-tuning task (classification or regression)')
+        parser.add_argument('--task',type=str, default='classification', help='3D Fine-tuning task (classification or regression)')
         parser.add_argument('--depth', type=int, default=5, help='ViT depth')
         parser.add_argument('--dim', type=int, default=64, help='ViT depth')
         parser.add_argument('--nslc', type=int, default=28, help='# of slices to use for 3D Fine-tuning')
