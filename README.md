@@ -107,7 +107,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 - ```--gpu_id``` specifies the GPU ID for training.
 - ```--n_cpu``` indicates the number of CPUs for data loading.
 - ```--n_epochs``` indicates the number of epochs to train.
-- ```--patience``` Number of epochs without improvement to wait before executing Early Stopping
+- ```--patience``` is the number of epochs to await without improvement(best loss - current loss < min_delta ) before initiating early stopping
 
 
 ## Fine-tuning
