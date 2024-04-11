@@ -1,6 +1,6 @@
 #Set seed for reproducibility
-import random
-random.seed(10)
+#import torch
+#torch.manual_seed(0)
 
 from Options.slivit_test_options import TestOptions
 from utils.load_backbone import load_backbone
@@ -24,6 +24,7 @@ if __name__ == '__main__':
     from Dsets.CustomDataset import CustomDataset
     from Dsets.USDataset import USDataset
     import torch
+    torch.manual_seed(0)
     import sklearn
     
     batch_size = opt.b_size
