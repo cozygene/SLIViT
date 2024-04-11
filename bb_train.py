@@ -1,10 +1,10 @@
+#Set seed for reproducibility
+import random
+random.seed(10)
 from Options.bb_train_options import TrainOptions
 import numpy as np
 import pandas as pd
 import os
-
-
-
 
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
