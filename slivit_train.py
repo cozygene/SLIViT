@@ -1,6 +1,6 @@
 #Set seed for reproducibility
-import random
-random.seed(10)
+#import torch
+#torch.manual_seed(0)
 from Options.slivit_train_options import TrainOptions
 import os
 
@@ -23,6 +23,7 @@ if __name__ == '__main__':
     from Dsets.CustomDataset import CustomDataset
     from Dsets.USDataset import USDataset
     import torch
+    torch.manual_seed(0)
     
     batch_size = opt.b_size
     num_workers = opt.n_cpu
