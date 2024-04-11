@@ -1,3 +1,7 @@
+#Set seed for reproducibility
+import random
+random.seed(10)
+
 from Options.slivit_test_options import TestOptions
 from utils.load_backbone import load_backbone
 import os
