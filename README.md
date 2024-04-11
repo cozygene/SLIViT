@@ -118,7 +118,7 @@ python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies P
 ```bash
 python slivit_train.py --dataset3d nodulemnist --task classification --bbpath /path/to/pretrained/convnext_bb_kermany.pth --nObb_feat 4 --nslc 28 --depth 5 --dim 64 --heads 10 --out_dir /output/dir/to/save_finetuned_slivit/ 
 ```
-### 3D Liver MRI (UKBB)
+### 3D MRI (UKBB)
 <img src="Figs/ukbb.gif" width="750px"/><br>
 UKBB MRI dataset available <a href="https://www.ukbiobank.ac.uk">here</a>. After downloading the data, replace the paths in  `./Dsets/ukbb_meta.csv` with corresponding paths to the downloaded scans.
 
