@@ -175,7 +175,7 @@ python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv
 ## Evaluating
 ### Nodule MNIST
 ```bash
-python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_noduleMNIST --metric roc-auc --depth 5 --dim 64 --nslc 28 --mlp_dim 64 --heads 10
+python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_noduleMNIST --depth 5 --dim 64 --nslc 28 --mlp_dim 64 --heads 10
 ```
 ### UKBB
 
@@ -185,7 +185,7 @@ python slivit_test.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --checkp
 ### Ultrasound
 
 ```bash
-python slivit_test.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --checkpoint ./Checkpoints/slivit_ultrasound --metric roc-auc --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
+python slivit_test.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --checkpoint ./Checkpoints/slivit_ultrasound --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
 ```
 
 - ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom3d` ) 
