@@ -24,7 +24,7 @@ if __name__ == '__main__':
     from Dsets.CustomDataset import CustomDataset
     from Dsets.USDataset import USDataset
     import torch
-    torch.manual_seed(0)
+    #torch.manual_seed(0)
     import sklearn
     
     batch_size = opt.b_size
