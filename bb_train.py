@@ -1,6 +1,6 @@
 #Set seed for reproducibility
-import random
-random.seed(10)
+#import torch
+#torch.manual_seed(0)
 from Options.bb_train_options import TrainOptions
 import numpy as np
 import pandas as pd
