@@ -38,7 +38,7 @@ class UKBBDataset(Dataset):
         t_imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
         return t_imgs, labels.squeeze()
     
-    def load_dcm(path,nslc):
+    def load_dcm(self,path,nslc):
         vol=[]
         img_paths = os.listdir(path)
         filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
