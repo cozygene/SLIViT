@@ -127,7 +127,7 @@ python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task 
 ```
 ### Ultrasound Videos
 ```bash
-python slivit_train.py --dataset3d ultrasound --task classification --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32
+python slivit_train.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32
 ```
 Ultrasound videos are available <a href="https://echonet.github.io/dynamic/index.html#dataset">here</a>. After downloading the data, replace the paths in  `./Dsets/ultrasound_meta.csv` with corresponding paths to the downloaded videos.
 
