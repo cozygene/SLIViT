@@ -8,7 +8,6 @@ import os
 
 if __name__ == '__main__':
     opt =  TrainOptions().parse()  
-
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id) 
     from medmnist import ChestMNIST
@@ -20,7 +19,6 @@ if __name__ == '__main__':
     from Dsets.CustomDataset import CustomDataset
     from fastai.callback.wandb import *
     from transformers import AutoModelForImageClassification
-    
     batch_size = opt.b_size
     num_workers = opt.n_cpu
     print(f'Num of cpus is {opt.n_cpu}')
@@ -36,14 +34,11 @@ if __name__ == '__main__':
         splts=[p.split('/')[1] for p in df['Path'].values]
         splitter = TrainTestSplitter(test_size=0.1, random_state=42)
 
-        train_indices, valid_indices2 = splitter(dataset)  # , stratify=True)
+        train_indices, valid_indices2 = splitter(dataset)
         valid_dataset = Subset(dataset, valid_indices2)
 
 
         train_dataset = Subset(dataset, train_indices)
-        
-        #valid_dataset = Subset(dataset,np.argwhere(np.array(splts)=='test') )
-        #train_dataset = Subset(dataset, np.argwhere(np.array(splts)!='test'))
         model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224",return_dict=False,num_labels=4,
                                                             ignore_mismatched_sizes=True)
     elif opt.dataset == 'chestmnist':
@@ -73,8 +68,6 @@ if __name__ == '__main__':
         model2 = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224",return_dict=False,num_labels=len(opt.pathologies.split(',')),
                                                             ignore_mismatched_sizes=True)
 
-
-
     train_loader = DataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True)
     print(f'# of train batches is {len(train_loader)}')
     valid_loader = DataLoader(valid_dataset, batch_size=batch_size, num_workers=num_workers, drop_last=True) 
@@ -100,7 +93,6 @@ if __name__ == '__main__':
     learner = learner.to_fp16()
     
     learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
-    
 
     learner.fit(lr=1e-5,n_epoch=opt.n_epochs, cbs=[SaveModelCallback(fname='convnext_bb_'+opt.dataset),EarlyStoppingCallback(monitor=torch.nn.BCEWithLogitsLoss(), min_delta=opt.min_delta
                         , patience=opt.patience)])
