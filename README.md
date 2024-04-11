@@ -126,7 +126,7 @@ UKBB MRI dataset available <a href="https://www.ukbiobank.ac.uk">here</a>. After
 python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --depth 5 --dim 256 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
 ```
 ### Ultrasound Videos
-<img src="Figs/ultrasound.gif" width="720px"/><br>
+<img src="Figs/ultrasound.gif" width="730px"/><br>
 Ultrasound videos are available <a href="https://echonet.github.io/dynamic/index.html#dataset">here</a>. After downloading the data, replace the paths in  `./Dsets/ultrasound_meta.csv` with corresponding paths to the downloaded videos.
 ```bash
 python slivit_train.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32
