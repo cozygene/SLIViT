@@ -102,6 +102,7 @@ if __name__ == '__main__':
     learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
     
 
-    learner.fit(lr=1e-5,n_epoch=opt.n_epochs, cbs=SaveModelCallback(fname='convnext_bb_'+opt.dataset))
+    learner.fit(lr=1e-5,n_epoch=opt.n_epochs, cbs=[SaveModelCallback(fname='convnext_bb_'+opt.dataset),EarlyStoppingCallback(monitor=torch.nn.BCEWithLogitsLoss(), min_delta=opt.min_delta
+                        , patience=opt.patience)])
 
 
