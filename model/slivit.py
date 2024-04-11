@@ -1,4 +1,3 @@
-# helpers
 from vit_pytorch import ViT
 from torch import nn
 from einops import rearrange, repeat
