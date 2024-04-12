@@ -8,15 +8,9 @@ SLIViT is a data-efficient deep-learning framework that accurately measures dise
 biomedical imaging, such as magnetic resonance imaging (MRI) scans, optical coherence tomography (OCT) scans, ultrasound
 videos, and Computed Tomography (CT) scans.
 
-SLIViT preprocesses volumes into 2D images and then combines two 2D-based deep-vision architectures: (1) a ConvNeXt
-backbone module that extracts a feature map for the slices (i.e., 2D frames of a volume), and (2) a ViT module that
-integrates this feature map into a single diagnosis prediction. SLIViT's feature-map extractor is initialized by
-pre-trained weights. These weights are obtained by pre-training a ConvNeXt first on ImageNet and then on a 2D
-biomedical-imaging dataset. The pre-trained network can be fine-tuned for different diagnostic tasks in
-volumetric-biomedical-imaging-data using a relatively small training set (few hundreds of samples).
-
-A step-by-step procedure that includes pre-training, fine-tuning, and evaluating SLIViT is provided, along
-with a specific case study using 3D CT volumes (classifying nodule malignancy in the NoduleMNIST dataset).
+Below you may find step-by-step instructions on how to pre-train, fine-tune, and evaluate SLIViT. Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further
+details and feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
+out</a> regarding any concerns/issues you are experiencing with SLIViT.
 
 # Usage instructions
 
@@ -207,11 +201,6 @@ python slivit_test.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.
 - ```--dim``` specifies the dimension for encoding transformer input
 - ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
 
-
-Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further
-details and feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
-out</a> regarding any concerns/issues you are experiencing with SLIViT.
-
 ## Data Availability
 
 The 2D OCT dataset was downloaded from https://www.kaggle.com/datasets/paultimothymooney/kermany2018. The 3D OCT B-scan
@@ -239,6 +228,7 @@ capacity. Proper credit supports and recognizes the original creators' efforts.
 
 Parts of the code are taken from the <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>
 repository. The figures depicting Kermany and the X-ray dataset are sourced from [1] and [2] respectively.
+
 ## References
 
 [1] Kermany DS, Goldbaum M, Cai W, Valentim CCS, Liang H, Baxter SL, McKeown A, Yang G, Wu X, Yan F, Dong J, Prasadha MK, Pei J, Ting MYL, Zhu J, Li C, Hewett S, Dong J, Ziyar I, Shi A, Zhang R, Zheng L, Hou R, Shi W, Fu X, Duan Y, Huu VAN, Wen C, Zhang ED, Zhang CL, Li O, Wang X, Singer MA, Sun X, Xu J, Tafreshi A, Lewis MA, Xia H, Zhang K. Identifying Medical Diagnoses and Treatable Diseases by Image-Based Deep Learning. Cell. 2018 Feb 22;172(5):1122-1131.e9. doi: 10.1016/j.cell.2018.02.010. PMID: 29474911.
