@@ -64,7 +64,7 @@ if __name__ == '__main__':
         valid_dataset = Subset(dataset, valid_indices)
         test_dataset = Subset(dataset, test_indices)   
   
-    elif opt.dataset3d == 'custom3d':
+    elif opt.dataset3d == 'custom':
         test_dataset = CustomDataset(opt.test_dir,opt.nslc)
         train_dataset = CustomDataset(opt.train_dir,opt.nslc)
         valid_dataset = CustomDataset(opt.valid_dir,opt.nslc)
