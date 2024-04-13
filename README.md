@@ -192,7 +192,7 @@ python slivit_test.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.
 ```bash
 python slivit_test.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/finetuned/convnext_bb.pth --task TaskType --pathology Pathology
 ```
-- ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom3d` ) 
+- ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom` ) 
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--nObb_feat``` is the number of classes the backbone was pre-trained on ( Kermany: `4` , ChestMNIST: `14` )
