@@ -5,7 +5,7 @@ class TrainOptions():
     def initialize(self, parser):
         self.parser = parser
         parser = BaseOptions.initialize(self, parser) 
-        parser.add_argument('--dataset3d',type=str, help='nodulemnist, ultrasound, ukbb, or custom3d')
+        parser.add_argument('--dataset3d',type=str, help='nodulemnist, ultrasound, ukbb, or custom')
         parser.add_argument('--bbpath',type=str, default='./Checkpoints/slivit_nodulemnist.pth',  help='Path to pre-rained Convnext Backbone')
         parser.add_argument('--nObb_feat',type=int, default=4,  help='# of features backbone extracts')
         parser.add_argument('--pathology',type=str,  help='Label to predict for 3D Fine-tuning')
