@@ -1,10 +1,8 @@
-import os
 import PIL
 import numpy as np
 from skimage import exposure
 from torchvision import transforms as tf
-import pydicom as dicom
-from PIL import Image
+
 
 gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
 totensor = tf.Compose([
@@ -17,10 +15,8 @@ def get_labels(sample, labels, pathologies):
 
 def get_samples(metadata, labels, pathologies):
     samples = []
-    #label_to_count = {p: {} for p in pathologies}
     for sample in metadata.path.values: #-2
         samples.append(sample)
-    #print(f'Label counts is: {}')
     return samples
 class pil_contrast_strech(object):
 

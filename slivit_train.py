@@ -9,15 +9,10 @@ if __name__ == '__main__':
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id) 
     from fastai.vision.all import *
-    from fastai.callback.wandb import *
     from Dsets.NoduleMNISTDataset import NoduleMNISTDataset
-    from fastai.callback.wandb import *
     from torch.utils.data import Subset
-    from fastai.vision.all import *
-    from fastai.callback.wandb import *
     from model.slivit import SLIViT
     from utils.load_backbone import load_backbone
-    from fastai.callback.wandb import *
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
     from Dsets.CustomDataset import CustomDataset
@@ -53,9 +48,9 @@ if __name__ == '__main__':
 
     elif opt.dataset3d == 'ultrasound':
         meta=pd.read_csv(opt.meta_csv)
-        train_indices =np.argwhere(meta['Split'].values=='TRAIN')
-        test_indices = np.argwhere(meta['Split'].values=='TEST')
-        valid_indices = np.argwhere(meta['Split'].values=='VAL')
+        train_indices =np.argwhere(meta['Split'].values=='train')
+        test_indices = np.argwhere(meta['Split'].values=='test')
+        valid_indices = np.argwhere(meta['Split'].values=='valid')
         dataset = USDataset(opt.meta_csv,
                             opt.meta_csv,
                             nslc=opt.nslc,
@@ -80,9 +75,12 @@ if __name__ == '__main__':
 
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
+
     backbone=load_backbone(opt.gpu_id,opt.bbpath,opt.nObb_feat)
+
     model = SLIViT(backbone=backbone, image_size=(768, 64), patch_size=64, num_classes=1, dim=opt.dim, depth=opt.depth, heads=opt.heads,
                     mlp_dim=opt.dim, channels=opt.nslc, dropout=opt.dropout, emb_dropout=opt.emb_dropout)
+    
     model.to(device='cuda')
 
     if opt.task == 'classification':
@@ -93,8 +91,6 @@ if __name__ == '__main__':
 
     learner = Learner(dls, model, model_dir=opt.out_dir ,
                 loss_func=loss_f )
-    
-    fp16 = MixedPrecision()
     
     if opt.task == 'classification':
         learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
