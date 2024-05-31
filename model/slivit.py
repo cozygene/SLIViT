@@ -1,9 +1,12 @@
+from vit_pytorch import ViT
 from torch import nn
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from sklearn.metrics import precision_recall_curve
 from utils.slivit_auxiliaries import *
+import cv2
 from tqdm import tqdm
+import os
 from torch import nn
 from torchvision.transforms import (
     Compose,
@@ -14,6 +17,7 @@ from torchvision.transforms import (
 )
 from torchvision import transforms as tf
 import torch
+from transformers import AutoModelForImageClassification
 from torch import nn
 
 
@@ -122,18 +126,15 @@ class SLIViT(nn.Module):
         patch_height = 12 * patch_width
         num_patches = (image_height // patch_height) * (image_width // patch_width) * channels
         patch_dim = patch_height * patch_width
-
         assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b c (h p1) (w p2) -> b (c h w) (p1 p2)', p1=patch_height, p2=patch_width),
             nn.Linear(patch_dim, dim),
         )
-
-        pos_tmp = torch.zeros((1, dim))
+        tmpp = torch.zeros((1, dim))
         tmp = torch.arange(num_patches) + 1
-        for i in range(num_patches): pos_tmp = torch.concat([pos_tmp, torch.ones((1, dim)) * tmp[i]], axis=0)
-
-        self.pos_embedding = nn.Parameter(pos_tmp.reshape((1, pos_tmp.shape[0], pos_tmp.shape[1]))) 
+        for i in range(num_patches): tmpp = torch.concat([tmpp, torch.ones((1, dim)) * tmp[i]], axis=0)
+        self.pos_embedding = nn.Parameter(tmpp.reshape((1, tmpp.shape[0], tmpp.shape[1])))  # .cuda()
         self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
         self.dropout = nn.Dropout(emb_dropout)
         self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim, dropout)
@@ -146,20 +147,16 @@ class SLIViT(nn.Module):
         self.act = nn.Sigmoid()
 
     def forward(self, x):
-        #Feature extraction (ConvNext)
         x = self.backbone(x)
         x = x.last_hidden_state
-        #To patch embedding
         x = x.reshape((x.shape[0], self.channels, 768, 64))
         x = self.to_patch_embedding(x)
         b, n, _ = x.shape
         cls_tokens = repeat(self.cls_token, '() n d -> b n d', b=b)
         x = torch.cat((cls_tokens, x), dim=1)
         x += self.pos_embedding[:, :(n + 1)]
-        #Transformer (ViT)
         x = self.dropout(x)
         x = self.transformer(x)
-        #Mlp Head Output
         x = x.mean(dim=1) if self.pool == 'mean' else x[:, 0]
         x = self.to_latent(x)
         x = self.mlp_head(x)
