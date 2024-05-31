@@ -7,6 +7,8 @@ from torchvision import transforms as tf
 import torch
 import PIL 
 from skimage import exposure
+from batchgenerators.transforms.noise_transforms import GaussianNoiseTransform, GaussianBlurTransform
+from batchgenerators.transforms.resample_transforms import SimulateLowResolutionTransform
 from torchvision.transforms import (
     RandomResizedCrop,
     ToTensor,

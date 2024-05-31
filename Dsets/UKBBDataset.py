@@ -5,8 +5,6 @@ import torch
 from fastai.vision.augment import aug_transforms
 from torch.utils.data import Dataset
 from fastai.vision import *
-from pydicom import dicom
-import os
 
 
 default_transform_gray = tf.Compose([
@@ -16,9 +14,7 @@ default_transform_gray = tf.Compose([
     tf.ToTensor(),
     gray2rgb
 ])
-
 class UKBBDataset(Dataset):
-
     def __init__(self, metafile_path, annotations_path, pathologies, nslc,transform=default_transform_gray):
         self.metadata = pd.read_csv(metafile_path)
         self.annotations = pd.read_csv(annotations_path)

@@ -2,17 +2,16 @@ import os
 from torch import nn
 
 class ConvNext(nn.Module):
-    def __init__(self, model):
-        super(ConvNext, self).__init__()
-        self.model=model
+        def __init__(self, model):
+            super(ConvNext, self).__init__()
+            self.model=model
 
-    def forward(self, x):
-        x = self.model(x)[0]
+        def forward(self, x):
+            x = self.model(x)[0]
 
-        return x
+            return x
 
 def load_backbone(gpu_id,bb_path='./Checkpoints/convnext_bb_kermany.pth',nOfeat=4):
-    
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id) 
     import torch

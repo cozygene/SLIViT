@@ -11,9 +11,14 @@ if __name__ == '__main__':
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id) 
     from fastai.vision.all import *
+    from fastai.callback.wandb import *
     from Dsets.NoduleMNISTDataset import NoduleMNISTDataset
+    from fastai.callback.wandb import *
     from torch.utils.data import Subset
+    from fastai.vision.all import *
+    from fastai.callback.wandb import *
     from model.slivit import SLIViT
+    from fastai.callback.wandb import *
     from medmnist import NoduleMNIST3D
     from Dsets.UKBBDataset import UKBBDataset
     from Dsets.CustomDataset import CustomDataset
@@ -50,9 +55,9 @@ if __name__ == '__main__':
 
     elif opt.dataset3d == 'ultrasound':
         meta=pd.read_csv(opt.meta_csv)
-        train_indices =np.argwhere(meta['Split'].values=='train')
-        test_indices = np.argwhere(meta['Split'].values=='test')
-        valid_indices = np.argwhere(meta['Split'].values=='valid')
+        train_indices =np.argwhere(meta['Split'].values=='TRAIN')
+        test_indices = np.argwhere(meta['Split'].values=='TEST')
+        valid_indices = np.argwhere(meta['Split'].values=='VAL')
         dataset = USDataset(opt.meta_csv,
                             opt.meta_csv,
                             nslc=opt.nslc,
@@ -86,17 +91,15 @@ if __name__ == '__main__':
 
     if opt.metric =='roc-auc' or opt.metric =='pr-auc':
         loss_f=torch.nn.BCEWithLogitsLoss()
-
     elif opt.metric =='r2':
         loss_f=torch.nn.L1Loss()
 
     learner = Learner(dls, model, model_dir=opt.out_dir ,
                 loss_func=loss_f )
-   
+    fp16 = MixedPrecision()
     
     if opt.metric =='roc-auc' or opt.metric =='pr-auc':
         learner.metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
-
     elif opt.metric =='r2':
         learner.metrics =  [R2Score(),ExplainedVariance(),PearsonCorrCoef()]
 
