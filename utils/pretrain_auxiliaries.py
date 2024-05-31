@@ -1,5 +1,4 @@
 
-import logging
 import PIL
 import numpy as np
 from PIL import Image
@@ -20,14 +19,18 @@ def get_labels(sample, labels, pathologies):
 def get_samples(metadata, labels, pathologies):
     samples = []
     label_to_count = {p: str((labels[p]==1).sum())+' Positive Scans, ' +str((labels[p]==0).sum())+ ' Negative Scans'  for p in pathologies}
+
     for sample in metadata.Path.values:
         samples.append(sample)
     print(f'Label counts is: {label_to_count}')
+
     return samples
 
 class pil_contrast_strech(object):
+
     def __init__(self, low=2, high=98):
         self.low, self.high = low, high
+
     def __call__(self, img):
         # Contrast stretching
         img = np.array(img)
@@ -39,6 +42,7 @@ transform_t = transforms.Compose([
     ])
 
 def load_2dim(vol_name,data_dir):
+
     img=Image.open(data_dir+vol_name)
     img_tensor=transform_t(img)
     return img_tensor
