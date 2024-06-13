@@ -36,7 +36,7 @@ conda install pytorch torchvision cpuonly -c pytorch
 
 Clone the repository and create conda enviroment: 
 ```bash
-git clone https://github.com/berkindurmus/SLIViT
+git clone https://github.com/cozygene/SLIViT
 conda create --name slivit python=3.8
 ```
 Activate conda enviroment and install required packages:
