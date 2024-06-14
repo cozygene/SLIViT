@@ -1,26 +1,14 @@
+import os
+from Options.slivit_train_options import TrainOptions
+opt = TrainOptions().parse()
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id)
 # Set seed for reproducibility
 from utils.slivit_auxiliaries import set_seed
-
 set_seed(42)
-from Options.slivit_train_options import TrainOptions
-import os
 
-'''
-Some weights of ConvNextForImageClassification were not initialized from the model checkpoint at facebook/convnext-tiny-224 and are newly initialized because the shapes did not match:
-- classifier.weight: found shape torch.Size([1000, 768]) in the checkpoint and torch.Size([4, 768]) in the model instantiated
-- classifier.bias: found shape torch.Size([1000]) in the checkpoint and torch.Size([4]) in the model instantiated
-You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
-epoch     train_loss  valid_loss  roc_auc_score  average_precision_score  time    
-0         0.571278    1.090870    0.156250       0.255556                 00:23     
-Better model found at epoch 0 with valid_loss value: 1.0908700227737427.
-1         0.377181    1.590721    0.406250       0.488095                 00:22     
-2         0.322664    2.200471    0.468750       0.391667                 00:22     
 
-'''
 if __name__ == '__main__':
-    opt = TrainOptions().parse()
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"] = str(opt.gpu_id)
     from fastai.vision.all import *
     from fastai.callback.wandb import *
     from torch.utils.data import Subset
@@ -42,6 +30,10 @@ if __name__ == '__main__':
         valid_dataset = NoduleMNISTDataset(NoduleMNIST3D(split="val", download=True), opt.nslc)
         test_dataset = NoduleMNISTDataset(NoduleMNIST3D(split="test", download=True), opt.nslc)
 
+        print('Running a mock version of the dataset with 20 samples only!!')
+        train_dataset = Subset(train_dataset, np.arange(0, 20))
+        valid_dataset = Subset(valid_dataset, np.arange(0, 20))
+        test_dataset = Subset(test_dataset, np.arange(0, 20))
     else:
         if opt.dataset3d == 'ukbb':
             pathology = 'PDFF'
