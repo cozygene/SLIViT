@@ -1,5 +1,5 @@
 <div align="justify">
-
+ 
 # SLIViT: a general AI framework for clinical-feature diagnosis from limited 3D biomedical-imaging data
 
 <br><br><img src="Figs/SLIViT.png" width="900px"/><br><br>
