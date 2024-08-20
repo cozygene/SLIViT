@@ -9,10 +9,12 @@ from utils.slivit_auxiliaries import save_options, logger, get_script_name, wrap
 
 out_dir = args.out_dir.rstrip('/')
 if not args.drop_default_suffix:
+    # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
     if args.meta_csv is not None:
         # example args.meta_csv:
-        # /scratch/avram/projects/hadassah/CRORA_imputation/meta/crora_70_manual_labels.csv
-        out_dir = f'{out_dir}/{os.path.splitext(args.meta_csv.split("/")[-1])[0]}'
+        # /meta_file_folder_path/ultrasound.csv
+        csv_file_name = os.path.splitext(args.meta_csv.split("/")[-1])[0]  # remove extension
+        out_dir = f'{out_dir}/{csv_file_name}'
     else:
         out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
 
