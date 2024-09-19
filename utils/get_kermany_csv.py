@@ -1,32 +1,29 @@
-# import subprocess
-#
-# ps = subprocess.Popen(['unzip', '-l', '/scratch/avram/Kermany/kermany2018.zip'], stdout=subprocess.PIPE)
-# ps = subprocess.Popen(['grep', 'oct2017/OCT2017 '], stdout=subprocess.PIPE)
-# output = subprocess.check_output(['grep', '-v', 'DS_Store'], stdin=ps.stdout).decode()
-# lines = output.split('\n')
-# x = subprocess.check_output(['unzip', '-l', '/scratch/avram/Kermany/kermany2018.zip']).decode()
-# x.split('\n')[:10]
-
-def get_meta(split, mock,
-             diseases={'CNV': '1,0,0,0',
-                       'DME': '0,1,0,0',
-                       'DRUSEN': '0,0,1,0',
-                       'NORMAL': '0,0,0,1'},
-             data_dir='/data1/Ophthalmology/OCT/Kermany'):
-    res = ''
-    with open(f'{data_dir}/{split}.txt') as f:
-        lines = [line.rstrip() for line in f.readlines() if 'jpeg' in line]
-    for i, line in enumerate(lines):
-        disease = line.split('-')[0]
-        res += f'{line},/{split}/{disease}/{line},{diseases[disease]}\n'
-        if mock and i ==1000:
-            break
-    return res
+import pandas as pd
+import argparse
 
 
-mock = ''
-mock = 'mock_'  # uncomment to create a mock dataset
-with open(f'/data1/Ophthalmology/OCT/Kermany/{mock}kermany.csv', 'w') as f:
-    f.write('F_name,path,Normal,DME,CNV,Drusen\n')  # TODO: remove F_name
-    f.write(get_meta('train', mock))
-    f.write(get_meta('test', mock))
+def process_csv(input_csv, data_path, output_csv):
+    df = pd.read_csv(input_csv)
+
+    # Generate the 'pid' column by removing the '.jpeg' suffix from 'F_name'
+    df['pid'] = df['F_name'].str.replace('.jpeg', '', regex=False)
+
+    # Generate the 'path' column by prefixing the data path to the 'Path' column
+    df['path'] = df['Path'].apply(lambda x: f'{data_path}{x}')
+
+    output_df = df[['pid', 'path', 'Normal', 'DME', 'CNV', 'Drusen']]
+
+    output_df.to_csv(output_csv, index=False)
+    print(f"Processed CSV has been saved to {output_csv}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Process the Kermany CSV file.')
+    parser.add_argument('--input_csv', type=str, required=True,
+                        help='Path to the original CSV file comes with the Kermany dataset.')
+    parser.add_argument('--data_path', type=str, required=True,
+                        help='Path to the data directory (where the train and test folders reside).')
+    parser.add_argument('--output_csv', type=str, required=True, help='Path to save the processed CSV file.')
+
+    args = parser.parse_args()
+
+    process_csv(args.input_csv, args.data_path, args.output_csv)
