@@ -7,9 +7,9 @@ from utils.slivit_auxiliaries import default_transform_gray, totensor
 
 class MRIDataset3D(SLIViTDataset3D):
 
-    def __init__(self, meta_data, label_name, num_slices_to_use,
-                 sparsing_method, path_col_name, transform=default_transform_gray):
-        super().__init__(meta_data, label_name, num_slices_to_use, sparsing_method, path_col_name, transform)
+    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use,
+                 sparsing_method, transform=default_transform_gray):
+        super().__init__(meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, transform)
 
         # example image name: '1.3.12.2.1107.5.2.18.41754.2017082116102653036617510.dcm'
         self.filter = lambda x: x.endswith('dcm')

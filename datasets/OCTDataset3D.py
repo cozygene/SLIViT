@@ -6,9 +6,9 @@ from utils.slivit_auxiliaries import default_transform_gray, totensor
 
 class OCTDataset3D(SLIViTDataset3D):
 
-    def __init__(self, meta_data, label_name, num_slices_to_use,
-                 sparsing_method, path_col_name, transform=default_transform_gray):
-        super().__init__(meta_data, label_name, num_slices_to_use, sparsing_method, path_col_name, transform)
+    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use,
+                 sparsing_method, transform=default_transform_gray):
+        super().__init__(meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, transform)
 
         #  example image name of Hadassah: bscan_12.tiff  ->  012
         #  example image name of Houston: 12.tiff  ->  012
