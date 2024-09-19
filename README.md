@@ -1,196 +1,138 @@
-<div align="justify">
+<div style="text-align: justify">
+ 
+# SLIViT: a unified AI framework for analysing 3D biomedical imaging data
 
-# SLIViT: a general AI framework for clinical-feature diagnosis from limited 3D biomedical-imaging data
-
-<br><br><img src="Figs/SLIViT.png" width="900px"/><br><br>
+<br><br><img src="visuals/SLIViT.png" width="900px"/><br><br>
 
 SLIViT is a data-efficient deep-learning framework that accurately measures disease-related risk factors in volumetric
-biomedical imaging, such as magnetic resonance imaging (MRI) scans, optical coherence tomography (OCT) scans, ultrasound
-videos, and Computed Tomography (CT) scans.
+biomedical imaging scans, such as magnetic resonance imaging (MRI), optical coherence tomography (OCT), ultrasound, and Computed Tomography (CT).
 
-Below you may find step-by-step instructions on how to pre-train, fine-tune, and evaluate SLIViT. Please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a> for further
-details and feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
+Below you may find step-by-step instructions on how to pre-train, fine-tune, and evaluate SLIViT. Please refer to 
+<a href="https://www.researchsquare.com/article/rs-3044914/latest"><!--<a href="https://doi.org/10.1038/s41551-024-01257-9">-->our manuscript</a> 
+for further details and feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
 out</a> regarding any concerns/issues you are experiencing with SLIViT.
 
-# Usage instructions
+#TL;DR 
+TODO
 
-Before using SLIViT, please make sure to have an appropriate conda environment with the relevant packages properly
-installed. Pre-trained and fine-tuned models can be downloaded from <a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">here.</a> Our model is implemented using PyTorch, and this repository supports PyTorch GPU implementation. 
+# Usage instructions
+Running SLIViT is straightforward, as detailed below. But first, please ensure you have a cozy conda environment set up with all the necessary packages installed.
 
 ## Setting up the environment
-
-<!--
-### CPU Enviroment
-
-Following instructions will set up a conda enviroment for pre-training using CPUs :
-
-
-```bash
-conda create --name slivit_cpu python=3.8.5
-conda activate slivit_cpu
-conda install pytorch torchvision cpuonly -c pytorch
-```
-
-### GPU Enviroment
--->
-
-Clone the repository and create conda enviroment: 
+First, go ahead and clone the repository. Once that's done, let’s set up your conda environment:
 ```bash
 git clone https://github.com/cozygene/SLIViT
 conda create --name slivit python=3.8
 ```
-Activate conda enviroment and install required packages:
+Next up, activate your conda environment and install the necessary packages:
 ```bash
 conda activate slivit
 conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 cd SLIViT
 pip install -r requirements.txt
 ```
-<a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">Download</a> the pre-trained backbone, fine-tuned SLIViT and move the files to the `Checkpoints` folder.
 
-## Backbone Pre-training
+[//]: # (Now, <a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">download</a> the pre-trained backbone and the fine-tuned SLIViT models. Once downloaded, please move the files into the checkpoints folder.)
 
-### 2D OCT (Kermany)
-<img src="Figs/Kermany_OCTs.png" width="600px"/>
-<h6>(The figure was borrowed from Kermany, et al., 2018 [1])</h6>
-<br>
+Is your environment all ready to go? Awesome! You can either take SLIViT for a spin by training it yourself, or just grab our trained checkpoints right <a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">here</a>. Heads up—our model runs smoothly on PyTorch, and this repository is fully equipped to harness PyTorch’s GPU powers (no TensorFlow here 😉).
 
-Download the <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">Kermany dataset</a>
+Curious about more advanced features? Just run the help command:
 ```bash
-python bb_train.py --dataset kermany --data_dir /path/to/data --meta_csv ./Dsets/kermany_meta.csv --pathologies Drusen,CNV,DME,Normal --out_dir /output/dir/to/save_pretrained_model/ 
+python pretrain.py -h
 ```
 
-### 2D X-ray (ChestMNIST)
-<img src="Figs/ChestMNIST_Xrays.png" width="450px"/>
-<h6>(The figure was borrowed from Wang, et al., 2017 [2])</h6>
-<br>
-
+Happy computing! 🚀
+## Pre-training SLIViT's backbone 
 ```bash
-python bb_train.py --dataset chestmnist --out_dir /output/dir/to/save_pretrained_model/ 
+python pretrain.py --dataset <dataset type {kermany,chestmnist,custom}> --out_dir <out path> --meta_csv <path to a meta file csv> --label2d <(comma separated )label column name(s)>
 ```
 
-### Custom 2D
+### The 2D OCT (Kermany) dataset
+<img src="visuals/OCT2D.png" width="600px"/><br>
+<small>(Figure sourced from Kermany, et al., 2018 [1])</small>
 
-Supported 2D image formats : `tiff`, `jpeg`, `png`, `bmp`
+Download the dataset <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">here</a>. After downloading the data, please update the paths in meta/kermany.csv to reflect the locations of your downloaded videos (you can use utils/get_kermany_csv.py for this purpose). To pre-train SLIViT on the Kermany dataset set --dataset to kermany and `label2d` to `Drusen,CNV,DME,Normal`.
 
-To commence pre-training with 2D Medical Scans, split the data into `train`, `validation`, `test` sets. Create three
-folders named `train`, `val`, `test`, and move the scans accordingly.
 
-Generate the  ```meta.csv``` file for 2D pre-training data as illustrated below:
+### The 2D X-ray (ChestMNIST) dataset
+<img src="visuals/Xray2D.png" width="450px"/><br>
+<small>(Figure borrowed from Wang, et al., 2017 [2])</small>
 
-|F_Name | Path | Pathology-1  |  Pathology-2   |  Pathology-3  | Pathology-4  | 
-|--- | --- | --- | --- |--- |--- |
-| CNV-6116901-21.jpeg  | /train/CNV/CNV-6116901-21.jpeg| 1.0 | 0.0   |  0.0  |   0.0| 
-| DME-4616882-33.jpeg  |   /test/DME/DME-4616882-33.jpeg| 0.0 | 1.0  |   0.0   |  0.0| 
-| CNV-7907754-23.jpeg  |  /test/CNV/CNV-7907754-23.jpeg | 1.0 | 0.0   |  0.0    | 0.0| 
-| NORMAL-3757443-31.jpeg | /val/NORMAL/NORMAL-3757443-31.jpeg | 0.0  |0.0  |   0.0   |  1.0 |
-| NORMAL-6434323-2.jpeg |  /train/NORMAL/NORMAL-6434323-2.jpeg  |0.0|  0.0   |  0.0 |    1.0|
-| NORMAL-910422-8.jpeg | /val/NORMAL/NORMAL-910422-8.jpeg | 0.0 | 0.0  |   0.0   |  1.0|
-| DRUSEN-8086850-28.jpeg | /train/DRUSEN/DRUSEN-8086850-28.jpeg | 0.0 | 0.0   |  1.0   |  0.0|
+The MNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `chestmnist`.
 
-In the above table, `F_Name` denotes the file name for 2D medical scan files, `Path` indicates the directory to these
-files, and `Pathology-1`, `Pathology-2`, `Pathology-3`, and `Pathology-4` represent binary classes for the respective
-pathologies.
 
-After creating ```meta.csv``` file, ConvNeXt backbone can be trained with following bash script:
+### A custom 2D dataset
+You can also create your own dataloader for any other 2D dataset of your choice (you can start with our template in datasets/CustomDataset2D.py) and use it to pretrain SLIViT by setting `--dataset` to `custom`. 
+
+
+## Fine-tuning SLIViT
 
 ```bash
-python bb_train.py --dataset custom --meta_csv /path/to/meta.csv --pathologies Pathology-1,Pathology-2,Pathology-3,Pathology-4 --out_dir /output/dir/to/save_pretrained_model/ --b_size 16 --gpu_id 0 --n_cpu=32
+python fine_tune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --test_csv <path to an external test csv file> --label3d <label column name in csv>
 ```
 
-- ```--dataset``` is the dataset for pre-training (`kermany`, `chestmnist`, `custom` ) 
-- ```--data_dir``` is the root directory for the created `train`, `validation`, `test` set folders.
-- ```--meta_csv``` is the directory to the created ```meta.csv```.
-- ```--pathologies``` is a comma-separated list of pathologies for pre-training.
-- ```--out_dir```  is the output directory for saving the pre-trained backbone.
-- ```--b_size``` denotes the batch size for training.
-- ```--gpu_id``` specifies the GPU ID for training.
-- ```--n_cpu``` indicates the number of CPUs for data loading.
-- ```--n_epochs``` indicates the number of epochs to train.
-- ```--patience``` is the number of epochs to await without improvement before initiating early stopping
+TODO: should I mention evaluate here? 
+If you prefer to evaluate slivit from the same dataset for training and testing, set the test proportion to be greater than zero in `--split_ratio` which by default is configured for an external test set (`0.85,0.15,0`). For example, set `--split_ratio` to `0.7,0.15,0.15` to set (respectively) the sample proportions for training, validation, and testing. 
+
+### The OCT (Houston) dataset
+The 3D OCT datasets utilized in this study are not publicly available due to institutional data-use policies and patient privacy concerns. However, we have provided the Dataset class used in our research for your reference. You can use this to fine-tune SLIViT on your own dataset.
+
+### The ultrasound video (EchoNet) dataset
+<img src="visuals/ultrasound.gif" width="750px"/><br>
+The EchoNet Ultrasound videos are available <a href="https://stanfordaimi.azurewebsites.net/datasets/834e1cd1-92f7-4268-9daa-d359198b310a">here</a>. After downloading the data, please update the paths in `meta/echonet.csv` to reflect the locations of your downloaded videos (you can use `utils/get_echonet_csv.py` for this purpose). To fine-tune SLIViT on the EchoNet dataset set `--dataset` to `ultrasound`.
+
+[//]: # (```bash)
+
+[//]: # (python slivit_train.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./checkpoints/kermany_convnext_tiny_feature_extractor.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32 )
+
+[//]: # (```)
 
 
-## Fine-tuning
+### The 3D MRI (United Kingdom Biobank) dataset
+<img src="visuals/mri.gif" width="750px"/><br>
+The UKBB MRI dataset is available <a href="https://www.ukbiobank.ac.uk">here</a>. Once you have downloaded the data, please create an appropriate meta file, or simply update the paths in `meta/ukbb.csv` to reflect the locations of your downloaded scans. To fine-tune SLIViT on the EchoNet dataset set `--dataset` to `mri`.
 
-### 3D CT (NoduleMNIST)
-<img src="Figs/nodulemnist.gif" width="450px"/><br>
+### The 3D CT (NoduleMNIST) dataset
+<img src="visuals/ct.gif" width="450px"/><br>
 
-```bash
-python slivit_train.py --dataset3d nodulemnist --task classification --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 28 --depth 5 --dim 64 --heads 10 --out_dir /output/dir/to/save_finetuned_slivit/ 
-```
-### 3D MRI (UKBB)
-<img src="Figs/ukbb.gif" width="750px"/><br>
-The UKBB MRI dataset available <a href="https://www.ukbiobank.ac.uk">here</a>. After downloading the data, replace the paths in  `./Dsets/ukbb_meta.csv` with corresponding paths to the downloaded scans.
+The MNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `ct`. 
 
-```bash
-python slivit_train.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --task regression --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --depth 5 --dim 256 --nslc 36 --heads 36 --out_dir /output/dir/to/save_finetuned_slivit/ 
-```
-### Ultrasound Videos (EchoNet)
-<img src="Figs/ultrasound.gif" width="750px"/><br>
-The EchoNet Ultrasound videos are available <a href="https://stanfordaimi.azurewebsites.net/datasets/834e1cd1-92f7-4268-9daa-d359198b310a">here</a>. After downloading the data, replace the paths in  `./Dsets/ultrasound_meta.csv` with corresponding paths to the downloaded videos.
-```bash
-python slivit_train.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./Checkpoints/convnext_bb_kermany.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32
-```
 ### Custom 3D
+Ready to fine-tune SLIViT on your own dataset? Just set `--dataset` to `custom` (after you’ve tailored a Dataset class to fit your needs; you can start with our template in `datasets/CustomDataset3D.py`) and include the right meta file to get things rolling!
 
-Supported 3D volume formats : 2D slice files as `tiff` or  `dcm`
-
-Generate the  ```meta.csv``` file for 3D fine-tuning data as illustrated below:
-
-|pid | path | Pathology  | Split | 
-| --- | --- | --- | ---  |
-| 1754715 | /scratch/avram/MRI/liver/dcm/with_annotations/5628597 | 1.4107 | train | 
-| 4501528 | /scratch/avram/MRI/liver/dcm/with_annotations/4501528 | 3.6272 | valid | 
-| 2161445 | /scratch/avram/MRI/liver/dcm/with_annotations/2161445 | 14.128 | valid | 
-| 5364532 | /scratch/avram/MRI/liver/dcm/with_annotations/5364532 | 1.3523 | train |
-| 2653392 | /scratch/avram/MRI/liver/dcm/with_annotations/2653392 | 2.6253 | test  |
-| 1754715 | /scratch/avram/MRI/liver/dcm/with_annotations/1754715 | 5.2235 | train |
-| 4986672 | /scratch/avram/MRI/liver/dcm/with_annotations/4986672 | 3.1356 | test  |
-
-In the above table, `pid` denotes the unique patient ID  for 3D medical volume, `Path` indicates the directory to folder which contains 2D slice files for the correspoding volume, and `Pathology` represent pathology score or binary pathology class.
-
-After creating ```meta.csv``` file, SLIViT can be fine tuned with following bash script:
-
+## Evaluating SLIViT
 ```bash
-python slivit_train.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/pretrained/convnext_bb.pth --task regression --pathology Pathology --out_dir /output/dir/to/save_pretrained_model/ 
+python fine_tune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --label3d <label column name in csv>
 ```
 
-- ```--dataset3d``` is the dataset for 3D fine-tuning (`nodulemnist`, `ukbb`, `ultrasound`,`custom3d` ) 
-- ```--meta_csv``` is the path to the created ```meta.csv``` file
-- ```--pathology``` is pathology for 3D fine-tuning
-- ```--bbpath``` is the path to pre-rained ConvNeXt backbone
-- ```--nObb_feat``` is the number of classes the backbone was pre-trained on ( Kermany: `4` , ChestMNIST: `14` )
-- ```--task``` is the 3D Fine-tuning task (classification or regression)
-- ```--nslc``` is the number of slices to use for 3D Fine-tuning
-- ```--depth``` is the Vision Transformer depth
-- ```--heads``` is the number of heads for multihead attention
-- ```--dim``` specifies the dimension for encoding transformer input
-- ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
-- ```--dropout``` is the dropout rate
-- ```--emb_dropout``` is the embeding dropout rate
-- ```--patience``` is the number of epochs to await without improvement before initiating early stopping
+If you prefer to use an external dataset for testing, set the test proportion to zero in the split ratio (for example, using a split of 0.85 for training and 0.15 for validation, as shown below). Additionally, provide a corresponding meta file to properly configure the dataset:
+```bash
+--split_ratio 0.85,0.15,0 --test_csv <path to an external test csv file>
+```
 
 
+### The OCT (Houston) dataset
+The 3D OCT datasets used in this study aren’t available publicly due to institutional policies and patient privacy concerns. However, you can still use the fine-tuned model we’ve provided in the `checkpoints` directory to evaluate it on your own dataset.
 
-## Evaluating
+
 ### Nodule MNIST
 ```bash
-python slivit_test.py --dataset3d nodulemnist --checkpoint ./Checkpoints/slivit_noduleMNIST --depth 5 --dim 64 --nslc 28 --mlp_dim 64 --heads 10
+python evaluate.py --dataset3d nodulemnist --checkpoint ./checkpoints/slivit_noduleMNIST --depth 5 --dim 64 --nslc 28 --mlp_dim 64 --heads 10
 ```
 ### UKBB
 
 ```bash
-python slivit_test.py --dataset3d ukbb --meta_csv ./Dsets/ukbb_meta.csv --checkpoint ./Checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
+python evaluate.py --dataset3d ukbb --meta_csv ./datasets/ukbb_meta.csv --checkpoint ./checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
 ```
 ### Ultrasound
 
 ```bash
-python slivit_test.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --checkpoint ./Checkpoints/slivit_ultrasound --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
+python evaluate.py --dataset3d ultrasound --meta_csv ./datasets/ultrasound_meta.csv --checkpoint ./checkpoints/slivit_ultrasound --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
 ```
 ### Custom 3D
 
 ```bash
-python slivit_test.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/finetuned/convnext_bb.pth --task TaskType --pathology Pathology
+python evaluate.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/finetuned/convnext_bb.pth --task TaskType --pathology Pathology
 ```
 - ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom` ) 
 - ```--meta_csv``` is the path to the created ```meta.csv``` file
