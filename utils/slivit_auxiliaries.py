@@ -208,9 +208,9 @@ def get_volumetric_dataloaders(dataset_class, args, out_dir, mnist=None):
                                                                        args.split_col, args.pid_col)
         dataset = dataset_class(args.meta_csv,
                                 args.label3d,
+                                args.path_col,
                                 args.slices,
-                                args.sparsing_method,
-                                args.path_col)
+                                args.sparsing_method)
 
         train_subset = Subset(dataset, train_indices)
         valid_subset = Subset(dataset, valid_indices)
@@ -230,8 +230,8 @@ def get_volumetric_dataloaders(dataset_class, args, out_dir, mnist=None):
             else:
                 msg = f'Using external test set for final model evaluation from:\n{args.test_csv}'
                 test_df = pd.read_csv(args.test_csv)
-                test_subset = Subset(dataset_class(test_df, args.label3d, args.slices,
-                                                   args.sparsing_method, args.path_col), torch.arange(0, len(test_df)))
+                test_subset = Subset(dataset_class(test_df, args.label3d, args.path_col, args.slices,
+                                                   args.sparsing_method), torch.arange(0, len(test_df)))
 
     if msg:
         logger.info('\n\n' + '*' * 100 + f'\n{msg}\n' + '*' * 100 + '\n')

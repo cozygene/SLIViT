@@ -7,8 +7,8 @@ from utils.slivit_auxiliaries import default_transform_gray
 
 
 class SLIViTDataset3D(Dataset):
-    def __init__(self, meta_data, label_name, num_slices_to_use,
-                 sparsing_method='eq', path_col_name='path', transform=default_transform_gray):
+    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use,
+                 sparsing_method, transform=default_transform_gray):
         if not isinstance(meta_data, pd.DataFrame):
             # meta_data is a path to a csv file
             meta_data = pd.read_csv(meta_data)  # , index_col=0)
