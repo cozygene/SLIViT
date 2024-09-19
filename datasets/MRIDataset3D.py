@@ -1,63 +1,30 @@
+import os
 import numpy as np
-from utils.slivit_auxiliaries import *
-import pandas as pd
-import torch
-from fastai.vision.augment import aug_transforms
-from torch.utils.data import Dataset
-from fastai.vision import *
+import pydicom as dicom
+from datasets.SLIViTDataset3D import SLIViTDataset3D
+from utils.slivit_auxiliaries import default_transform_gray, totensor
 
 
-default_transform_gray = tf.Compose([
-    tf.ToPILImage(),
-    tf.Resize((256, 256)),
-    #pil_contrast_strech(),
-    tf.ToTensor(),
-    gray2rgb
-])
-class UKBBDataset(Dataset):
-    def __init__(self, metafile_path, annotations_path, pathologies, nslc,transform=default_transform_gray):
-        self.metadata = pd.read_csv(metafile_path)
-        self.annotations = pd.read_csv(annotations_path)
-        self.pathologies = pathologies
-        self.samples = get_samples(self.metadata, self.annotations, pathologies)
-        self.t = transform
-        self.data_reader = self.load_dcm
-        self.label_reader = get_labels
-        self.labels=[self.label_reader(self.samples[i], self.annotations, self.pathologies) for i in range(len(self.samples))]
-        self.labels=torch.FloatTensor(self.labels)
-        self.nslc=nslc
+class MRIDataset3D(SLIViTDataset3D):
 
-    def __len__(self):
-        return len(self.samples)
+    def __init__(self, meta_data, label_name, num_slices_to_use,
+                 sparsing_method, path_col_name, transform=default_transform_gray):
+        super().__init__(meta_data, label_name, num_slices_to_use, sparsing_method, path_col_name, transform)
+
+        # example image name: '1.3.12.2.1107.5.2.18.41754.2017082116102653036617510.dcm'
+        self.filter = lambda x: x.endswith('dcm')
 
     def __getitem__(self, idx):
-        sample = self.samples[idx[0]]
-        imgs = self.data_reader(sample,self.nslc)
-        labels = self.label_reader(sample, self.annotations, self.pathologies)  
-        labels = torch.FloatTensor(labels)
-        t_imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
-        return t_imgs, labels.squeeze()
-    
-    def load_dcm(self,path,nslc):
-        vol=[]
-        img_paths = os.listdir(path)
-        filtered = filter(lambda img_path: img_path.split('.')[-1] == 'dcm', img_paths)
-        img_paths = list(filtered)
-        if len(img_paths) == nslc:
-            for img_name in img_paths:
-                img=dicom.dcmread(f'{path}/{img_name}')
-                vol.append(totensor(img.pixel_array.astype(np.float64)))
-        else:
-            i=0
-            idx_smpl=np.linspace(0, len(img_paths)-1, nslc).astype(int)
-            for img_name in img_paths:
-                if i in idx_smpl:
-                    img=dicom.dcmread(f'{path}/{img_name}')
-                    vol.append(totensor(img.pixel_array.astype(np.float64)))
-                i+=1
+        t_imgs, label = super().__getitem__(idx[0])
+        return t_imgs, label.squeeze()
+
+    def load_volume(self, path, slc_idxs):
+        filtered = list(filter(self.filter, os.listdir(path)))  # exclude non-dicom files
+        img_paths = [filtered[i] for i in slc_idxs]
+
+        vol = []
+        for img_name in img_paths:
+            img = dicom.dcmread(f'{path}/{img_name}')
+            vol.append(totensor(img.pixel_array.astype(np.float64)))
+
         return vol
-
-
-
-
-
