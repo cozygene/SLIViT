@@ -1,3 +1,5 @@
 .DS_Store
 .idea/
-
+*pth
+*__pycache__*
+old*
