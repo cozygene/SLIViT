@@ -1,4 +1,4 @@
-# fine_tune.py
+# finetune.py
 
 from utils.slivit_auxiliaries import *
 

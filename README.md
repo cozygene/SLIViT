@@ -68,7 +68,7 @@ You can also create your own dataloader for any other 2D dataset of your choice 
 ## Fine-tuning SLIViT
 
 ```bash
-python fine_tune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --test_csv <path to an external test csv file> --label3d <label column name in csv>
+python finetune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --test_csv <path to an external test csv file> --label3d <label column name in csv>
 ```
 
 TODO: should I mention evaluate here? 
@@ -102,7 +102,7 @@ Ready to fine-tune SLIViT on your own dataset? Just set `--dataset` to `custom` 
 
 ## Evaluating SLIViT
 ```bash
-python fine_tune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --label3d <label column name in csv>
+python evaluate.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --label3d <label column name in csv>
 ```
 
 If you prefer to use an external dataset for testing, set the test proportion to zero in the split ratio (for example, using a split of 0.85 for training and 0.15 for validation, as shown below). Additionally, provide a corresponding meta file to properly configure the dataset:
