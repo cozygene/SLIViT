@@ -107,9 +107,8 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             # print(config)
             tuning = 'fine_tune' if config[-1] else 'fit'
             suffix = '-'.join(f'{item[0]}_{item[1]}' for item in config if item[0] != 'fine_tune') + f'-{tuning}'
-            command = f"/scratch/avram/envs/slivit/bin/python /scratch/avram/projects/SLIViT/fine_tune.py "
+            command = f"/scratch/avram/envs/slivit/bin/python /scratch/avram/projects/SLIViT/finetune.py "
             command += f"--seed 1 --dataset oct "
-            # command += f'--meta_csv /scratch/avram/projects/hadassah/CRORA_imputation/{mock if mock else ""}crora_manual_labels_meta.csv '
             command += f'--meta_csv {csv_path} '
             command += f'--test_csv {test_path} '
             command += f"--label3d {label} --gpu_id {gpu} --cpus 40 "
