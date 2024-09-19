@@ -18,7 +18,7 @@ class MRIDataset3D(SLIViTDataset3D):
         t_imgs, label = super().__getitem__(idx[0])
         return t_imgs, label.squeeze()
 
-    def load_volume(self, path, slc_idxs):
+    def load_scan(self, path, slc_idxs):
         filtered = list(filter(self.filter, os.listdir(path)))  # exclude non-dicom files
         img_paths = [filtered[i] for i in slc_idxs]
 

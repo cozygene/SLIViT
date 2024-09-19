@@ -1,41 +1,22 @@
 import os
 import torch
-import pandas as pd
 import numpy as np
-from torch.utils.data import Dataset
 from utils.slivit_auxiliaries import default_transform_gray
+from datasets.SLIViTDataset import SLIViTDataset
 
 
-class SLIViTDataset3D(Dataset):
+class SLIViTDataset3D(SLIViTDataset):
     def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use,
                  sparsing_method, transform=default_transform_gray):
-        if not isinstance(meta_data, pd.DataFrame):
-            # meta_data is a path to a csv file
-            meta_data = pd.read_csv(meta_data)  # , index_col=0)
-        self.labels = meta_data[label_name].values
-        self.sample_paths = meta_data[path_col_name].values
-        for p in self.sample_paths:
-            assert os.path.exists(p), f'{p} do not exist'
+        super().__init__(meta_data, label_name, path_col_name, transform)
         self.num_slices_to_use = num_slices_to_use
-        self.t = transform
         self.sparsing_method = sparsing_method
-        self.filter = lambda x: x
-
-
-    def __len__(self):
-        return len(self.sample_paths)
-
 
     def __getitem__(self, idx):
-        sample = self.sample_paths[idx]
-        slice_idxs = self.get_slices_indexes(sample, self.num_slices_to_use)
-
-        imgs = self.load_volume(sample, slice_idxs)
-
+        sample, label = super().__getitem__(idx)
+        slice_idxs = self.get_slices_indexes(sample, self.num_slices_to_use)  # TODO: consider moving to load_volume
+        imgs = self.load_scan(sample, slice_idxs)
         imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
-
-        label = torch.FloatTensor([self.labels[idx]])  # unwrap two-dimensional array
-
         return imgs, label  # TODO: Consider adding EHR info
 
     def get_slices_indexes(self, vol_path, num_slices_to_use):
@@ -57,7 +38,6 @@ class SLIViTDataset3D(Dataset):
 
         return slc_idxs
 
-
-    def load_volume(self, *args):
+    def load_scan(self, *args):
         raise NotImplementedError('load_volume method must be implemented in child class')
 

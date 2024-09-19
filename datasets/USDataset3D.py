@@ -17,7 +17,7 @@ class USDataset3D(SLIViTDataset3D):
         t_imgs, label = super().__getitem__(idx[0])  #TODO: check why it's happenning: idx[0] (instead of idx)
         return t_imgs, label
 
-    def load_volume(self, path, slice_idxs):
+    def load_scan(self, path, slice_idxs):
         frames_to_use = [str(x).zfill(4) for x in slice_idxs]
 
         vol = []
