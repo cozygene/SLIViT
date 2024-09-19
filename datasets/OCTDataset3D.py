@@ -15,7 +15,7 @@ class OCTDataset3D(SLIViTDataset3D):
         self.filter = lambda x: x.endswith('tiff')
 
 
-    def load_volume(self, vol_path, slc_idxs):
+    def load_scan(self, vol_path, slc_idxs):
 
         slices = os.listdir(vol_path)
         vol = []
