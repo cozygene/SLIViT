@@ -67,6 +67,7 @@ hyper_params = {
     'fine_tune': [False, True]
 }
 
+
 def get_configurations(num_configs):
     random.seed(42)
 
@@ -88,9 +89,6 @@ def get_configurations(num_configs):
 
 
 def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
-    # meta_csv='/scratch/avram/projects/hadassah/CRORA_imputation/meta/hp_tuning_crora_manual_labels.csv'):
-    # out_dir = f'/scratch/avram/projects/hadassah/CRORA_imputation/models/{mock if mock else ""}hp_tuning_crora'
-
     os.makedirs(out_dir, exist_ok=True)
 
     configs = get_configurations(num_configs)
@@ -109,7 +107,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             suffix = '-'.join(f'{item[0]}_{item[1]}' for item in config if item[0] != 'fine_tune') + f'-{tuning}'
             command = f"/scratch/avram/envs/slivit/bin/python /scratch/avram/projects/SLIViT/finetune.py "
             command += f"--seed 1 --dataset oct "
-            command += f'--meta_csv {csv_path} '
+            command += f'--meta_data {csv_path} '
             command += f'--test_csv {test_path} '
             command += f"--label3d {label} --gpu_id {gpu} --cpus 40 "
             command += f"--drop_default_suffix "
@@ -118,7 +116,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             command += f"--out_dir {out_dir}/{label}/{suffix} "
             command += ' '.join(
                 f'--{item[0]} {item[1]}' for item in config if item[0] != 'fine_tune') + f' --{tuning}' + '\n'
-            done_file_path = f'{out_dir}/{label}/{suffix}/done_finetune' # TODO: change to {get_script_name()}
+            done_file_path = f'{out_dir}/{label}/{suffix}/done_finetune'  # TODO: change to {get_script_name()}
 
             if os.path.exists(done_file_path):
                 print('Configuration already trained. Skipping.')
@@ -137,5 +135,5 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
 
 
 run_commands(args.train_csv_path, args.test_csv_path, args.num_configs,
-             args.gpu_id,args.labels, args.out)
+             args.gpu_id, args.labels, args.out)
 print(f"Ran {args.num_configs} configurations.")
