@@ -1,13 +1,11 @@
 import os
 import torch
 import pandas as pd
-import numpy as np
 from torch.utils.data import Dataset
-from utils.slivit_auxiliaries import default_transform_gray
 
 
 class SLIViTDataset(Dataset):
-    def __init__(self, meta_data, label_name, path_col_name, transform=default_transform_gray):
+    def __init__(self, meta_data, label_name, path_col_name, transform):
         if not isinstance(meta_data, pd.DataFrame):
             # meta_data is a path to a csv file
             meta_data = pd.read_csv(meta_data)  # , index_col=0)
@@ -28,4 +26,3 @@ class SLIViTDataset(Dataset):
 
     def load_scan(self, *args):
         raise NotImplementedError('load_scan method must be implemented in child class')
-

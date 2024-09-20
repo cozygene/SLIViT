@@ -14,12 +14,12 @@ def get_labels(sample, labels, pathologies):
     return label
 
 
-def get_samples(metadata, labels, pathologies, path_col):
+def get_samples(meta_data, labels, pathologies, path_col):
     samples = []
     label_to_count = {
         p: str((labels[p] == 1).sum()) + ' Positive Scans, ' + str((labels[p] == 0).sum()) + ' Negative Scans' for p in
         pathologies}
-    for sample in metadata[path_col].values:
+    for sample in meta_data[path_col].values:
         samples.append(sample)
     print(f'Label counts is: {label_to_count}')
     return samples

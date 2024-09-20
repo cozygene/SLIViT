@@ -35,9 +35,6 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger()
 
 gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
-totensor = tf.Compose([
-    tf.ToTensor(),
-])
 
 
 def get_label(sample, labels, pathologies):
@@ -45,10 +42,10 @@ def get_label(sample, labels, pathologies):
     return label
 
 
-def get_samples(metadata):
+def get_samples(meta_data):
     samples = []
     # label_to_count = {p: {} for p in pathologies}
-    for sample in metadata.path.values:  # -2
+    for sample in meta_data.path.values:  # -2
         samples.append(sample)
     # print(f'Label counts is: {}')
     return samples
@@ -86,7 +83,7 @@ default_transform_gray = tf.Compose([
 ])
 
 
-def get_split_indices(meta_csv, out_dir, split_ratio, pathology, split_col, pid_col):
+def get_split_indices(meta_data, out_dir, split_ratio, pathology, split_col, pid_col):
     # try:
     #     df = pd.read_csv(split_file_path)
     #     train_idx = np.argwhere(df[split_col].str.contains('train', case=False))
@@ -96,7 +93,7 @@ def get_split_indices(meta_csv, out_dir, split_ratio, pathology, split_col, pid_
     # except FileNotFoundError:
     #     pass
 
-    df = pd.read_csv(meta_csv)
+    df = pd.read_csv(meta_data)
     if split_col in df.columns:
         # Get indices for train, val and test
         train_idx = np.argwhere(df[split_col].str.contains('train', case=False))
@@ -130,7 +127,7 @@ def get_split_indices(meta_csv, out_dir, split_ratio, pathology, split_col, pid_
             df[split_col] = 'train'
             df.loc[val_idx, split_col] = 'val'
             df.loc[test_idx, split_col] = 'test'
-            df.to_csv(f'{out_dir}/{os.path.split(meta_csv)[-1]}', index=False)
+            df.to_csv(f'{out_dir}/{os.path.split(meta_data)[-1]}', index=False)
         else:
             assert get_script_name() == 'evaluate', \
                 '--split_ratio was set inappropriately (empty train split is only allowed for evaluate.py)'
@@ -142,11 +139,11 @@ def get_split_indices(meta_csv, out_dir, split_ratio, pathology, split_col, pid_
     return train_idx, val_idx, test_idx
 
 
-def store_predictions(learner, test_loader, meta_csv, pathology, results_file, split_col='Split'):
+def store_predictions(learner, test_loader, meta_data, pathology, results_file, split_col='Split'):
     logger.info(f'Computing predictions...')
     preds = learner.get_preds(dl=test_loader)
 
-    df = pd.read_csv(meta_csv).iloc[test_loader.indices.squeeze()]
+    df = pd.read_csv(meta_data).iloc[test_loader.indices.squeeze()]
     assert df[split_col].str.contains('test', case=False).all()
 
     with open(results_file, 'w') as f:
@@ -181,14 +178,14 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
     logger.info('\n' + '*' * 100 + f'\nScores are saved at:\n{out_dir}')
 
 
-def evaluate_and_store_results(learner, data_loader, model_name, meta_csv, pathology, out_dir):
+def evaluate_and_store_results(learner, data_loader, model_name, meta_data, pathology, out_dir):
     print()
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
         # evaluate the best model
         learner.load(model_name)
         results_file = f'{out_dir}/predicted_scores.csv'
-        # preds = store_predictions(learner, data_loader, meta_csv, pathology, results_file)
+        # preds = store_predictions(learner, data_loader, meta_data, pathology, results_file)
         evaluate_model(learner, data_loader, out_dir)
     else:
         # evaluation_loader is empty
@@ -210,10 +207,10 @@ def get_volumetric_dataloaders(dataset_class, args, out_dir, mnist=None):
             test_subset = Subset(test_subset, np.arange(0, args.mnist_mocks))
 
     else:
-        train_indices, valid_indices, test_indices = get_split_indices(args.meta_csv, out_dir,
+        train_indices, valid_indices, test_indices = get_split_indices(args.meta_data, out_dir,
                                                                        args.split_ratio, args.label3d,
                                                                        args.split_col, args.pid_col)
-        dataset = dataset_class(args.meta_csv,
+        dataset = dataset_class(args.meta_data,
                                 args.label3d,
                                 args.path_col,
                                 args.slices,
@@ -340,10 +337,10 @@ def init_out_dir(args):
     out_dir = args.out_dir.rstrip('/')
     if not args.drop_default_suffix:
         # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
-        if args.meta_csv is not None:
-            # example args.meta_csv:
+        if args.meta_data is not None:
+            # example args.meta_data:
             # /meta_file_folder_path/ultrasound.csv
-            csv_file_name = os.path.splitext(args.meta_csv.split("/")[-1])[0]  # remove extension
+            csv_file_name = os.path.splitext(args.meta_data.split("/")[-1])[0]  # remove extension
             out_dir = f'{out_dir}/{csv_file_name}'
         else:
             out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
