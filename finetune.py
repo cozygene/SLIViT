@@ -1,6 +1,6 @@
 # finetune.py
 
-from utils.slivit_auxiliaries import *
+from auxiliaries.slivit_auxiliaries import *
 
 wandb.require("core")
 wandb.init(project=args.wandb_name)
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if len(test_loader):
-        evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_csv, args.label3d, out_dir)
+        evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
     else:
         logger.info('No test set provided. Skipping evaluation...')
     wandb.finish()
