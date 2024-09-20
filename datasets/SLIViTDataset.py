@@ -12,19 +12,19 @@ class SLIViTDataset(Dataset):
             # meta_data is a path to a csv file
             meta_data = pd.read_csv(meta_data)  # , index_col=0)
         self.labels = meta_data[label_name].values
-        self.sample_paths = meta_data[path_col_name].values
-        for p in self.sample_paths:
+        self.scan_paths = meta_data[path_col_name].values
+        for p in self.scan_paths:
             assert os.path.exists(p), f'{p} do not exist'
         self.t = transform
         self.filter = lambda x: x
 
     def __len__(self):
-        return len(self.sample_paths)
+        return len(self.scan_paths)
 
     def __getitem__(self, idx):
-        sample = self.sample_paths[idx]
+        scan_path = self.scan_paths[idx]
         label = torch.FloatTensor([self.labels[idx]])  # unwrap two-dimensional array
-        return sample, label  # TODO: Consider adding EHR info
+        return scan_path, label  # TODO: Consider adding EHR info
 
     def load_scan(self, *args):
         raise NotImplementedError('load_scan method must be implemented in child class')
