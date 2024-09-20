@@ -1,14 +1,12 @@
 import os
 import torch
 import numpy as np
-from utils.slivit_auxiliaries import default_transform_gray
 from datasets.SLIViTDataset import SLIViTDataset
 
 
 class SLIViTDataset3D(SLIViTDataset):
-    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use,
-                 sparsing_method, transform=default_transform_gray):
-        super().__init__(meta_data, label_name, path_col_name, transform)
+    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, transformations):
+        super().__init__(meta_data, label_name, path_col_name, transformations)
         self.num_slices_to_use = num_slices_to_use
         self.sparsing_method = sparsing_method
 

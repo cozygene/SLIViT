@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-from utils.slivit_auxiliaries import default_transform_gray
+from auxiliaries.slivit_auxiliaries import default_transform_gray
 # from torchvision.transforms import (
 #     Compose,
 #     Normalize,

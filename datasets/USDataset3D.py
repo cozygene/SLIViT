@@ -1,14 +1,14 @@
 from PIL import Image
 
 from datasets.SLIViTDataset3D import SLIViTDataset3D
-from utils.slivit_auxiliaries import totensor, default_transform_gray
+from auxiliaries.slivit_auxiliaries import default_transform_gray
+from auxiliaries.misc import to_tensor
 
 
 class USDataset3D(SLIViTDataset3D):
 
-    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use,
-                 sparsing_method, transform=default_transform_gray):
-        super().__init__(meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, transform)
+    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method):
+        super().__init__(meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, default_transform_gray)
 
         # example image name: '0003.tiff'
         self.filter = lambda x: x.endswith('tiff')
@@ -23,5 +23,5 @@ class USDataset3D(SLIViTDataset3D):
         scan = []
         for frame in frames_to_use:
             frame = Image.open(f'{path}/{frame}.tiff')
-            scan.append(totensor(frame))
+            scan.append(to_tensor(frame))
         return scan
