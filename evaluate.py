@@ -1,4 +1,4 @@
-from utils.slivit_auxiliaries import *
+from auxiliaries.slivit_auxiliaries import *
 
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
@@ -12,6 +12,6 @@ if __name__ == '__main__':
     learner, _ = create_learner(slivit, dls, out_dir, args)
 
     # Evaluate and store results
-    evaluate_and_store_results(learner, test_loader, args.checkpoint, args.meta_csv, args.label3d, out_dir)
+    evaluate_and_store_results(learner, test_loader, args.checkpoint, args.meta_data, args.label3d, out_dir)
 
     wrap_up(out_dir)
