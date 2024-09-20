@@ -44,7 +44,7 @@ python pretrain.py -h
 Happy computing! 🚀
 ## Pre-training SLIViT's backbone 
 ```bash
-python pretrain.py --dataset <dataset type {kermany,chestmnist,custom}> --out_dir <out path> --meta_csv <path to a meta file csv> --label2d <(comma separated )label column name(s)>
+python pretrain.py --dataset <dataset type {kermany,chestmnist,custom}> --out_dir <out path> --meta_data <path to a meta file csv> --label2d <(comma separated )label column name(s)>
 ```
 
 ### The 2D OCT (Kermany) dataset
@@ -68,7 +68,7 @@ You can also create your own dataloader for any other 2D dataset of your choice 
 ## Fine-tuning SLIViT
 
 ```bash
-python finetune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --test_csv <path to an external test csv file> --label3d <label column name in csv>
+python finetune.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_data <path to a meta file csv> --test_csv <path to an external test csv file> --label3d <label column name in csv>
 ```
 
 TODO: should I mention evaluate here? 
@@ -83,7 +83,7 @@ The EchoNet Ultrasound videos are available <a href="https://stanfordaimi.azurew
 
 [//]: # (```bash)
 
-[//]: # (python slivit_train.py --dataset3d ultrasound --meta_csv ./Dsets/ultrasound_meta.csv --bbpath ./checkpoints/kermany_convnext_tiny_feature_extractor.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32 )
+[//]: # (python slivit_train.py --dataset3d ultrasound --meta_data ./Dsets/ultrasound_meta.csv --bbpath ./checkpoints/kermany_convnext_tiny_feature_extractor.pth --nObb_feat 4 --nslc 32 --depth 5 --dim 256 --heads 32 )
 
 [//]: # (```)
 
@@ -102,7 +102,7 @@ Ready to fine-tune SLIViT on your own dataset? Just set `--dataset` to `custom` 
 
 ## Evaluating SLIViT
 ```bash
-python evaluate.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_csv <path to a meta file csv> --label3d <label column name in csv>
+python evaluate.py --dataset <dataset type {oct,ultrasound,mri,ct,custom}> --fe_path <path to a pretrained convnext-t backbone> --out_dir <out path> --meta_data <path to a meta file csv> --label3d <label column name in csv>
 ```
 
 If you prefer to use an external dataset for testing, set the test proportion to zero in the split ratio (for example, using a split of 0.85 for training and 0.15 for validation, as shown below). Additionally, provide a corresponding meta file to properly configure the dataset:
@@ -122,20 +122,20 @@ python evaluate.py --dataset3d nodulemnist --checkpoint ./checkpoints/slivit_nod
 ### UKBB
 
 ```bash
-python evaluate.py --dataset3d ukbb --meta_csv ./datasets/ukbb_meta.csv --checkpoint ./checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
+python evaluate.py --dataset3d ukbb --meta_data ./datasets/ukbb_meta.csv --checkpoint ./checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
 ```
 ### Ultrasound
 
 ```bash
-python evaluate.py --dataset3d ultrasound --meta_csv ./datasets/ultrasound_meta.csv --checkpoint ./checkpoints/slivit_ultrasound --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
+python evaluate.py --dataset3d ultrasound --meta_data ./datasets/ultrasound_meta.csv --checkpoint ./checkpoints/slivit_ultrasound --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
 ```
 ### Custom 3D
 
 ```bash
-python evaluate.py --dataset3d custom --meta_csv /path/to/generated/meta.csv --bbpath /path/to/finetuned/convnext_bb.pth --task TaskType --pathology Pathology
+python evaluate.py --dataset3d custom --meta_data /path/to/generated/meta.csv --bbpath /path/to/finetuned/convnext_bb.pth --task TaskType --pathology Pathology
 ```
 - ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom` ) 
-- ```--meta_csv``` is the path to the created ```meta.csv``` file
+- ```--meta_data``` is the path to the created ```meta.csv``` file
 - ```--pathology``` is pathology for 3D fine-tuning
 - ```--nObb_feat``` is the number of classes the backbone was pre-trained on ( Kermany: `4` , ChestMNIST: `14` )
 - ```--task``` is the 3D Fine-tuning task (classification or regression)
