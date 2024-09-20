@@ -1,4 +1,4 @@
-from utils.slivit_auxiliaries import *
+from auxiliaries.slivit_auxiliaries import *
 from utils.load_backbone import AutoModelForImageClassification
 
 #TODO:
@@ -26,12 +26,11 @@ def get_pretraining_datasets(args, logger):
         valid_dataset = dataset_class(valid_dataset)
     elif args.dataset == 'kermany':
         from datasets.KermanyDataset import KermanyDataset as dataset_class
-        dataset = dataset_class(args.meta_csv,
-                                args.meta_csv,
-                                args.data_dir,
-                                pathologies=[p for p in args.label2d.split(',')])
-        df = pd.read_csv(args.meta_csv)
-        splts = [p.split('/')[1] for p in df['path'].values]
+        dataset = dataset_class(args.meta_data,
+                                args.label2d,
+                                args.path_col)
+        df = pd.read_csv(args.meta_data)
+        splts = [p.split('/')[1] for p in df[args.path_col].values]
         splitter = TrainTestSplitter(test_size=0.1, random_state=42)
 
         train_indices, valid_indices2 = splitter(dataset)
@@ -94,6 +93,8 @@ if __name__ == '__main__':
                                                                      num_labels=len(train_dataset[0][1]),  # length of the target vector
                                                                      ignore_mismatched_sizes=True))
     model.to(device='cuda')
+
+    out_dir = init_out_dir(args)
     learner = Learner(dls, model, model_dir=out_dir,
                       loss_func=torch.nn.BCEWithLogitsLoss())
     # fp16 = MixedPrecision()
@@ -108,6 +109,5 @@ if __name__ == '__main__':
                                                                          , patience=args.patience)])
 
     logger.info(f'Trained feature extractor is saved at:\n{out_dir}/{checkpoint_name}.pth\n')
-    logger.info(f'Running configuration is saved at:\n{options_file}\n')
 
     wrap_up(out_dir)

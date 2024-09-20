@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(prog='SLIViT',
                                  description='SLIViT: A deep-learning method for medical image diagnosis.')
 parser.add_argument('--out_dir', type=str, default='.', help='Output directory to save the trained model')
 parser.add_argument('--out_suffix', type=str, help='a subfolder name for hp tuning')
-parser.add_argument('--meta_csv', type=str, help='Path to meta csv file')
+parser.add_argument('--meta_data', type=str, help='Path to meta csv file')
 parser.add_argument('--test_csv', type=str, default=None,
                     help='Path to external test set csv file (use internal test set by default)')
 # parser.add_argument('--split_file_path', type=str, help='Path to a meta csv file with a pre-defined split (train/val/test)')
@@ -36,7 +36,7 @@ parser.add_argument('--patience', type=int, default=5, help='patience for early 
 parser.add_argument('--fine_tune', action='store_true', help='learner.fine_tune instead of learner.fit')
 
 # pretraining
-parser.add_argument('--label2d', type=str,
+parser.add_argument('--label2d', type=lambda x: x.split(','),
                     help='Comma separated list of labels to use as targets in the pre-training')  # TODO: automate this and/or merge with label3d
 
 # fine_tuning and evaluation parameters
@@ -126,7 +126,7 @@ args = parser.parse_args()
 #     # Define common arguments that can appear after the subcommand
 #     parser = argparse.ArgumentParser(add_help=False)
 #     common_parser.add_argument('--data_dir', type=str, default='.', help='Root path to the data')
-#     common_parser.add_argument('--meta_csv', type=str, default='no_meta', help='Path to meta csv file')
+#     common_parser.add_argument('--meta_data', type=str, default='no_meta', help='Path to meta csv file')
 #     common_parser.add_argument('--out_dir', type=str, default='.', help='Output directory to save the trained model')
 #     common_parser.add_argument('--gpu_id', type=int, default=0, help='GPU ID for training')
 #     common_parser.add_argument('--b_size', type=int, default=16, help='Batch size for training')
@@ -141,7 +141,7 @@ args = parser.parse_args()
 #     # Re-parse all arguments with the common options included
 #     full_parser = setup_parser()
 #     full_parser.add_argument('--data_dir', type=str, default='.', help='Root path to the data')
-#     full_parser.add_argument('--meta_csv', type=str, default='no_meta', help='Path to meta csv file')
+#     full_parser.add_argument('--meta_data', type=str, default='no_meta', help='Path to meta csv file')
 #     full_parser.add_argument('--out_dir', type=str, default='.', help='Output directory to save the trained model')
 #     full_parser.add_argument('--gpu_id', type=int, default=0, help='GPU ID for training')
 #     full_parser.add_argument('--b_size', type=int, default=16, help='Batch size for training')
