@@ -13,11 +13,11 @@ class SLIViTDataset3D(SLIViTDataset):
         self.sparsing_method = sparsing_method
 
     def __getitem__(self, idx):
-        sample, label = super().__getitem__(idx)
-        slice_idxs = self.get_slices_indexes(sample, self.num_slices_to_use)  # TODO: consider moving to load_volume
-        imgs = self.load_scan(sample, slice_idxs)
-        imgs = torch.cat([self.t(im) for im in imgs], dim=-1)
-        return imgs, label  # TODO: Consider adding EHR info
+        scan_path, label = super().__getitem__(idx)
+        slice_idxs = self.get_slices_indexes(scan_path, self.num_slices_to_use)  # TODO: consider moving to load_volume
+        scan = self.load_scan(scan_path, slice_idxs)
+        transformed_scan = torch.cat([self.t(im) for im in scan], dim=-1)
+        return transformed_scan, label  # TODO: Consider adding EHR info
 
     def get_slices_indexes(self, vol_path, num_slices_to_use):
         total_num_of_slices = len(list(filter(self.filter, os.listdir(vol_path))))
