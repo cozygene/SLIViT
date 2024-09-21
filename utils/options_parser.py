@@ -15,7 +15,7 @@ parser.add_argument('--dataset', type=str, required=True, help='Task\'s dataset 
 parser.add_argument('--mnist_mocks', type=int,
                     help='Number of mnist samples to use for this run. If None, all are used.')
 parser.add_argument('--drop_default_suffix', action='store_true', help='Drop default suffix to the out_dir path')
-parser.add_argument('--wandb_name', default='stam', help='A name for the wandb project')
+parser.add_argument('--wandb_name', default=None, help='A name for the wandb project (if not provided, wandb will not be used)')
 
 # advanced general parameters
 parser.add_argument('--gpu_id', type=int, default=1, help='GPU ID for training')

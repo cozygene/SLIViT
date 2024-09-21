@@ -5,7 +5,8 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
 import sys
-import wandb
+if args.wandb_name is not None:
+    import wandb
 import torch
 import PIL
 from fastai.data.core import DataLoaders
@@ -14,7 +15,6 @@ from fastai.imports import *
 from fastai.learner import Learner
 from fastai.metrics import RocAucMulti, APScoreMulti, R2Score, ExplainedVariance, PearsonCorrCoef
 from fastai.vision.all import *
-from fastai.callback.wandb import *
 from skimage import exposure
 from sklearn.model_selection import GroupShuffleSplit
 from torch.utils.data import Subset
@@ -23,6 +23,8 @@ from PIL import Image
 import logging
 from slivit import SLIViT
 from utils.load_backbone import load_backbone
+if args.wandb_name is not None:
+    from fastai.callback.wandb import *
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -365,7 +367,8 @@ def create_learner(slivit, dls, out_dir, args):
                       cbs=[SaveModelCallback(fname=best_model_name),
                            EarlyStoppingCallback(monitor='valid_loss', min_delta=args.min_delta,
                                                  patience=args.patience),
-                           CSVLogger()] + [WandbCallback()] if get_script_name() != 'evaluate' else [])
+                           CSVLogger()] + [WandbCallback()] if (args.wandb_name is not None and
+                                                                get_script_name() != 'evaluate') else [])
     return learner, best_model_name
 
 
