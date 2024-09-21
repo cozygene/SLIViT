@@ -2,8 +2,8 @@
 
 from auxiliaries.slivit_auxiliaries import *
 
-wandb.require("core")
-wandb.init(project=args.wandb_name)
+if args.wandb_name is not None:
+    wandb.init(project=args.wandb_name)
 
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
@@ -17,24 +17,17 @@ if __name__ == '__main__':
     learner, best_model_name = create_learner(slivit, dls, out_dir, args)
 
     try:
-        if args.fine_tune:
-            learner.fine_tune(args.epochs, args.lr)
-        else:
-            learner.fit(args.epochs, args.lr)
-
+        learner.fine_tune(args.epochs, args.lr) if args.fine_tune else learner.fit(args.epochs, args.lr)
         logger.info(f'Best model is stored at:\n{out_dir}/{best_model_name}.pth')
-
+        if len(test_loader):
+            evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
+        else:
+            logger.info('No test set provided. Skipping evaluation...')
     except torch.cuda.OutOfMemoryError as e:
         print(f'\n{e.args[0]}\n')
         logger.error('Out of memory error occurred. Exiting...\n')
-        wandb.finish()
         wrap_up(out_dir, e.args[0])
         sys.exit(1)
-
-    if len(test_loader):
-        evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
-    else:
-        logger.info('No test set provided. Skipping evaluation...')
-    wandb.finish()
-
+    if args.wandb_name is not None:
+        wandb.finish()
     wrap_up(out_dir)
