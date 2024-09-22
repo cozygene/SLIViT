@@ -1,6 +1,7 @@
 import os
 import torch
 import pandas as pd
+import numpy as np
 from torch.utils.data import Dataset
 
 
@@ -21,7 +22,7 @@ class SLIViTDataset(Dataset):
 
     def __getitem__(self, idx):
         scan_path = self.scan_paths[idx]
-        label = torch.FloatTensor([self.labels[idx]])  # unwrap two-dimensional array
+        label = torch.FloatTensor(np.array([self.labels[idx]]))  # unwrap two-dimensional array
         return scan_path, label  # TODO: Consider adding EHR info
 
     def load_scan(self, *args):
