@@ -10,24 +10,20 @@ if __name__ == '__main__':
 
     out_dir = init_out_dir(args)
 
-    slivit = setup_slivit(args)
+    slivit = SLIViT(backbone=load_backbone(args.fe_classes, args.fe_path),
+                    fi_dim=args.vit_dim, fi_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
+                    num_vol_frames=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
 
     dls, test_loader = setup_dataloaders(args, out_dir)
 
     learner, best_model_name = create_learner(slivit, dls, out_dir, args)
 
     try:
-        learner.fine_tune(args.epochs, args.lr) if args.fine_tune else learner.fit(args.epochs, args.lr)
-        logger.info(f'Best model is stored at:\n{out_dir}/{best_model_name}.pth')
-        if len(test_loader):
-            evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
-        else:
-            logger.info('No test set provided. Skipping evaluation...')
-    except torch.cuda.OutOfMemoryError as e:
-        print(f'\n{e.args[0]}\n')
-        logger.error('Out of memory error occurred. Exiting...\n')
+        train_and_evaluate_slivit(learner, test_loader, out_dir, best_model_name, args)
+        wrap_up(out_dir)
+    except Exception as e:
         wrap_up(out_dir, e.args[0])
         sys.exit(1)
-    if args.wandb_name is not None:
-        wandb.finish()
-    wrap_up(out_dir)
+    finally:
+        if args.wandb_name is not None:
+            wandb.finish()

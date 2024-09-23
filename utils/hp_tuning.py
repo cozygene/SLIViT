@@ -23,7 +23,7 @@ def setup_parser():
     parser.add_argument('--num_configs', type=int, required=True, help='Number of configurations to process.')
 
     # GPU ID to use
-    parser.add_argument('--gpu_id', type=int, required=True, help='GPU ID to use for processing.')
+    parser.add_argument('--gpu_id', type=str, default='3,1', help='GPU ID for training')
 
     # Mock processing mode
     parser.add_argument('--mock', action='store_true', help='Run with mock data.')
@@ -54,17 +54,17 @@ def setup_parser():
 args = setup_parser()
 hyper_params = {
     'batch': [4],  # 1],
-    'lr': [5e-3, 1e-4, 5e-4],  # 1e-3],
+    'lr': [1e-4, 5e-5],  # 1e-3],
     'vit_depth': [1, 5, 9],
-    'vit_dim': [32, 64, 128],
+    'vit_dim': [64, 128, 256],
     'mlp_dim': [64],
-    'heads': [19, 49],
-    'dropout': [0.1, 0.2],
-    'emb_dropout': [0, 0.1],
+    'heads': [10, 20, 30, 40],
+    'dropout': [0.1, 0.05],
+    'emb_dropout': [0.1],
     'sparsing_method': ['eq', 'mid'],
     'epochs': [1] if args.mock else [5, 10, 20],
     'slices': [19, 49],
-    'fine_tune': [False, True]
+    'finetune': [False, True]
 }
 
 
@@ -82,8 +82,8 @@ def get_configurations(num_configs):
 
         if config not in configs:
             configs += (config,)
-        else:
-            print("Duplicate configuration found. Skipping.")
+        # else:
+        #     print("Duplicate configuration found. Skipping.")
 
     return configs
 
@@ -103,8 +103,9 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
     for config in configs:
         for label in labels:
             # print(config)
-            tuning = 'fine_tune' if config[-1] else 'fit'
-            suffix = '-'.join(f'{item[0]}_{item[1]}' for item in config if item[0] != 'fine_tune') + f'-{tuning}'
+            finetune = config[-1][-1]
+            suffix = '-'.join(f'{item[0]}_{item[1]}' for item in config if item[0] != 'finetune')
+            suffix += f'-finetune' if finetune else '-fit'
             command = f"/scratch/avram/envs/slivit/bin/python /scratch/avram/projects/SLIViT/finetune.py "
             command += f"--seed 1 --dataset oct "
             command += f'--meta_data {csv_path} '
@@ -114,8 +115,9 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             command += f"--split_ratio .8,.2,.0 "
             command += f"--wandb_name houston_{label} "
             command += f"--out_dir {out_dir}/{label}/{suffix} "
-            command += ' '.join(
-                f'--{item[0]} {item[1]}' for item in config if item[0] != 'fine_tune') + f' --{tuning}' + '\n'
+            command += ' '.join(f'--{item[0]} {item[1]}' for item in config if item[0] != 'finetune')
+            if finetune:
+                command += f' --{finetune}'
             done_file_path = f'{out_dir}/{label}/{suffix}/done_finetune'  # TODO: change to {get_script_name()}
 
             if os.path.exists(done_file_path):
@@ -124,7 +126,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
                 continue
 
             if not os.path.exists(done_file_path):
-                print(f"Running command:\n{command}")
+                print(f"Running command:\n{command}\n")
                 subprocess.run(command, shell=True)
             else:
                 print(f'Configuration already trained. Skipping...')
