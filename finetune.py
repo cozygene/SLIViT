@@ -1,5 +1,3 @@
-# finetune.py
-
 from auxiliaries.slivit_auxiliaries import *
 
 if args.wandb_name is not None:
@@ -10,11 +8,11 @@ if __name__ == '__main__':
 
     out_dir = init_out_dir(args)
 
+    dls, test_loader = setup_dataloaders(args, out_dir)
+
     slivit = SLIViT(backbone=load_backbone(args.fe_classes, args.fe_path),
                     fi_dim=args.vit_dim, fi_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
                     num_vol_frames=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
-
-    dls, test_loader = setup_dataloaders(args, out_dir)
 
     learner, best_model_name = create_learner(slivit, dls, out_dir, args)
 
