@@ -27,3 +27,6 @@ class SLIViTDataset(Dataset):
 
     def load_scan(self, *args):
         raise NotImplementedError('load_scan method must be implemented in child class')
+
+    def get_num_classes(self):
+        return len(np.unique(self.labels))
