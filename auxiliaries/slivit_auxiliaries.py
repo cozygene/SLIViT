@@ -26,7 +26,7 @@ def get_label(sample, labels, pathologies):
     return label
 
 
-def train_and_evaluate_slivit(learner, test_loader, out_dir, best_model_name, args):
+def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None):
     gpus = os.environ["CUDA_VISIBLE_DEVICES"].split(',')
     for gpu in range(len(gpus)):
         try:
@@ -163,65 +163,6 @@ def evaluate_and_store_results(learner, data_loader, model_name, meta_data, path
         logger.info('Evaluation loader is empty. No evaluation is performed.')
 
 
-def get_volumetric_dataloaders(dataset_class, args, out_dir, mnist=None):
-    msg = ''
-    if mnist is not None:
-        train_subset = dataset_class(mnist(split="train", download=True), args.slices)
-        valid_subset = dataset_class(mnist(split="val", download=True), args.slices)
-        test_subset = dataset_class(mnist(split="test", download=True), args.slices)
-
-        if args.mnist_mocks is not None:
-            msg += f'Running a mock version of the dataset with {args.mnist_mocks} samples only!!'
-
-            train_subset = Subset(train_subset, np.arange(0, args.mnist_mocks))
-            valid_subset = Subset(valid_subset, np.arange(0, args.mnist_mocks))
-            test_subset = Subset(test_subset, np.arange(0, args.mnist_mocks))
-
-    else:
-        train_indices, valid_indices, test_indices = get_split_indices(args.meta_data, out_dir,
-                                                                       args.split_ratio, args.label3d,
-                                                                       args.split_col, args.pid_col)
-        dataset = dataset_class(args.meta_data,
-                                args.label3d,
-                                args.path_col,
-                                args.slices,
-                                args.sparsing_method)
-
-        train_subset = Subset(dataset, train_indices)
-        valid_subset = Subset(dataset, valid_indices)
-        if len(test_indices) > 0:
-            # assert args.split_ratio[2] > 0, 'Test set is not empty but split_ratio[2] is 0'
-            # internal test set
-            msg = f'Using internal test set for final model evaluation'
-            if args.split_ratio[2] == 0:
-                msg += ' (split_ratio 0 is overridden by a pre-defined split)'
-            test_subset = Subset(dataset, test_indices)
-        else:
-            # external test set
-            assert args.split_ratio[2] == 0, 'Test set is empty but split_ratio[2] is not 0'
-            if args.test_csv is None:
-                msg = 'No model evaluation will be done (test ratio was set to 0 and no test_csv was provided).'
-                test_subset = Subset(dataset, [])  # empty test set
-            else:
-                msg = f'Using external test set for final model evaluation from:\n{args.test_csv}'
-                test_df = pd.read_csv(args.test_csv)
-                test_subset = Subset(dataset_class(test_df, args.label3d, args.path_col, args.slices,
-                                                   args.sparsing_method), np.arange(0, len(test_df)))
-
-    if msg and get_script_name() != 'evaluate':
-        logger.info('\n\n' + '*' * 100 + f'\n{msg}\n' + '*' * 100 + '\n')
-
-    logger.info(f'Num of cpus is {args.cpus}')
-
-    train_loader = DataLoader(train_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
-    logger.info(f'# of train batches is {len(train_loader)}')
-    valid_loader = DataLoader(valid_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
-    logger.info(f'# of validation batches is {len(valid_loader)}')
-    test_loader = DataLoader(test_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
-    logger.info(f'# of Test batches is {len(test_loader)}\n')
-    return train_loader, valid_loader, test_loader
-
-
 def save_options(options_file, args):
     arguments = []
     for arg in vars(args):
@@ -283,12 +224,12 @@ def wrap_up(out_dir, msg=''):
         logger.info('Encountered an error!')
     else:
         logger.info('Done!')
-    logger.info('_' * 100 + '\n\n\n')
+    logger.info('_' * 100 + '\n\n')
 
 
 def setup_dataloaders(args, out_dir):
     dataset_class, mnist = get_dataset_class(args.dataset)
-    train_loader, valid_loader, test_loader = get_volumetric_dataloaders(dataset_class, args, out_dir, mnist)
+    train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, out_dir, mnist)
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
     return dls, test_loader

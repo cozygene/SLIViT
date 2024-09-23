@@ -17,7 +17,7 @@ if __name__ == '__main__':
     learner, best_model_name = create_learner(slivit, dls, out_dir, args)
 
     try:
-        train_and_evaluate_slivit(learner, test_loader, out_dir, best_model_name, args)
+        train_and_evaluate(learner, out_dir, best_model_name, args, test_loader)
         wrap_up(out_dir)
     except Exception as e:
         wrap_up(out_dir, e.args[0])
