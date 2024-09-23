@@ -18,7 +18,7 @@ parser.add_argument('--drop_default_suffix', action='store_true', help='Drop def
 parser.add_argument('--wandb_name', default=None, help='A name for the wandb project (if not provided, wandb will not be used)')
 
 # advanced general parameters
-parser.add_argument('--gpu_id', type=int, default=1, help='GPU ID for training')
+parser.add_argument('--gpu_id', type=str, default='0', help='GPU ID for training')
 parser.add_argument('--batch', type=int, default=16, help='Batch size')
 parser.add_argument('--cpus', type=int, default=16, help='# of cpus to use for loading data')
 parser.add_argument('--epochs', type=int, default=20, help='# of training epochs')

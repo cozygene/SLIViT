@@ -44,6 +44,49 @@ def get_label(sample, labels, pathologies):
     return label
 
 
+def train_and_evaluate_slivit(learner, test_loader, out_dir, best_model_name, args):
+    gpus = os.environ["CUDA_VISIBLE_DEVICES"].split(',')
+    for gpu in range(len(gpus)):
+        try:
+            # Set the current GPU
+            torch.cuda.set_device(gpu)  # Switch to the current GPU
+            learner.model.to(f'cuda:{gpu}')  # Move model to the current GPU
+
+            # Release previous GPU's memory if not on the first GPU
+            if gpu > 0:
+                torch.cuda.set_device(gpu - 1)  # Switch to the previous GPU
+                torch.cuda.empty_cache()  # Release the memory of the previous GPU
+                torch.cuda.set_device(gpu)  # Switch back to the current GPU
+
+            # Train or fine-tune the model
+            if args.fine_tune:
+                learner.fine_tune(args.epochs, args.lr)
+            else:
+                learner.fit(args.epochs, args.lr)
+
+            logger.info(f'Best model is stored at:\n{out_dir}/{best_model_name}.pth')
+
+            # Evaluate the model on the test set if provided
+            if len(test_loader):
+                evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
+            else:
+                logger.info('No test set provided. Skipping evaluation...')
+
+            # successful running
+            return
+
+        except RuntimeError as e:
+            if 'out of memory' in e.args[0]:
+                logger.error(f'GPU {gpus[gpu]} ran out of memory. Trying next GPU...\n')
+            else:
+                logger.error(f'Unrecognized errro occurred: {e.args[0]}. Exiting...\n')
+                raise e
+
+    # Handle failure case where all GPUs run out of memory or error out
+    logger.error('Out of memory error occurred on all GPUs. Exiting...\n')
+    raise e  # Re-raise the exception for proper handling outside this function
+
+
 def get_samples(meta_data):
     samples = []
     # label_to_count = {p: {} for p in pathologies}
@@ -177,7 +220,7 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
         logger.info(f'{metric_name}: {metric_score:.5f}')
         with open(f'{out_dir}/{metric_name}.txt', 'w') as f:
             f.write(f'{metric_score:.5f}\n')
-    logger.info('\n' + '*' * 100 + f'\nScores are saved at:\n{out_dir}')
+    logger.info('\n' + '*' * 100 + f'\nRunning result is saved at:\n{out_dir}')
 
 
 def evaluate_and_store_results(learner, data_loader, model_name, meta_data, pathology, out_dir):
@@ -315,16 +358,10 @@ def wrap_up(out_dir, msg=''):
     if msg:
         with open(f'{out_dir}/error_{get_script_name()}', 'w') as f:
             f.write(msg)
-    logger.info('Done!')
+        logger.info('Encountered an error!')
+    else:
+        logger.info('Done!')
     logger.info('_' * 100 + '\n\n\n')
-
-
-def setup_slivit(args):
-    slivit = SLIViT(backbone=load_backbone(args.fe_classes, args.fe_path),
-                    fi_dim=args.vit_dim, fi_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
-                    num_vol_frames=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
-    slivit.to(device='cuda')
-    return slivit
 
 
 def setup_dataloaders(args, out_dir):
