@@ -15,7 +15,7 @@ class SLIViTDataset3D(SLIViTDataset):
         slice_idxs = self.get_slices_indexes(scan_path, self.num_slices_to_use)  # TODO: consider moving to load_volume
         scan = self.load_scan(scan_path, slice_idxs)
         transformed_scan = torch.cat([self.t(im) for im in scan], dim=-1)
-        return transformed_scan, label  # TODO: Consider adding EHR info
+        return transformed_scan, label.squeeze(0)  # TODO: Consider adding EHR info
 
     def get_slices_indexes(self, vol_path, num_slices_to_use):
         total_num_of_slices = len(list(filter(self.filter, os.listdir(vol_path))))

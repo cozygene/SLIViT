@@ -10,7 +10,7 @@ class SLIViTDataset(Dataset):
         if not isinstance(meta_data, pd.DataFrame):
             # meta_data is a path to a csv file
             meta_data = pd.read_csv(meta_data)  # , index_col=0)
-        self.labels = meta_data[label_name].values
+        self.labels = meta_data[label_name.split(',')].values
         self.scan_paths = meta_data[path_col_name].values
         for p in self.scan_paths:
             assert os.path.exists(p), f'{p} do not exist'
