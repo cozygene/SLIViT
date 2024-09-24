@@ -20,8 +20,8 @@ if __name__ == '__main__':
         train_and_evaluate(learner, out_dir, best_model_name, args, test_loader)
         wrap_up(out_dir)
     except Exception as e:
-        wrap_up(out_dir, e.args[0])
-        sys.exit(1)
+        wrap_up(out_dir, e)
+        raise e
     finally:
         if args.wandb_name is not None:
             wandb.finish()
