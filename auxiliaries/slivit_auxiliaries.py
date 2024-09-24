@@ -183,25 +183,6 @@ def save_options(options_file, args):
     logger.info(f'Running configuration is saved at:\n{options_file}\n')
 
 
-def get_dataset_class(dataset_name):
-    mnist = None
-    if dataset_name == 'oct':
-        from datasets.OCTDataset3D import OCTDataset3D as dataset_class
-    elif dataset_name == 'ultrasound':
-        from datasets.USDataset3D import USDataset3D as dataset_class
-    elif dataset_name == 'mri':
-        from datasets.MRIDataset3D import MRIDataset3D as dataset_class
-    elif dataset_name == 'ct':
-        from medmnist import NoduleMNIST3D as mnist
-        from datasets.MNISTDataset3D import MNISTDataset3D as dataset_class
-    elif dataset_name == 'custom':
-        from datasets.CustomDataset3D import CustomDataset3D as dataset_class
-    else:
-        raise ValueError('Unknown dataset option')
-
-    return dataset_class, mnist
-
-
 def get_loss_and_metrics(task):
     if task == 'cls':
         loss_f = torch.nn.BCEWithLogitsLoss()
