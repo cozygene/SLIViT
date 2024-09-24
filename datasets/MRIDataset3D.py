@@ -9,7 +9,7 @@ from auxiliaries.misc import to_tensor
 class MRIDataset3D(SLIViTDataset3D):
 
     def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method):
-        super().__init__(meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, default_transform_gray)
+        super().__init__(meta_data, label_name, path_col_name, default_transform_gray, num_slices_to_use, sparsing_method)
 
         # example image name: '1.3.12.2.1107.5.2.18.41754.2017082116102653036617510.dcm'
         self.filter = lambda x: x.endswith('dcm')

@@ -5,7 +5,7 @@ from datasets.SLIViTDataset import SLIViTDataset
 
 
 class SLIViTDataset3D(SLIViTDataset):
-    def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, transformations):
+    def __init__(self, meta_data, label_name, path_col_name, transformations, num_slices_to_use, sparsing_method):
         super().__init__(meta_data, label_name, path_col_name, transformations)
         self.num_slices_to_use = num_slices_to_use
         self.sparsing_method = sparsing_method

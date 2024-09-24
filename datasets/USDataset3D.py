@@ -8,7 +8,7 @@ from auxiliaries.misc import to_tensor
 class USDataset3D(SLIViTDataset3D):
 
     def __init__(self, meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method):
-        super().__init__(meta_data, label_name, path_col_name, num_slices_to_use, sparsing_method, default_transform_gray)
+        super().__init__(meta_data, label_name, path_col_name, default_transform_gray, num_slices_to_use, sparsing_method)
 
         # example image name: '0003.tiff'
         self.filter = lambda x: x.endswith('tiff')
