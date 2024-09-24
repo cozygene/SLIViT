@@ -1,14 +1,17 @@
 import os
 import torch
 import numpy as np
+
+from auxiliaries.slivit_auxiliaries import default_transform_gray
 from datasets.SLIViTDataset import SLIViTDataset
 
 
 class SLIViTDataset3D(SLIViTDataset):
-    def __init__(self, meta_data, label_name, path_col_name, transformations, num_slices_to_use, sparsing_method):
-        super().__init__(meta_data, label_name, path_col_name, transformations)
-        self.num_slices_to_use = num_slices_to_use
-        self.sparsing_method = sparsing_method
+    def __init__(self, meta_data, label_name, path_col_name, **kwargs):# num_slices_to_use, sparsing_method):
+        super().__init__(meta_data, label_name, path_col_name, default_transform_gray)
+        self.num_slices_to_use = kwargs.get('num_slices_to_use')
+        self.sparsing_method = kwargs.get('sparsing_method')
+        self.filter = lambda x: x.endswith(kwargs.get('img_suffix'))
 
     def __getitem__(self, idx):
         scan_path, label = super().__getitem__(idx)
@@ -19,6 +22,8 @@ class SLIViTDataset3D(SLIViTDataset):
 
     def get_slices_indexes(self, vol_path, num_slices_to_use):
         total_num_of_slices = len(list(filter(self.filter, os.listdir(vol_path))))
+        if total_num_of_slices == 0:
+            raise ValueError(f"No images found in {vol_path}")
         if self.sparsing_method == 'eq':
             # equally-spaced down sample the slices
             slc_idxs = np.linspace(0, total_num_of_slices - 1,
@@ -29,7 +34,7 @@ class SLIViTDataset3D(SLIViTDataset):
             slc_idxs = np.linspace(middle - num_slices_to_use // 2, middle + num_slices_to_use // 2,
                                    num_slices_to_use).astype(int)  # down sample slices
         elif self.sparsing_method == 'custom':
-            # customized down sample method to be defined by the user
+            # customized sampling method to be defined by the user
             raise NotImplementedError("Sparsing method not implemented")
         else:
             raise ValueError("Sparsing method not recognized")
