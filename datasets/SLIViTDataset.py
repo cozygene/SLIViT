@@ -29,4 +29,4 @@ class SLIViTDataset(Dataset):
         raise NotImplementedError('load_scan method must be implemented in child class')
 
     def get_num_classes(self):
-        return len(np.unique(self.labels))
+        return len(self.labels[0])
