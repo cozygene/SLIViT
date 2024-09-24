@@ -117,7 +117,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             command += f"--out_dir {out_dir}/{label}/{suffix} "
             command += ' '.join(f'--{item[0]} {item[1]}' for item in config if item[0] != 'finetune')
             if finetune:
-                command += f' --{finetune}'
+                command += f' --finetune'
             done_file_path = f'{out_dir}/{label}/{suffix}/done_finetune'  # TODO: change to {get_script_name()}
 
             if os.path.exists(done_file_path):

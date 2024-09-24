@@ -31,6 +31,7 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
     for gpu in range(len(gpus)):
         try:
             # Set the current GPU
+            logger.info(f'Trying GPU {gpus[gpu]}\n')
             torch.cuda.set_device(gpu)  # Switch to the current GPU
             learner.model.to(f'cuda:{gpu}')  # Move model to the current GPU
 
@@ -41,7 +42,7 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
                 torch.cuda.set_device(gpu)  # Switch back to the current GPU
 
             # Train or fine-tune the model
-            if args.fine_tune:
+            if args.finetune:
                 learner.fine_tune(args.epochs, args.lr)
             else:
                 learner.fit(args.epochs, args.lr)
@@ -59,9 +60,9 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
 
         except RuntimeError as e:
             if 'out of memory' in e.args[0]:
-                logger.error(f'GPU {gpus[gpu]} ran out of memory. Trying next GPU...\n')
+                logger.error(f'GPU ran out of memory. Trying next GPU...\n')
             else:
-                logger.error(f'Unrecognized errro occurred: {e.args[0]}. Exiting...\n')
+                logger.error(f'Unrecognized error occurred: {e.args[0]}. Exiting...\n')
                 raise e
 
     # Handle failure case where all GPUs run out of memory or error out
@@ -215,13 +216,13 @@ def get_loss_and_metrics(task):
     return loss_f, metrics
 
 
-def wrap_up(out_dir, msg=''):
+def wrap_up(out_dir, e=None):
     with open(f'{out_dir}/done_{get_script_name()}', 'w') as f:
         pass
-    if msg:
+    if e:
         with open(f'{out_dir}/error_{get_script_name()}', 'w') as f:
-            f.write(msg)
-        logger.info('Encountered an error!')
+            f.write(e.args[0])
+        logger.info(f'Encountered an error!\n{e.args[0]}')
     else:
         logger.info('Done!')
     logger.info('_' * 100 + '\n\n')
