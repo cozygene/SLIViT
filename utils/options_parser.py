@@ -33,7 +33,7 @@ parser.add_argument('--split_ratio', type=lambda x: [float(i) for i in x.split('
 parser.add_argument('--min_delta', type=float, default=0.1,
                     help='minimum delta between the last monitor value and the best monitor value for early stopping')
 parser.add_argument('--patience', type=int, default=5, help='patience for early stopping')
-parser.add_argument('--fine_tune', action='store_true', help='learner.fine_tune instead of learner.fit')
+parser.add_argument('--finetune', action='store_true', help='learner.fine_tune instead of learner.fit')
 
 # pretraining
 parser.add_argument('--label2d', type=lambda x: x.split(','),
