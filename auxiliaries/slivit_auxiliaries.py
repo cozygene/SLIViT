@@ -14,11 +14,12 @@ from PIL import Image
 from slivit import SLIViT
 from auxiliaries.misc import *
 from utils.load_backbone import load_backbone
+
 if args.wandb_name is not None:
     from fastai.callback.wandb import *
 
-
 gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
+script_name = get_script_name()
 
 
 def get_label(sample, labels, pathologies):
@@ -185,7 +186,7 @@ def save_options(options_file, args):
 
 def get_loss_and_metrics(task):
     if task == 'cls':
-        loss_f = torch.nn.BCEWithLogitsLoss()
+        loss_f = torch.nn.BCEWithLogitsLoss()  #TODO: consider using CrossEntropyLoss
         # metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
         metrics = [RocAucMulti(), APScoreMulti()]
     elif task == 'reg':
@@ -198,15 +199,14 @@ def get_loss_and_metrics(task):
 
 
 def wrap_up(out_dir, e=None):
-    with open(f'{out_dir}/done_{get_script_name()}', 'w') as f:
+    with open(f'{out_dir}/done_{script_name}', 'w') as f:
         pass
     if e:
-        with open(f'{out_dir}/error_{get_script_name()}', 'w') as f:
-            f.write(e.args[0])
-        logger.info(f'Encountered an error!\n{e.args[0]}')
+        with open(f'{out_dir}/error_{script_name}', 'w') as f:
+            f.write(f'{e}\n')
     else:
         logger.info('Done!')
-    logger.info('_' * 100 + '\n')
+        logger.info('_' * 100 + '\n')
 
 
 def setup_dataloaders(args, out_dir):
@@ -236,7 +236,7 @@ def init_out_dir(args):
     logger.info(f'\nOutput direcory is\n{out_dir}\n')
     os.makedirs(out_dir, exist_ok=True)
 
-    options_file = f'{out_dir}/options_{get_script_name()}.txt'
+    options_file = f'{out_dir}/options_{script_name}.txt'
     save_options(options_file, args)
 
     return out_dir
@@ -247,10 +247,9 @@ def create_learner(slivit, dls, out_dir, args):
     loss_f, metrics = get_loss_and_metrics(args.task)
     learner = Learner(dls, slivit, model_dir=out_dir, loss_func=loss_f, metrics=metrics,
                       cbs=[SaveModelCallback(fname=best_model_name),
-                           EarlyStoppingCallback(monitor='valid_loss', min_delta=args.min_delta,
-                                                 patience=args.patience),
-                           CSVLogger()] + [WandbCallback()] if (args.wandb_name is not None and
-                                                                get_script_name() != 'evaluate') else [])
+                           EarlyStoppingCallback(min_delta=args.min_delta, patience=args.patience),
+                           CSVLogger()] +
+                          ([WandbCallback()] if (args.wandb_name is not None and script_name != 'evaluate') else []))
     return learner, best_model_name
 
 
