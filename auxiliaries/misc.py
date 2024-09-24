@@ -51,8 +51,9 @@ def get_split_indices(meta_data, out_dir, split_ratio, pathology, split_col, pid
             # Draw indices for train, val and test
             # First split
             gss = GroupShuffleSplit(n_splits=1, train_size=split_ratio[0])
-            train_idx, temp_idx = next(gss.split(df, df[pathology],
-                                                 df[pid_col]))  # split by patient
+            train_idx, temp_idx = next(gss.split(df,
+                                                 y=None if get_script_name() == 'pretrain' else df[pathology],
+                                                 groups=df[pid_col]))  # split by patient
 
             if split_ratio[2] == 0:
                 # using external test set
@@ -104,10 +105,12 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
                                                                        args.split_ratio, args.label3d,
                                                                        args.split_col, args.pid_col)
         dataset = dataset_class(args.meta_data,
-                                args.label3d,
+                                args.label3d,#.split(','),
                                 args.path_col,
-                                args.slices,
-                                args.sparsing_method)
+                                # **kwargs
+                                num_slices_to_use=args.slices,
+                                sparsing_method=args.sparsing_method,
+                                img_suffix=args.img_suffix)
 
         train_subset = Subset(dataset, train_indices)
         valid_subset = Subset(dataset, valid_indices)
@@ -127,8 +130,12 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
             else:
                 msg = f'Using external test set for final model evaluation from:\n{args.test_csv}'
                 test_df = pd.read_csv(args.test_csv)
-                test_subset = Subset(dataset_class(test_df, args.label3d, args.path_col, args.slices,
-                                                   args.sparsing_method), np.arange(0, len(test_df)))
+                test_subset = Subset(dataset_class(test_df, args.label3d, args.path_col,
+                                                   #**kwargs
+                                                   num_slices_to_use=args.slices,
+                                                   sparsing_method=args.sparsing_method,
+                                                   img_suffix=args.img_suffix),
+                                     np.arange(0, len(test_df)))
 
     if msg and get_script_name() != 'evaluate':
         logger.info('\n\n' + '*' * 100 + f'\n{msg}\n' + '*' * 100 + '\n')
@@ -142,3 +149,29 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
     test_loader = DataLoader(test_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
     logger.info(f'# of Test batches is {len(test_loader)}\n')
     return train_loader, valid_loader, test_loader
+
+
+def get_dataset_class(dataset_name):
+    mnist = None
+    if dataset_name == 'chestmnist':
+        from medmnist import ChestMNIST as mnist
+        from datasets.ChestMNIST import MNISTDataset2D as dataset_class
+    elif dataset_name == 'ct':
+        from medmnist import NoduleMNIST3D as mnist
+        from datasets.MNISTDataset3D import MNISTDataset3D as dataset_class
+    elif dataset_name == 'kermany':
+        from datasets.KermanyDataset import KermanyDataset as dataset_class
+    elif dataset_name == 'oct':
+        from datasets.OCTDataset3D import OCTDataset3D as dataset_class
+    elif dataset_name == 'ultrasound':
+        from datasets.USDataset3D import USDataset3D as dataset_class
+    elif dataset_name == 'mri':
+        from datasets.MRIDataset3D import MRIDataset3D as dataset_class
+    elif dataset_name == 'custom2d':
+        from datasets.CustomDataset2D import CustomDataset2D as dataset_class
+    elif dataset_name == 'custom3d':
+        from datasets.CustomDataset3D import CustomDataset3D as dataset_class
+    else:
+        raise ValueError('Unknown dataset option')
+
+    return dataset_class, mnist
