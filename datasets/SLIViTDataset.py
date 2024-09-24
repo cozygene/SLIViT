@@ -16,6 +16,7 @@ class SLIViTDataset(Dataset):
             assert os.path.exists(p), f'{p} do not exist'
         self.t = transform
         self.filter = lambda x: x
+        self.num_classes = len(self.labels[0])
 
     def __len__(self):
         return len(self.scan_paths)
@@ -29,4 +30,4 @@ class SLIViTDataset(Dataset):
         raise NotImplementedError('load_scan method must be implemented in child class')
 
     def get_num_classes(self):
-        return len(self.labels[0])
+        return self.num_classes
