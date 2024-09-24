@@ -2,7 +2,7 @@ import os
 from datasets.SLIViTDataset3D import SLIViTDataset3D
 from auxiliaries.pretrain_auxiliaries import *
 from auxiliaries.slivit_auxiliaries import default_transform_gray
-from auxiliaries.misc import to_tensor, get_split_indices
+from auxiliaries.misc import to_tensor
 
 
 class OCTDataset3D(SLIViTDataset3D):
