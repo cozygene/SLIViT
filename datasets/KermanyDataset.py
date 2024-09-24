@@ -1,25 +1,10 @@
-import pandas as pd
-import torch
-from torch.utils.data import Dataset
-
 from datasets.SLIViTDataset import SLIViTDataset
 from auxiliaries.pretrain_auxiliaries import *
-from torchvision.transforms import Compose
-from torchvision.transforms import ToTensor, PILToTensor
+from torchvision.transforms import PILToTensor
 
-default_transform = Compose(
-    [
-        tf.ToPILImage(),
-        tf.Resize((224, 224)),
-        pil_contrast_strech(),
-        ToTensor(),
-        gray2rgb
-    ]
-)
 
-# TODO: cleanup this class
 class KermanyDataset(SLIViTDataset):
-    def __init__(self, meta_data, label_name, path_col_name):
+    def __init__(self, meta_data, label_name, path_col_name, **kwargs):
         super().__init__(meta_data, label_name, path_col_name, default_transform)
 
     def __getitem__(self, idx):
