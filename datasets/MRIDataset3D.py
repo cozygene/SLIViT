@@ -15,8 +15,7 @@ class MRIDataset3D(SLIViTDataset3D):
         self.filter = lambda x: x.endswith('dcm')
 
     def __getitem__(self, idx):
-        scan, label = super().__getitem__(idx[0])
-        return scan, label.squeeze()
+        return super().__getitem__(idx[0])
 
     def load_scan(self, path, slc_idxs):
         filtered = list(filter(self.filter, os.listdir(path)))  # exclude non-dicom files
