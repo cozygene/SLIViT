@@ -53,7 +53,7 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
             if len(test_loader):
                 evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
             else:
-                logger.info('No test set provided. Skipping evaluation...')
+                logger.info('Skipping evaluation... (test set was not provided)')
 
             # successful running
             return
@@ -206,7 +206,7 @@ def wrap_up(out_dir, e=None):
         logger.info(f'Encountered an error!\n{e.args[0]}')
     else:
         logger.info('Done!')
-    logger.info('_' * 100 + '\n\n')
+    logger.info('_' * 100 + '\n')
 
 
 def setup_dataloaders(args, out_dir):
