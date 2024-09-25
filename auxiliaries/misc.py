@@ -1,6 +1,7 @@
 from fastai.data.load import DataLoader
 from torch.utils.data import Subset
-
+from fastai.imports import *
+import torch
 from utils.options_parser import args
 import os
 
@@ -37,9 +38,9 @@ def get_script_name():
     return sys.argv[0].split('/')[-1].split('.')[0]
 
 
-def get_split_indices(meta_data, out_dir, split_ratio, pathology, split_col, pid_col):
+def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col):
 
-    df = pd.read_csv(meta_data)
+    df = pd.read_csv(meta)
     if split_col in df.columns:
         # Get indices for train, val and test
         train_idx = np.argwhere(df[split_col].str.contains('train', case=False))
@@ -74,7 +75,7 @@ def get_split_indices(meta_data, out_dir, split_ratio, pathology, split_col, pid
             df[split_col] = 'train'
             df.loc[val_idx, split_col] = 'val'
             df.loc[test_idx, split_col] = 'test'
-            df.to_csv(f'{out_dir}/{os.path.split(meta_data)[-1]}', index=False)
+            df.to_csv(f'{out_dir}/{os.path.split(meta)[-1]}', index=False)
         else:
             assert get_script_name() == 'evaluate', \
                 '--split_ratio was set inappropriately (empty train split is only allowed for evaluate.py)'
@@ -89,23 +90,25 @@ def get_split_indices(meta_data, out_dir, split_ratio, pathology, split_col, pid
 def get_dataloaders(dataset_class, args, out_dir, mnist=None):
     msg = ''
     if mnist is not None:
-        train_subset = dataset_class(mnist(split="train", download=True), args.slices)
-        valid_subset = dataset_class(mnist(split="val", download=True), args.slices)
-        test_subset = dataset_class(mnist(split="test", download=True), args.slices)
+        # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
+        train_subset = dataset_class(mnist(split="train", download=True, size=28 if args.mnist_mocks else 224), num_slices_to_use=args.slices)
+        valid_subset = dataset_class(mnist(split="val", download=True, size=28 if args.mnist_mocks else 224), num_slices_to_use=args.slices)
+        test_subset = dataset_class(mnist(split="test", download=True, size=28 if args.mnist_mocks else 224), num_slices_to_use=args.slices)
 
         if args.mnist_mocks is not None:
             msg += f'Running a mock version of the dataset with {args.mnist_mocks} samples only!!'
 
-            train_subset = Subset(train_subset, np.arange(0, args.mnist_mocks))
-            valid_subset = Subset(valid_subset, np.arange(0, args.mnist_mocks))
-            test_subset = Subset(test_subset, np.arange(0, args.mnist_mocks))
+        train_subset = Subset(train_subset, np.arange(args.mnist_mocks if args.mnist_mocks else len(train_subset)))
+        valid_subset = Subset(valid_subset, np.arange(args.mnist_mocks if args.mnist_mocks else len(valid_subset)))
+        test_subset = Subset(test_subset, np.arange(args.mnist_mocks if args.mnist_mocks else len(test_subset)))
 
+        # dataset  = ConcatDataset([train_subset, valid_subset, test_subset])
     else:
-        train_indices, valid_indices, test_indices = get_split_indices(args.meta_data, out_dir,
-                                                                       args.split_ratio, args.label3d,
+        train_indices, valid_indices, test_indices = get_split_indices(args.meta, out_dir,
+                                                                       args.split_ratio, args.label,
                                                                        args.split_col, args.pid_col)
-        dataset = dataset_class(args.meta_data,
-                                args.label3d,#.split(','),
+        dataset = dataset_class(args.meta,
+                                args.label,#.split(','),
                                 args.path_col,
                                 # **kwargs
                                 num_slices_to_use=args.slices,
@@ -124,18 +127,18 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
         else:
             # external test set
             assert args.split_ratio[2] == 0, 'Test set is empty but split_ratio[2] is not 0'
-            if args.test_csv is None:
-                msg = 'No model evaluation will be done (test ratio was set to 0 and no test_csv was provided).'
+            if args.test_meta is None:
+                msg = 'No model evaluation will be done (test ratio was set to 0 and no test_meta was provided).'
                 test_subset = Subset(dataset, [])  # empty test set
             else:
-                msg = f'Using external test set for final model evaluation from:\n{args.test_csv}'
-                test_df = pd.read_csv(args.test_csv)
-                test_subset = Subset(dataset_class(test_df, args.label3d, args.path_col,
+                msg = f'Using external test set for final model evaluation from:\n{args.test_meta}'
+                test_df = pd.read_csv(args.test_meta)
+                test_subset = Subset(dataset_class(test_df, args.label, args.path_col,
                                                    #**kwargs
                                                    num_slices_to_use=args.slices,
                                                    sparsing_method=args.sparsing_method,
                                                    img_suffix=args.img_suffix),
-                                     np.arange(0, len(test_df)))
+                                     np.arange(len(test_df)))
 
     if msg and get_script_name() != 'evaluate':
         logger.info('\n\n' + '*' * 100 + f'\n{msg}\n' + '*' * 100 + '\n')
@@ -153,19 +156,19 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
 
 def get_dataset_class(dataset_name):
     mnist = None
-    if dataset_name == 'chestmnist':
+    if dataset_name == 'xray2d':
         from medmnist import ChestMNIST as mnist
-        from datasets.ChestMNIST import MNISTDataset2D as dataset_class
-    elif dataset_name == 'ct':
+        from datasets.MNISTDataset2D import MNISTDataset2D as dataset_class
+    elif dataset_name == 'ct3d':
         from medmnist import NoduleMNIST3D as mnist
         from datasets.MNISTDataset3D import MNISTDataset3D as dataset_class
-    elif dataset_name == 'kermany':
-        from datasets.KermanyDataset import KermanyDataset as dataset_class
-    elif dataset_name == 'oct':
+    elif dataset_name == 'oct2d':
+        from datasets.OCTDataset2D import KermanyDataset as dataset_class
+    elif dataset_name == 'oct3d':
         from datasets.OCTDataset3D import OCTDataset3D as dataset_class
-    elif dataset_name == 'ultrasound':
+    elif dataset_name == 'ultrasound3d':
         from datasets.USDataset3D import USDataset3D as dataset_class
-    elif dataset_name == 'mri':
+    elif dataset_name == 'mri3d':
         from datasets.MRIDataset3D import MRIDataset3D as dataset_class
     elif dataset_name == 'custom2d':
         from datasets.CustomDataset2D import CustomDataset2D as dataset_class
@@ -175,3 +178,18 @@ def get_dataset_class(dataset_name):
         raise ValueError('Unknown dataset option')
 
     return dataset_class, mnist
+
+
+def set_seed(seed=42):
+    """Sets the seed for reproducibility."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if using multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
+if args.seed is not None:
+    set_seed(args.seed)
