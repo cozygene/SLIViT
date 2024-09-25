@@ -163,7 +163,7 @@ def get_dataset_class(dataset_name):
         from medmnist import NoduleMNIST3D as mnist
         from datasets.MNISTDataset3D import MNISTDataset3D as dataset_class
     elif dataset_name == 'oct2d':
-        from datasets.OCTDataset2D import KermanyDataset as dataset_class
+        from datasets.OCTDataset2D import OCTDataset2D as dataset_class
     elif dataset_name == 'oct3d':
         from datasets.OCTDataset3D import OCTDataset3D as dataset_class
     elif dataset_name == 'ultrasound3d':
