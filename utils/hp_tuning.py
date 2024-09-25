@@ -17,7 +17,7 @@ def setup_parser():
     parser.add_argument('--train_csv_path', type=str, required=True, help='Path to the train meta file.')
 
     # Path to the test set
-    parser.add_argument('--test_csv_path', type=str, required=True, help='Path to the test meta file.')
+    parser.add_argument('--test_meta_path', type=str, required=True, help='Path to the test meta file.')
 
     # Number of configurations to process
     parser.add_argument('--num_configs', type=int, required=True, help='Number of configurations to process.')
@@ -35,13 +35,13 @@ def setup_parser():
 
     if args.mock:
         args.train_csv_path = '/mock_'.join(os.path.split(args.train_csv_path))
-        args.test_csv_path = '/mock_'.join(os.path.split(args.test_csv_path))
+        args.test_meta_path = '/mock_'.join(os.path.split(args.test_meta_path))
         args.out += '/mock'
 
     # Print all parsed arguments
     print("Parsed Arguments:")
     print(f"Labels: {args.labels}")
-    print(f"Train data: {args.test_csv_path}")
+    print(f"Train data: {args.test_meta_path}")
     print(f"Test data: {args.train_csv_path}")
     print(f"Number of Configurations: {args.num_configs}")
     print(f"GPU ID: {args.gpu_id}")
@@ -107,10 +107,10 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             suffix = '-'.join(f'{item[0]}_{item[1]}' for item in config if item[0] != 'finetune')
             suffix += f'-finetune' if finetune else '-fit'
             command = f"/scratch/avram/envs/slivit/bin/python /scratch/avram/projects/SLIViT/finetune.py "
-            command += f"--seed 1 --dataset oct "
-            command += f'--meta_data {csv_path} '
-            command += f'--test_csv {test_path} '
-            command += f"--label3d {label} --gpu_id {gpu} --cpus 40 "
+            command += f"--seed 1 --dataset oct3d "
+            command += f'--meta {csv_path} '
+            command += f'--test_meta {test_path} '
+            command += f"--label {label} --gpu_id {gpu} --cpus 40 "
             command += f"--drop_default_suffix "
             command += f"--split_ratio .8,.2,.0 "
             command += f"--wandb_name houston_{label} "
@@ -136,6 +136,6 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
                 time.sleep(10)
 
 
-run_commands(args.train_csv_path, args.test_csv_path, args.num_configs,
+run_commands(args.train_csv_path, args.test_meta_path, args.num_configs,
              args.gpu_id, args.labels, args.out)
 print(f"Ran {args.num_configs} configurations.")

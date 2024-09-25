@@ -3,9 +3,9 @@ from auxiliaries.pretrain_auxiliaries import *
 from torchvision.transforms import PILToTensor
 
 
-class KermanyDataset(SLIViTDataset):
-    def __init__(self, meta_data, label_name, path_col_name, **kwargs):
-        super().__init__(meta_data, label_name, path_col_name, default_transform)
+class OCTDataset2D(SLIViTDataset):
+    def __init__(self, meta, label_name, path_col_name, **kwargs):
+        super().__init__(meta, label_name, path_col_name, default_transform)
 
     def __getitem__(self, idx):
         sample_path, label = super().__getitem__(idx)
