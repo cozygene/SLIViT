@@ -52,7 +52,7 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
 
             # Evaluate the model on the test set if provided
             if len(test_loader):
-                evaluate_and_store_results(learner, test_loader, best_model_name, args.meta_data, args.label3d, out_dir)
+                evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label, out_dir)
             else:
                 logger.info('Skipping evaluation... (test set was not provided)')
 
@@ -71,36 +71,25 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
     raise e  # Re-raise the exception for proper handling outside this function
 
 
-def get_samples(meta_data):
+def get_samples(meta):
     samples = []
     # label_to_count = {p: {} for p in pathologies}
-    for sample in meta_data.path.values:  # -2
+    for sample in meta.path.values:  # -2
         samples.append(sample)
     # print(f'Label counts is: {}')
     return samples
 
 
-class pil_contrast_strech(object):
-
-    def __init__(self, low=2, high=98):
-        self.low, self.high = low, high
-
-    def __call__(self, img):
-        # Contrast stretching
-        img = np.array(img)
-        plow, phigh = np.percentile(img, (self.low, self.high))
-        return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
-
-
-def set_seed(seed=42):
-    """Sets the seed for reproducibility."""
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)  # if using multi-GPU
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+# class pil_contrast_strech(object):
+#
+#     def __init__(self, low=2, high=98):
+#         self.low, self.high = low, high
+#
+#     def __call__(self, img):
+#         # Contrast stretching
+#         img = np.array(img)
+#         plow, phigh = np.percentile(img, (self.low, self.high))
+#         return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
 
 
 default_transform_gray = tf.Compose([
@@ -112,11 +101,11 @@ default_transform_gray = tf.Compose([
 ])
 
 
-def store_predictions(learner, test_loader, meta_data, pathology, results_file, split_col='Split'):
+def store_predictions(learner, test_loader, meta, pathology, results_file, split_col='Split'):
     logger.info(f'Computing predictions...')
     preds = learner.get_preds(dl=test_loader)
 
-    df = pd.read_csv(meta_data).iloc[test_loader.indices.squeeze()]
+    df = pd.read_csv(meta).iloc[test_loader.indices.squeeze()]
     assert df[split_col].str.contains('test', case=False).all()
 
     with open(results_file, 'w') as f:
@@ -151,14 +140,14 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
     logger.info('\n' + '*' * 100 + f'\nRunning result is saved at:\n{out_dir}')
 
 
-def evaluate_and_store_results(learner, data_loader, model_name, meta_data, pathology, out_dir):
+def evaluate_and_store_results(learner, data_loader, model_name, meta, pathology, out_dir):
     print()
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
         # evaluate the best model
         learner.load(model_name)
         results_file = f'{out_dir}/predicted_scores.csv'
-        # preds = store_predictions(learner, data_loader, meta_data, pathology, results_file)
+        # preds = store_predictions(learner, data_loader, meta, pathology, results_file)
         evaluate_model(learner, data_loader, out_dir)
     else:
         # evaluation_loader is empty
@@ -201,7 +190,7 @@ def get_loss_and_metrics(task):
 def wrap_up(out_dir, e=None):
     with open(f'{out_dir}/done_{script_name}', 'w') as f:
         pass
-    if e:
+    if e is not None:
         with open(f'{out_dir}/error_{script_name}', 'w') as f:
             f.write(f'{e}\n')
     else:
@@ -221,10 +210,10 @@ def init_out_dir(args):
     out_dir = args.out_dir.rstrip('/')
     if not args.drop_default_suffix:
         # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
-        if args.meta_data is not None:
-            # example args.meta_data:
+        if args.meta is not None:
+            # example args.meta:
             # /meta_file_folder_path/ultrasound.csv
-            csv_file_name = os.path.splitext(args.meta_data.split("/")[-1])[0]  # remove extension
+            csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
             out_dir = f'{out_dir}/{csv_file_name}'
         else:
             out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
@@ -252,6 +241,3 @@ def create_learner(slivit, dls, out_dir, args):
                           ([WandbCallback()] if (args.wandb_name is not None and script_name != 'evaluate') else []))
     return learner, best_model_name
 
-
-if args.seed is not None:
-    set_seed(args.seed)

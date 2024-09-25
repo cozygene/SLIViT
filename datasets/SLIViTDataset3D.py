@@ -7,8 +7,8 @@ from datasets.SLIViTDataset import SLIViTDataset
 
 
 class SLIViTDataset3D(SLIViTDataset):
-    def __init__(self, meta_data, label_name, path_col_name, **kwargs):# num_slices_to_use, sparsing_method):
-        super().__init__(meta_data, label_name, path_col_name, default_transform_gray)
+    def __init__(self, meta, label_name, path_col_name, **kwargs):# num_slices_to_use, sparsing_method):
+        super().__init__(meta, label_name, path_col_name, default_transform_gray)
         self.num_slices_to_use = kwargs.get('num_slices_to_use')
         self.sparsing_method = kwargs.get('sparsing_method')
         self.filter = lambda x: x.endswith(kwargs.get('img_suffix'))
