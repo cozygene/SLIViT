@@ -21,7 +21,7 @@ if __name__ == '__main__':
         wrap_up(out_dir)
     except Exception as e:
         wrap_up(out_dir, e)
-        raise e
     finally:
         if args.wandb_name is not None:
             wandb.finish()
+
