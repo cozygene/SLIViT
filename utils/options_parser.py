@@ -33,7 +33,7 @@ parser.add_argument('--seed', type=int, default=1, help='Set random seed for rep
 parser.add_argument('--data_dir', type=str, default='.', help='Root directory for the dataset.')
 parser.add_argument('--split_ratio', type=lambda x: [float(i) for i in x.split(',')], default=[0.85, 0.15, 0],
                     help='Train/Val/Test split ratio (comma-separated).')
-parser.add_argument('--min_delta', type=float, default=0.1, help='Minimum delta for early stopping.')
+parser.add_argument('--min_delta', type=float, default=0, help='Minimum delta for early stopping.')
 parser.add_argument('--patience', type=int, default=5,
                     help='Number of epochs to wait for improvement before early stopping.')
 parser.add_argument('--finetune', action='store_true', help='Use learner.fine_tune() instead of learner.fit().')
