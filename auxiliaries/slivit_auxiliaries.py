@@ -61,14 +61,16 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
 
         except RuntimeError as e:
             if 'out of memory' in e.args[0]:
-                logger.error(f'GPU ran out of memory. Trying next GPU...\n')
+                if gpu < len(gpus) - 1:
+                    logger.error(f'GPU ran out of memory. Trying next GPU...\n')
+                else:
+                    # Handle failure case where all GPUs run out of memory or error out
+                    logger.error('Out of memory error occurred on all GPUs. Exiting...\n')
+                    # Re-raise the exception for proper handling outside this function
+                    raise e
             else:
                 logger.error(f'Unrecognized error occurred: {e.args[0]}. Exiting...\n')
                 raise e
-
-    # Handle failure case where all GPUs run out of memory or error out
-    logger.error('Out of memory error occurred on all GPUs. Exiting...\n')
-    raise e  # Re-raise the exception for proper handling outside this function
 
 
 def get_samples(meta):
@@ -189,13 +191,14 @@ def get_loss_and_metrics(task):
 
 def wrap_up(out_dir, e=None):
     with open(f'{out_dir}/done_{script_name}', 'w') as f:
-        pass
-    if e is not None:
-        with open(f'{out_dir}/error_{script_name}', 'w') as f:
+        if e is None:
+            # done file should be empty when successful
+            logger.info('Done successfully!')
+            logger.info('_' * 100 + '\n')
+        else:
             f.write(f'{e}\n')
-    else:
-        logger.info('Done!')
-        logger.info('_' * 100 + '\n')
+            raise e
+
 
 
 def setup_dataloaders(args, out_dir):
