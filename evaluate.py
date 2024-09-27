@@ -1,4 +1,5 @@
 from auxiliaries.slivit_auxiliaries import *
+assert args.checkpoint is not None, 'No checkpoint provided. Please provide a checkpoint to evaluate the model.'
 
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
