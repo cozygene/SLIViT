@@ -91,9 +91,15 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
     msg = ''
     if mnist is not None:
         # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
-        train_subset = dataset_class(mnist(split="train", download=True, size=28 if args.mnist_mocks else 224), num_slices_to_use=args.slices)
-        valid_subset = dataset_class(mnist(split="val", download=True, size=28 if args.mnist_mocks else 224), num_slices_to_use=args.slices)
-        test_subset = dataset_class(mnist(split="test", download=True, size=28 if args.mnist_mocks else 224), num_slices_to_use=args.slices)
+        train_subset = dataset_class(mnist(split="train", download=True, root=args.mnist_root,
+                                           size=28 if args.mnist_mocks else 224),
+                                     num_slices_to_use=args.slices)
+        valid_subset = dataset_class(mnist(split="val", download=True, root=args.mnist_root,
+                                           size=28 if args.mnist_mocks else 224),
+                                     num_slices_to_use=args.slices)
+        test_subset = dataset_class(mnist(split="test", download=True, root=args.mnist_root,
+                                          size=28 if args.mnist_mocks else 224),
+                                    num_slices_to_use=args.slices)
 
         if args.mnist_mocks is not None:
             msg += f'Running a mock version of the dataset with {args.mnist_mocks} samples only!!'

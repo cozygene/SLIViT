@@ -14,9 +14,7 @@ parser.add_argument('--test_meta', type=str, default=None,
                     help='Path to external test set CSV file (uses internal test set by default).')
 parser.add_argument('--label', type=str, help='Goal of the learning task (comma-separated if more than one).')
 parser.add_argument('--dataset', type=str, required=True,
-                    choices=['oct2d', 'xray2d', 'custom2d', 'oct3d', 'ultrasound3d', 'mri3d', 'ct3d', 'custom3d'])
-parser.add_argument('--mnist_mocks', type=int,
-                    help='Number of MNIST samples to use for this run (default: all samples).')
+                    choices=['oct2d', 'xray2d', 'custom2d', 'oct3d', 'us3d', 'mri3d', 'ct3d', 'custom3d'])
 parser.add_argument('--drop_default_suffix', action='store_true',
                     help='Drop the default suffix from the output directory path.')
 parser.add_argument('--wandb_name', type=str, default=None,
@@ -26,11 +24,13 @@ parser.add_argument('--wandb_name', type=str, default=None,
 parser.add_argument('--gpu_id', type=str, default='0', help='GPU ID for training (default: 0).')
 parser.add_argument('--batch', type=int, default=16, help='Batch size for training.')
 parser.add_argument('--cpus', type=int, default=16, help='Number of CPU workers for data loading.')
-parser.add_argument('--epochs', type=int, default=20, help='Number of training epochs.')
-parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate for training.')
+parser.add_argument('--epochs', type=int, default=10, help='Number of training epochs.')
+parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate for training.')
 parser.add_argument('--task', type=str, default='cls', help='Task type: "cls" (classification) or "reg" (regression).')
 parser.add_argument('--seed', type=int, default=1, help='Set random seed for reproducibility.')
-parser.add_argument('--data_dir', type=str, default='.', help='Root directory for the dataset.')
+parser.add_argument('--mnist_mocks', type=int,
+                    help='Number of MNIST samples to use for this run (default: all samples).')
+parser.add_argument('--mnist_root', type=str, default='./', help='Root directory for mnist dataset downloads.')
 parser.add_argument('--split_ratio', type=lambda x: [float(i) for i in x.split(',')], default=[0.85, 0.15, 0],
                     help='Train/Val/Test split ratio (comma-separated).')
 parser.add_argument('--min_delta', type=float, default=0, help='Minimum delta for early stopping.')
