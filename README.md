@@ -156,47 +156,10 @@ Ready to fine-tune SLIViT on your own dataset? Just set `--dataset` to `custom3d
 ### Evaluating SLIViT
 The general command to evaluate a trained SLIViT model goes as follows:
 ```bash
-python evaluate.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <path to a pretrained SLIViT-like feature extractor> --fe_classes <number of classes the feature extractor was pre-trained on> --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
+python evaluate.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <path to a pretrained SLIViT-like feature extractor> --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
 ```
 
-[//]: # (TODO)
-
-#### The OCT (Houston) dataset
-The 3D OCT datasets used in this study aren’t available publicly due to institutional policies and patient privacy concerns. However, you can still use the fine-tuned model we’ve provided in the `checkpoints` directory to evaluate it on your own dataset.
-
-
-#### Nodule MNIST
-```bash
-python evaluate.py --dataset3d nodulemnist --checkpoint ./checkpoints/slivit_noduleMNIST --depth 5 --dim 64 --nslc 28 --mlp_dim 64 --heads 10
-```
-#### UKBB
-
-```bash
-python evaluate.py --dataset3d ukbb --meta ./datasets/ukbb_meta.csv --checkpoint ./checkpoints/slivit_ukbb --metric r2 --pathology PDFF --depth 5 --dim 256 --nslc 36 --heads 36
-```
-#### Ultrasound
-
-```bash
-python evaluate.py --dataset3d ultrasound --meta ./datasets/ultrasound_meta.csv --checkpoint ./checkpoints/slivit_ultrasound --pathology EF_b --depth 5 --dim 256 --nslc 32 --heads 32 --mlp_dim 256
-```
-#### Custom 3D
-
-```bash
-python evaluate.py --dataset3d custom --meta /path/to/generated/meta.csv --bbpath /path/to/finetuned/convnext_bb.pth --task TaskType --pathology Pathology
-```
-- ```--dataset3d``` is the dataset for 3D fine-tuning ( `nodulemnist`, `ukbb`, `ultrasound` ,`custom` ) 
-- ```--meta``` is the path to the created ```meta.csv``` file
-- ```--pathology``` is pathology for 3D fine-tuning
-- ```--nObb_feat``` is the number of classes the backbone was pre-trained on ( Kermany: `4` , ChestMNIST: `14` )
-- ```--task``` is the 3D Fine-tuning task (classification or regression)
-- ```--metric``` is the score metric for evaluation ( `roc-auc`, `pr-auc`, `r2` ) 
-- ```--checkpoint``` is the path to fine-tuned slivit
-- ```--nslc``` is the number of slices to use for 3D Fine-tuning
-- ```--depth``` is the Vision Transformer depth
-- ```--heads``` is the number of heads for multihead attention
-- ```--dim``` specifies the dimension for encoding transformer input
-- ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
-
+By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_dim`, `--vit_depth`, `--heads`, `--mlp_dim`, and `--slices` are pulled from the automatically generated `finetune_options.txt` file in your fine-tuning results folder. If that file happens to be missing, you'll need to manually provide the correct hyperparameters as arguments (check out `python evaluate.py -h` for additional guidance). If you're having troubles to configure the architecture, you can always use `finetune.py` for both training and evaluation. 
 
 ### Credits
 
