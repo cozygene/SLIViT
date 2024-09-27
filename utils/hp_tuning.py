@@ -108,6 +108,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             suffix += f'-finetune' if finetune else '-fit'
             command = f"/scratch/avram/envs/slivit/bin/python /scratch/avram/projects/SLIViT/finetune.py "
             command += f"--seed 1 --dataset oct3d "
+            command += f'--fe_classes 4 '
             command += f'--meta {csv_path} '
             command += f'--test_meta {test_path} '
             command += f"--label {label} --gpu_id {gpu} --cpus 40 "
@@ -120,16 +121,19 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
                 command += f' --finetune'
             done_file_path = f'{out_dir}/{label}/{suffix}/done_finetune'  # TODO: change to {get_script_name()}
 
-            if os.path.exists(done_file_path):
-                print('Configuration already trained. Skipping.')
-                # break
-                continue
+            try:
+                if os.path.getsize(done_file_path) == 0:
+                    print('Configuration already trained successfully. Skipping.')
+                    continue  # skip configuration
+                else:
+                    # unsuccessful training
+                    os.remove(done_file_path)
+            except FileNotFoundError:
+                # never trained
+                pass
 
-            if not os.path.exists(done_file_path):
-                print(f"Running command:\n{command}\n")
-                subprocess.run(command, shell=True)
-            else:
-                print(f'Configuration already trained. Skipping...')
+            print(f"Running command:\n{command}\n")
+            subprocess.run(command, shell=True)
 
             # Check for the completion file
             while not os.path.exists(done_file_path):
