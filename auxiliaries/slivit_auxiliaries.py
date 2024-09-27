@@ -238,7 +238,7 @@ def init_out_dir(args):
 
 
 def create_learner(slivit, dls, out_dir, args):
-    best_model_name = f'slivit_{args.dataset}'
+    best_model_name = f'slivit_{args.dataset}' + (f'_{args.label}' if len(args.label.split(','))==1 else '')
     loss_f, metrics = get_loss_and_metrics(args.task)
     learner = Learner(dls, slivit, model_dir=out_dir, loss_func=loss_f, metrics=metrics,
                       cbs=[SaveModelCallback(fname=best_model_name),
