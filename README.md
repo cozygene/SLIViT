@@ -197,14 +197,6 @@ python evaluate.py --dataset3d custom --meta /path/to/generated/meta.csv --bbpat
 - ```--dim``` specifies the dimension for encoding transformer input
 - ```--mlp_dim``` denotes the multi-layer perceptron dimension for ViT
 
-### Data Availability
-
-The 2D OCT dataset was downloaded from https://www.kaggle.com/datasets/paultimothymooney/kermany2018. The 3D OCT B-scan
-data are not publicly available due to institutional data use policy and concerns about patient privacy. However, they
-are available from the authors upon reasonable request and with permission of the institutional review board. The
-echocardiogram dataset is available at https://echonet.github.io/dynamic/index.html#dataset. The MRI dataset is
-available at https://www.ukbiobank.ac.uk. The 3D CT, the 2D CT, and the 2D X-ray datasets are available
-at https://medmnist.com/.
 
 ### Credits
 
