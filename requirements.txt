@@ -1,9 +1,15 @@
-fastai==2.7.17
 scikit-learn==1.3.2
-scikit-image==0.21.0
 pandas==2.0.3
 medmnist==3.0.2
 wandb==0.18.1
 pydicom==2.4.4
+fastai==2.7.17
+scikit-image==0.21.0
 vit_pytorch==1.7.12
 transformers==4.44.2
+
+
+pip install jupyter jedi jupyter_contrib_nbextensions
+conda install pytorch torchvision torchaudio cudatoolkit=11.8 -c pytorch -c nvidia
+pip install fastai scikit-image vit_pytorch transformers
+

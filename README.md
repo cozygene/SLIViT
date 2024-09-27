@@ -2,7 +2,9 @@
 
 # SLIViT  <!--<img src="visuals/cover.png" width="500" align="right">--> 
 
- 
+ [//]: # ([*Nature Biomedical Engineering*]&#40;https://www.nature.com/articles/s41551-024-01257-9&#41;  )
+[*Submitted preprint*](https://www.researchsquare.com/article/rs-3044914/v2)  
+
 ### Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans.
 Oren Avram*, Berkin Durmus*, ... , Srinivas R. Sadda+,  Eran Halperin+
 
@@ -110,7 +112,7 @@ Just so you know, unless you specify a split column in the meta file (with `--sp
 Heads up! The 3D OCT datasets we used in this study aren't available because of some strict institutional rules and privacy concerns. But no worries! We've got the fine-tuned checkpoints ready for you to use for further fine-tuning or for evaluation purposes. Plus, if you've got your own 3D OCT dataset, we’re also sharing our Dataset class so you can fine-tune SLIViT on it. Dive in and see what you can discover!
 
 #### The 3D ultrasound video (EchoNet) dataset
-<img src="visuals/ultrasound.gif" width="750px"/><br>
+<img src="visuals/ultrasound.gi" width="750px"/><br>
 You can grab the EchoNet Ultrasound videos right <a href="https://stanfordaimi.azurewebsites.net/datasets/834e1cd1-92f7-4268-9daa-d359198b310a">here</a>. After you download the data, generate `meta/echonet.csv` to match where you've saved your videos. If you need a little help with that, `utils/get_echonet_csv.py` is there for you. Ready to fine-tune SLIViT on the EchoNet dataset? Just set `--dataset` to `us3d` and you're all set!
 
 For the binary classification task, you can use the following command:
@@ -132,7 +134,7 @@ python finetune.py --dataset us3d --fe_path ./checkpoints/slivit_oct2d.pth --fe_
 
 
 #### The 3D MRI (United Kingdom Biobank) dataset
-<img src="visuals/mri.gif" width="750px"/><br>
+<img src="visuals/mri.gi" width="750px"/><br>
 The UKBB MRI dataset is available <a href="https://www.ukbiobank.ac.uk">here</a>. Once you have downloaded the data, please create an appropriate meta file<!--, or simply update the paths in `meta/ukbb.csv` to reflect the locations of your downloaded scans-->. To fine-tune SLIViT on the UKBB dataset set `--dataset` to `mri3d` (and `--task` to `reg`). Also, set `--img_suffix` to `dcm` to filter out unrelevant files in the directory.
 
 ```bash
@@ -140,7 +142,7 @@ python finetune.py --dataset mri3d --fe_path ./checkpoints/slivit_oct2d.pth --fe
 ```
 
 #### The 3D CT (NoduleMNIST) dataset
-<img src="visuals/ct.gif" width="450px"/><br>
+<img src="visuals/ct.gi" width="450px"/><br>
 
 The MNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `ct3d`. 
 
@@ -208,16 +210,22 @@ at https://medmnist.com/.
 
 We kindly request that users cite the corresponding paper when using our code, checkpoints, or conclusions in any capacity. Proper credit not only supports the original creators but also acknowledges their contributions.
 
+
+
+<!--
 ```
-@article{avram2023slivit,
-  title={SLIViT: a general AI framework for clinical-feature diagnosis from limited 3D biomedical-imaging data},
-  author={Avram, Oren and others},
-  journal={InReview preprint https://www.researchsquare.com/article/rs-3044914/latest},
-  year={2023}
+@article{avram2024accurate,
+  title={Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans},
+  author={Avram, Oren; Durmus, Berkin; Rakocz, Nadav; Corradetti, Giulia; An, Ulzee; Nitalla, Muneeswar G.; Terway, Prerit; Rudas, Akos; Chen, Zeyuan; Wakatsuki, Yu; et al.},
+  doi={10.1038/s41551-024-01257-9},
+  journal={Nature Biomedical Engineering},
+  year={2024},
+  publisher={Nature Publishing Group}
 }
 ```
+-->
 
-## Acknowledgement
+### Acknowledgement
 
 Parts of the code are taken from the <a href="https://github.com/lucidrains/vit-pytorch/tree/main"> vit-pytorch</a>
 repository. The figures depicting Kermany and the X-ray dataset are sourced from [1] and [2] respectively.

@@ -47,7 +47,7 @@ class SLIViT(nn.Module):
                  num_vol_frames, patch_height=768, patch_width=64, rnd_pos_emb=False,
                  num_classes=1, dim_head=64, dropout=0., emb_dropout=0.):
         super().__init__()
-        self.backbone = backbone
+        self.backbone = backbone  # TODO: call load_backbone here
         self.num_patches = num_vol_frames
         patch_dim = patch_height * patch_width  # 768 * 64
         # assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
@@ -68,6 +68,7 @@ class SLIViT(nn.Module):
         else:
             # initialize positional embeddings with the slice number
             self.pos_embedding = nn.Parameter(torch.arange(self.num_patches+1).repeat(fi_dim, 1).t().unsqueeze(0).float())  # require
+
         self.cls_token = nn.Parameter(torch.randn(1, 1, fi_dim))
         self.dropout = nn.Dropout(emb_dropout)
 
@@ -101,4 +102,6 @@ class SLIViT(nn.Module):
         # # x = self.to_latent(x)
         # x = self.mlp_head(x)
         # return x
+
+    # TODO: move load_backbone here
 

@@ -14,8 +14,9 @@ if __name__ == '__main__':
                         fi_dim=args.vit_dim, fi_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
                         num_vol_frames=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
     except RuntimeError as e:
-        logger.error(f"Could not load model:\n{e}\n\nPlease double-check that the pretrained feature extractor is "
-                     f"correctly set up and compatible with the model. This will ensure everything runs smoothly!\n")
+        logger.error(f"Could not load model:\n{e}\n\nPlease double-check that you have enough GPU memory, "
+                     f"the pretrained feature extractor is correctly set up and compatible with the "
+                     f"model. This will ensure everything runs smoothly!\n")
         sys.exit(1)
 
     learner, best_model_name = create_learner(slivit, dls, out_dir, args, mnist)

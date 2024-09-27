@@ -1,4 +1,6 @@
+import PIL
 from fastai.data.load import DataLoader
+from skimage import exposure
 from torch.utils.data import Subset
 from fastai.imports import *
 import torch
@@ -55,6 +57,9 @@ def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col)
             train_idx, temp_idx = next(gss.split(df,
                                                  y=None if get_script_name() == 'pretrain' else df[pathology],
                                                  groups=df[pid_col]))  # split by patient
+                                                 # TODO: check if split "by file" for kermany
+                                                 # helps getting the high performance
+                                                 # groups=df['path']))  # split by patient
 
             if split_ratio[2] == 0:
                 # using external test set
@@ -64,8 +69,9 @@ def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col)
                 test_val_df = df.iloc[temp_idx]
                 # Second split
                 gss_temp = GroupShuffleSplit(n_splits=1, train_size=split_ratio[1] / sum(split_ratio[1:]))
-                val_idx, test_idx = next(gss_temp.split(test_val_df, test_val_df[pathology],
-                                                        test_val_df[pid_col]))  # split by patient
+                val_idx, test_idx = next(gss_temp.split(test_val_df,
+                                                        y=test_val_df[pathology],
+                                                        groups=test_val_df[pid_col]))  # split by patient
 
                 # Map temporary indices back to original indices
                 val_idx = temp_idx[val_idx]
@@ -91,14 +97,19 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
     msg = ''
     if mnist is not None:
         # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
-        train_subset = dataset_class(mnist(split="train", download=True, root=args.mnist_root,
-                                           size=28 if args.mnist_mocks else 224),
+        if args.mnist_mocks:
+            size = 28
+        elif 'xray' in args.dataset:
+            # chestmnist
+            size = 224
+        else:
+            # nodulemnist
+            size = 64
+        train_subset = dataset_class(mnist(split="train", download=True, root=args.mnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        valid_subset = dataset_class(mnist(split="val", download=True, root=args.mnist_root,
-                                           size=28 if args.mnist_mocks else 224),
+        valid_subset = dataset_class(mnist(split="val", download=True, root=args.mnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        test_subset = dataset_class(mnist(split="test", download=True, root=args.mnist_root,
-                                          size=28 if args.mnist_mocks else 224),
+        test_subset = dataset_class(mnist(split="test", download=True, root=args.mnist_root, size=size),
                                     num_slices_to_use=args.slices)
 
         if args.mnist_mocks is not None:
@@ -185,6 +196,12 @@ def get_dataset_class(dataset_name):
                          'xray2d, ct3d, oct2d, oct3d, us3d, mri3d, custom2d, custom3d.')
 
     return dataset_class, mnist
+
+
+def apply_contrast_stretch(img, low=2, high=98):
+    img = np.array(img)
+    plow, phigh = np.percentile(img, (low, high))
+    return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
 
 
 def set_seed(seed=42):
