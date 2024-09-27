@@ -12,7 +12,7 @@ if __name__ == '__main__':
     try:
         slivit = SLIViT(backbone=load_backbone(args.fe_classes, args.fe_path),
                         fi_dim=args.vit_dim, fi_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
-                        num_vol_frames=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
+                        num_of_patches=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
     except RuntimeError as e:
         logger.error(f"Could not load model:\n{e}\n\nPlease double-check that you have enough GPU memory, "
                      f"the pretrained feature extractor is correctly set up and compatible with the "
