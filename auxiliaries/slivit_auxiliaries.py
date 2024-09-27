@@ -48,11 +48,12 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
             else:
                 learner.fit(args.epochs, args.lr)
 
-            logger.info(f'Best model is stored at:\n{out_dir}/{best_model_name}.pth')
+            best_model_path = f'{out_dir}/{best_model_name}.pth'
+            logger.info(f'Best model is stored at:{best_model_path}\n')
 
             # Evaluate the model on the test set if provided
             if len(test_loader):
-                evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label, out_dir)
+                evaluate_and_store_results(learner, test_loader, best_model_path, args.meta, args.label, out_dir)
             else:
                 logger.info('Skipping evaluation... (test set was not provided)')
 
@@ -144,12 +145,12 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
     logger.info(f'Running result is saved at:\n{out_dir}\n')
 
 
-def evaluate_and_store_results(learner, data_loader, model_name, meta, pathology, out_dir):
-    print()
+def evaluate_and_store_results(learner, data_loader, checkpoint_path, meta, pathology, out_dir):
+    print(checkpoint_path)
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
         # evaluate the best model
-        learner.load(model_name)
+        learner.load(checkpoint_path[:-4] if checkpoint_path.endswith('.pth') else checkpoint_path)
         results_file = f'{out_dir}/predicted_scores.csv'
         # preds = store_predictions(learner, data_loader, meta, pathology, results_file)
         evaluate_model(learner, data_loader, out_dir)
@@ -179,7 +180,7 @@ def save_options(options_file, args):
 
 def get_loss_and_metrics(task):
     if task == 'cls':
-        loss_f = torch.nn.BCEWithLogitsLoss()  #TODO: consider using CrossEntropyLoss
+        loss_f = torch.nn.BCEWithLogitsLoss()  # TODO: consider using CrossEntropyLoss
         # metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
         metrics = [RocAucMulti(), APScoreMulti()]
     elif task == 'reg':
