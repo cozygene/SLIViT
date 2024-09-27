@@ -44,11 +44,11 @@ class ConvNext(nn.Module):
 class SLIViT(nn.Module):
 
     def __init__(self, *, backbone, fi_dim, fi_depth, heads, mlp_dim,
-                 num_vol_frames, patch_height=768, patch_width=64, rnd_pos_emb=False,
+                 num_of_patches, patch_height=768, patch_width=64, rnd_pos_emb=False,
                  num_classes=1, dim_head=64, dropout=0., emb_dropout=0.):
         super().__init__()
         self.backbone = backbone  # TODO: call load_backbone here
-        self.num_patches = num_vol_frames
+        self.num_patches = num_of_patches
         patch_dim = patch_height * patch_width  # 768 * 64
         # assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
         self.to_patch_embedding = nn.Sequential(
