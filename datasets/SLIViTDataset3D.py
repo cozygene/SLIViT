@@ -22,8 +22,7 @@ class SLIViTDataset3D(SLIViTDataset):
 
     def get_slices_indexes(self, vol_path, num_slices_to_use):
         total_num_of_slices = len(list(filter(self.filter, os.listdir(vol_path))))
-        if total_num_of_slices == 0:
-            raise ValueError(f"No images found in {vol_path}")
+        assert total_num_of_slices > 0, f"No images found in {vol_path}"
         if self.sparsing_method == 'eq':
             # equally-spaced down sample the slices
             slc_idxs = np.linspace(0, total_num_of_slices - 1,

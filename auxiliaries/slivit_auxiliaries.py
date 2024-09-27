@@ -116,8 +116,7 @@ def store_predictions(learner, test_loader, meta, pathology, results_file, split
         f.write(f'{",".join(df.columns.to_list() + ["Pred"])}\n')
         for i in range(len(preds[1])):
             if pathology == 'CRORA':  # and len(df.columns) > 1:
-                assert df.CRORA.iloc[i] == preds[1][i].item(), \
-                    ValueError(f'CRORA does not contain the true label!! Check failed at index {df.index[i]}')
+                assert df.CRORA.iloc[i] == preds[1][i].item(), f'CRORA does not contain the true label!! Check failed at index {df.index[i]}'
             # record = f'{df.index[i]},' + df.iloc[i].to_csv(header=False, index=False).rstrip().replace('\n', ',')
             record = df.iloc[i].to_csv(header=False, index=False).rstrip().replace('\n', ',')
             f.write(f'{record},{preds[0][i].item()}\n')
@@ -205,8 +204,9 @@ def wrap_up(out_dir, e=None):
 
 def setup_dataloaders(args, out_dir):
     dataset_class, mnist = get_dataset_class(args.dataset)
-    if mnist is None and args.meta is None:
-        raise ValueError('Meta file is required for non-mnist datasets. Please provide the meta file path.')
+    assert args.meta is not None or \
+           mnist is not None, \
+        'Meta file is required for non-mnist datasets. Please provide the meta file path.'
     train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, out_dir, mnist)
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
