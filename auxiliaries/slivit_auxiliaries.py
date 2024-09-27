@@ -203,9 +203,10 @@ def wrap_up(out_dir, e=None):
             raise e
 
 
-
 def setup_dataloaders(args, out_dir):
     dataset_class, mnist = get_dataset_class(args.dataset)
+    if mnist is None and args.meta is None:
+        raise ValueError('Meta file is required for non-mnist datasets. Please provide the meta file path.')
     train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, out_dir, mnist)
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
