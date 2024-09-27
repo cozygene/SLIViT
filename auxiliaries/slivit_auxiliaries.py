@@ -65,7 +65,9 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
                     logger.error(f'GPU ran out of memory. Trying next GPU...\n')
                 else:
                     # Handle failure case where all GPUs run out of memory or error out
-                    logger.error('Out of memory error occurred on all GPUs. Exiting...\n')
+                    logger.error('Out of memory error occurred on all GPUs.\n'
+                                 'You may want to try reducing the batch size or using a larger GPU.'
+                                 'Exiting...\n')
                     # Re-raise the exception for proper handling outside this function
                     raise e
             else:
@@ -136,10 +138,11 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
         pass
 
     for metric_score, metric_name in zip(metric_scores, metric_names):
-        logger.info(f'{metric_name}: {metric_score:.5f}')
+        logger.info(f'{metric_name}: {metric_score:.5f}' + (('\n' + '*' * 100)
+                                                            if metric_name == metric_names[-1] else ''))
         with open(f'{out_dir}/{metric_name}.txt', 'w') as f:
             f.write(f'{metric_score:.5f}\n')
-    logger.info('\n' + '*' * 100 + f'\nRunning result is saved at:\n{out_dir}')
+    logger.info(f'Running result is saved at:\n{out_dir}\n')
 
 
 def evaluate_and_store_results(learner, data_loader, model_name, meta, pathology, out_dir):
