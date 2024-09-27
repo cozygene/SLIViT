@@ -159,7 +159,7 @@ def evaluate_and_store_results(learner, data_loader, checkpoint_path, meta, path
         logger.info('Evaluation loader is empty. No evaluation is performed.')
 
 
-def save_options(options_file, args):
+def save_options(command_file, options_file, args):
     arguments = []
     for arg in vars(args):
         value = getattr(args, arg)
@@ -169,13 +169,15 @@ def save_options(options_file, args):
         else:  # if value is not None:
             arguments.append(f'--{arg} "{value}"')
 
-    command = f"python {sys.argv[0]} {' '.join(arguments)}"
-
-    with open(options_file, 'w') as f:
+    with open(command_file, 'w') as f:
         f.write(' '.join(sys.argv) + "\n\n")
-        f.write(command + "\n")
 
-    logger.info(f'Running configuration is saved at:\n{options_file}\n')
+    # all options, including default values
+    with open(options_file, 'w') as f:
+        f.write(f"python {sys.argv[0]} {' '.join(arguments)}\n")
+
+    logger.info(f'Running command is saved at:\n{command_file}\n')
+    logger.info(f'Full running configuration (including default parameters) is saved at:\n{options_file}\n')
 
 
 def get_loss_and_metrics(task):
@@ -233,8 +235,9 @@ def init_out_dir(args):
     logger.info(f'\nOutput direcory is\n{out_dir}\n')
     os.makedirs(out_dir, exist_ok=True)
 
-    options_file = f'{out_dir}/options_{script_name}.txt'
-    save_options(options_file, args)
+    command_file = f'{out_dir}/{script_name}_command.txt'
+    options_file = f'{out_dir}/{script_name}_options.txt'
+    save_options(command_file, options_file, args)
 
     return out_dir
 
