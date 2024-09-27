@@ -76,10 +76,10 @@ Just a heads-up: When using *any* MNIST dataset, you don't need to worry about p
 <img src="visuals/OCT2D.png" width="600px"/><br>
 <small>(Figure sourced from Kermany, et al., 2018 [1])</small>
 
-Download the dataset <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">here</a>. After downloading the data, please update the paths in meta/kermany.csv to reflect the locations of your downloaded videos (you can use `utils/get_kermany_csv.py` for this purpose). To pre-train SLIViT on the Kermany dataset set `--dataset` to `oct2d` and `label` to `Drusen,CNV,DME,Normal`:
+Download the dataset <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">here</a>. After downloading and unzipping the data, please create a meta file for the dataloader that reflects the locations of your downloaded scans (you can use `utils/get_kermany_csv.py` for this purpose). To pre-train SLIViT on the Kermany dataset set `--dataset` to `oct2d` and `label` to `Drusen,CNV,DME,Normal`:
 
 ```bash
-python pretrain.py --dataset oct2d --out_dir ./results/ --meta ./meta/kermany.csv --label Normal,Drusen,CNV,DME
+python pretrain.py --dataset oct2d --out_dir ./results/ --meta ./meta/kermany.csv --label NORMAL,DRUSEN,CNV,DME
 ```
 
 #### The 2D X-ray (ChestMNIST) dataset
