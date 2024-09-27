@@ -50,7 +50,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', required=True,
                         type=lambda x: x if os.path.exists(x) else None,
                         help='Path to the original Kermany\'s train and test folders.')
-    parser.add_argument('--output_csv', type=str, required=True, help='Path to save the output CSV file.')
+    parser.add_argument('--output_csv', type=str, default='../meta/kermany.csv',
+                        help='Path to save the output CSV file.')
 
     args = parser.parse_args()
 
