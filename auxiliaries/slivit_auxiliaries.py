@@ -210,7 +210,7 @@ def setup_dataloaders(args, out_dir):
     train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, out_dir, mnist)
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
-    return dls, test_loader
+    return dls, test_loader, mnist
 
 
 def init_out_dir(args):
@@ -219,9 +219,9 @@ def init_out_dir(args):
         # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
         if args.meta is not None:
             # example args.meta:
-            # /meta_file_folder_path/ultrasound.csv
+            # ./meta/echonet.csv
             csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
-            out_dir = f'{out_dir}/{csv_file_name}'
+            out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label}' if len(args.label.split(',')) == 1 else '')
         else:
             out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
 
@@ -238,8 +238,8 @@ def init_out_dir(args):
     return out_dir
 
 
-def create_learner(slivit, dls, out_dir, args):
-    best_model_name = f'slivit_{args.dataset}' + (f'_{args.label}' if len(args.label.split(','))==1 else '')
+def create_learner(slivit, dls, out_dir, args, mnist):
+    best_model_name = f'slivit_{args.dataset}' + (f'_{args.label}' if mnist is None and len(args.label.split(',')) == 1 else '')
     loss_f, metrics = get_loss_and_metrics(args.task)
     learner = Learner(dls, slivit, model_dir=out_dir, loss_func=loss_f, metrics=metrics,
                       cbs=[SaveModelCallback(fname=best_model_name),
@@ -247,4 +247,3 @@ def create_learner(slivit, dls, out_dir, args):
                            CSVLogger()] +
                           ([WandbCallback()] if (args.wandb_name is not None and script_name != 'evaluate') else []))
     return learner, best_model_name
-
