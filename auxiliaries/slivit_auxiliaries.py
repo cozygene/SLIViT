@@ -32,7 +32,7 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
     for gpu in range(len(gpus)):
         try:
             # Set the current GPU
-            logger.info(f'Trying GPU {gpus[gpu]}\n')
+            logger.info(f'Trying GPU {gpus[gpu]}')
             torch.cuda.set_device(gpu)  # Switch to the current GPU
             learner.model.to(f'cuda:{gpu}')  # Move model to the current GPU
 
@@ -42,20 +42,22 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
                 torch.cuda.empty_cache()  # Release the memory of the previous GPU
                 torch.cuda.set_device(gpu)  # Switch back to the current GPU
 
-            # Train or fine-tune the model
+            # fit or fine-tune the model
             if args.finetune:
                 learner.fine_tune(args.epochs, args.lr)
             else:
+                # default
                 learner.fit(args.epochs, args.lr)
 
-            best_model_path = f'{out_dir}/{best_model_name}.pth'
-            logger.info(f'Best model is stored at:{best_model_path}\n')
+            logger.info(f'Best model is stored at:\n{out_dir}/{best_model_name}.pth')
 
-            # Evaluate the model on the test set if provided
-            if len(test_loader):
-                evaluate_and_store_results(learner, test_loader, best_model_path, args.meta, args.label, out_dir)
-            else:
-                logger.info('Skipping evaluation... (test set was not provided)')
+            # TODO: comment out this condition if mnist dataset split is handled internally
+            if get_script_name() != 'pretrain':
+                # Evaluate the model on the test set if provided
+                if len(test_loader):
+                    evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label, out_dir)
+                else:
+                    logger.info('Skipping evaluation... (test set was not provided)')
 
             # successful running
             return
@@ -142,15 +144,15 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
                                                             if metric_name == metric_names[-1] else ''))
         with open(f'{out_dir}/{metric_name}.txt', 'w') as f:
             f.write(f'{metric_score:.5f}\n')
-    logger.info(f'Running result is saved at:\n{out_dir}\n')
+    logger.info(f'Running result is saved at:\n{out_dir}')
 
 
-def evaluate_and_store_results(learner, data_loader, checkpoint_path, meta, pathology, out_dir):
-    print(checkpoint_path)
+def evaluate_and_store_results(learner, data_loader, weights_path, meta, pathology, out_dir):
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
         # evaluate the best model
-        learner.load(checkpoint_path[:-4] if checkpoint_path.endswith('.pth') else checkpoint_path)
+        # only model name (passing full path/extension causes a bug in fastai)
+        learner.load(weights_path.split('/')[-1].split('.pth')[0])
         results_file = f'{out_dir}/predicted_scores.csv'
         # preds = store_predictions(learner, data_loader, meta, pathology, results_file)
         evaluate_model(learner, data_loader, out_dir)
@@ -174,7 +176,7 @@ def save_options(command_file, options_file, args):
 
     # all options, including default values
     with open(options_file, 'w') as f:
-        f.write(f"python {sys.argv[0]} {' '.join(arguments)}\n")
+        f.write(f"python {sys.argv[0]} {' '.join(arguments)}\n\n")
 
     logger.info(f'Running command is saved at:\n{command_file}\n')
     logger.info(f'Full running configuration (including default parameters) is saved at:\n{options_file}\n')
@@ -243,7 +245,7 @@ def init_out_dir(args):
 
 
 def create_learner(slivit, dls, out_dir, args, mnist):
-    best_model_name = f'slivit_{args.dataset}' + (f'_{args.label}' if mnist is None and len(args.label.split(',')) == 1 else '')
+    best_model_name = f'finetuned_slivit'
     loss_f, metrics = get_loss_and_metrics(args.task)
     learner = Learner(dls, slivit, model_dir=out_dir, loss_func=loss_f, metrics=metrics,
                       cbs=[SaveModelCallback(fname=best_model_name),
