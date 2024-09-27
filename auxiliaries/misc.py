@@ -105,6 +105,7 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
         else:
             # nodulemnist
             size = 64
+        os.makedirs(args.mnist_root, exist_ok=True)
         train_subset = dataset_class(mnist(split="train", download=True, root=args.mnist_root, size=size),
                                      num_slices_to_use=args.slices)
         valid_subset = dataset_class(mnist(split="val", download=True, root=args.mnist_root, size=size),
