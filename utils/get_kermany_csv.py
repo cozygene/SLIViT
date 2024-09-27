@@ -46,8 +46,8 @@ def get_kermany_csv(data_path, output_csv):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Create CSV from directory of images.')
-    parser.add_argument('--data_path', default='./CellData/OCT',
+    parser = argparse.ArgumentParser(description='Create CSV from directory of images (should look like <path to unziped folder>/CellData/OCT')
+    parser.add_argument('--data_path', required=True,
                         type=lambda x: x if os.path.exists(x) else None,
                         help='Path to the original Kermany\'s train and test folders.')
     parser.add_argument('--output_csv', type=str, required=True, help='Path to save the output CSV file.')
