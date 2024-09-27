@@ -172,7 +172,7 @@ def get_dataset_class(dataset_name):
         from datasets.OCTDataset2D import OCTDataset2D as dataset_class
     elif dataset_name == 'oct3d':
         from datasets.OCTDataset3D import OCTDataset3D as dataset_class
-    elif dataset_name == 'ultrasound3d':
+    elif dataset_name == 'us3d':
         from datasets.USDataset3D import USDataset3D as dataset_class
     elif dataset_name == 'mri3d':
         from datasets.MRIDataset3D import MRIDataset3D as dataset_class
@@ -181,7 +181,8 @@ def get_dataset_class(dataset_name):
     elif dataset_name == 'custom3d':
         from datasets.CustomDataset3D import CustomDataset3D as dataset_class
     else:
-        raise ValueError('Unknown dataset option')
+        raise ValueError('Unknown dataset option. Please choose from: '
+                         'xray2d, ct3d, oct2d, oct3d, us3d, mri3d, custom2d, custom3d.')
 
     return dataset_class, mnist
 
