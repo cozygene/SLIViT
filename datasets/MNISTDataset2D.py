@@ -2,21 +2,9 @@ import torch
 from torch.utils.data import Dataset
 from torchvision import transforms as tf
 
-# from auxiliaries.misc import to_tensor
+from auxiliaries.misc import to_tensor, apply_contrast_stretch
 
 # gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
-
-# class pil_contrast_strech(object):
-#
-#     def __init__(self, low=2, high=98):
-#         self.low, self.high = low, high
-#
-#     def __call__(self, img):
-#         # Contrast stretching
-#         img = np.array(img)
-#         plow, phigh = np.percentile(img, (self.low, self.high))
-#         return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
-#
 
 # transform_new = tf.Compose(
 #     [  # TODO: check why here no need for ToPILImage in contrast to the 3D version
@@ -39,9 +27,8 @@ class MNISTDataset2D(Dataset):
         self.dataset = dataset
         self.num_classes = len(self.dataset.info['label'])
         self.t = tf.Compose([
-            # pil_contrast_strech(),
+            apply_contrast_stretch,
             tf.ToTensor(),
-            # resize is
             tf.Resize((224, 224)),  # if self.dataset[0][0].shape == (28, 28) else torch.nn.Identity(),
             tf.RandomResizedCrop((224, 224)),
             tf.Lambda(lambda x: x.expand(3, -1, -1))  # gray to rgb

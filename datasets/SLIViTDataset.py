@@ -11,7 +11,8 @@ class SLIViTDataset(Dataset):
             # meta is a path to a csv file
             meta = pd.read_csv(meta)  # , index_col=0)
         self.labels = meta[label_name.split(',')].values
-        self.scan_paths = meta[path_col_name].values
+        self.scan_paths = meta[path_col_name].values#.apply(lambda x: f'/scratch/avram/Kermany/{x}').values #TOOD: delete this
+        # print(meta[path_col_name].apply(lambda x: f'/scratch/avram/Kermany/{x}')[:10])
         for p in self.scan_paths:
             assert os.path.exists(p), f'{p} do not exist'
         self.t = transform
