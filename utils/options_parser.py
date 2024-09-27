@@ -43,8 +43,9 @@ parser.add_argument('--fe_path', type=str,
                     default='/scratch/avram/projects/hadassah/CRORA_imputation/models/kermany/convnext_tiny_feature_extractor.pth',
                     help='Path to the pretrained feature extractor.')
 parser.add_argument('--checkpoint', type=str, default='./slivit_ct', help='Path to the finetuned SLIViT model.')
-parser.add_argument('--fe_classes', type=int, default=4,
-                    help='Number of classes in the pretrained feature extractor (e.g., oct2d: 4).')
+parser.add_argument('--fe_classes', type=int, required=True,
+                    help='Number of classes in the pretrained feature extractor '
+                         '(for oct2d it\'s 4; for xray2d it\'s 14).')
 parser.add_argument('--vit_depth', type=int, default=5, help='Depth of the Vision Transformer (ViT).')
 parser.add_argument('--vit_dim', type=int, default=256, help='Dimension of the Vision Transformer (ViT).')
 parser.add_argument('--mlp_dim', type=int, default=512, help='Dimension of the MLP layer.')
