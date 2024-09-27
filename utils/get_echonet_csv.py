@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument('--csv_path', default='./meta/echonet/FileList.csv',
                         help='Path to the FileList.csv that comes with the dataset.')
     parser.add_argument('--data_path', required=True, help='Path to the local data directory')
-    parser.add_argument('--out', required=True, help='Path to save the modified CSV file.')
+    parser.add_argument('--out', default='./meta/echonet.csv', help='Path to save the modified CSV file.')
 
     args = parser.parse_args()
     process_csv(args.csv_path, args.data_path, args.out)
