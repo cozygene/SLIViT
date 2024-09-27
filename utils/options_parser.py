@@ -30,7 +30,7 @@ parser.add_argument('--task', type=str, default='cls', help='Task type: "cls" (c
 parser.add_argument('--seed', type=int, default=1, help='Set random seed for reproducibility.')
 parser.add_argument('--mnist_mocks', type=int,
                     help='Number of MNIST samples to use for this run (default: all samples).')
-parser.add_argument('--mnist_root', type=str, default='./', help='Root directory for mnist dataset downloads.')
+parser.add_argument('--mnist_root', type=str, default='./data', help='Root directory for mnist dataset downloads.')
 parser.add_argument('--split_ratio', type=lambda x: [float(i) for i in x.split(',')], default=[0.85, 0.15, 0],
                     help='Train/Val/Test split ratio (comma-separated).')
 parser.add_argument('--min_delta', type=float, default=0, help='Minimum delta for early stopping.')
@@ -42,10 +42,12 @@ parser.add_argument('--finetune', action='store_true', help='Use learner.fine_tu
 parser.add_argument('--fe_path', type=str,
                     default='./checkpoints/convnext_tiny_feature_extractor.pth',
                     help='Path to the pretrained feature extractor.')
-parser.add_argument('--fe_classes', type=int, required=True,
+parser.add_argument('--fe_classes', type=int, default=4,
                     help='Number of classes in the pretrained feature extractor '
                          '(for oct2d it\'s 4; for xray2d it\'s 14).')
 parser.add_argument('--checkpoint', type=str, default=None, help='Path to the finetuned SLIViT model.')
+parser.add_argument('--ignore_options_file', action='store_true',
+                    help='Forcing to use hps provided by the user (even if there is an options file).')
 parser.add_argument('--vit_depth', type=int, default=5, help='Depth of the Vision Transformer (ViT).')
 parser.add_argument('--vit_dim', type=int, default=256, help='Dimension of the Vision Transformer (ViT).')
 parser.add_argument('--mlp_dim', type=int, default=512, help='Dimension of the MLP layer.')
