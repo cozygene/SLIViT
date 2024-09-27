@@ -1,29 +1,57 @@
+import os
 import pandas as pd
 import argparse
 
 
-def process_csv(input_csv, data_path, output_csv):
-    df = pd.read_csv(input_csv)
+def get_kermany_csv(data_path, output_csv):
+    class_names = ['NORMAL', 'DRUSEN', 'CNV', 'DME']
+    data = []
+    # Traverse the directory structure
+    for subfolder in os.listdir(data_path):
+        subfolder_path = os.path.join(data_path, subfolder)
 
-    # Generate the 'pid' column by removing the '.jpeg' suffix from 'F_name'
-    df['pid'] = df['F_name'].str.replace('.jpeg', '', regex=False)
+        if os.path.isdir(subfolder_path):
+            for class_name in os.listdir(subfolder_path):
+                class_path = os.path.join(subfolder_path, class_name)
 
-    # Generate the 'path' column by prefixing the data path to the 'Path' column
-    df['path'] = df['Path'].apply(lambda x: f'{data_path}{x}')
+                if os.path.isdir(class_path):
+                    # Add the class name to the set of class names
 
-    output_df = df[['pid', 'path', 'Normal', 'DME', 'CNV', 'Drusen']]
+                    for img_file in os.listdir(class_path):
+                        if img_file.lower().endswith(('.jpeg')):  # Consider only jpeg files
+                            # Construct the path and row information
+                            file_path = os.path.join(class_path, img_file)
+                            #     df['pid'] = df['F_name'].apply(lambda x: x.split('-')[1])
+                            row = {
+                                # Extract the 'pid' from filename.
+                                # For example, CNV-1016042-100.jpeg -> 1016042
+                                'pid': img_file.split('-')[1]
+                            }
 
-    output_df.to_csv(output_csv, index=False)
+                            # Initialize class columns for this row
+                            for cls in class_names:
+                                row[cls] = int(class_name == cls)
+
+                            row['path'] = file_path
+
+                            # Add the row to the list
+                            data.append(row)
+
+    # Create a DataFrame from the list of rows
+    df = pd.DataFrame(data)
+
+    df.to_csv(output_csv, index=False)
     print(f"Processed CSV has been saved to {output_csv}")
+    print(df.head())
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Process the Kermany CSV file.')
-    parser.add_argument('--input_csv', type=str, required=True,
-                        help='Path to the original CSV file comes with the Kermany dataset.')
-    parser.add_argument('--data_path', type=str, required=True,
-                        help='Path to the data directory (where the train and test folders reside).')
-    parser.add_argument('--output_csv', type=str, required=True, help='Path to save the processed CSV file.')
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Create CSV from directory of images.')
+    parser.add_argument('--data_path', default='./CellData/OCT',
+                        type=lambda x: x if os.path.exists(x) else None,
+                        help='Path to the original Kermany\'s train and test folders.')
+    parser.add_argument('--output_csv', type=str, required=True, help='Path to save the output CSV file.')
 
     args = parser.parse_args()
 
-    process_csv(args.input_csv, args.data_path, args.output_csv)
+    get_kermany_csv(args.data_path, args.output_csv)
