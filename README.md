@@ -49,14 +49,12 @@ cd SLIViT
 pip install -r requirements.txt
 ```
 
-If you would like to download the pretrained checkpoints type in
+If you would like to download the pre-trained feature-extractor backbone and the fine-tuned SLIViT checkpoints type in
 ```bash
 pip install gdown
-gdown --folder https://drive.google.com/open?id=1f8P3g8ofBTWMFiuNS8vc01s98HyS7oRT&usp=drive_fs
+gdown --folder `https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP`
+#gdown --folder `https://drive.google.com/open?id=1f8P3g8ofBTWMFiuNS8vc01s98HyS7oRT`
 ```
-
-
-[//]: # (Now, <a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">download</a> the pre-trained backbone and the fine-tuned SLIViT models. Once downloaded, please move the files into the checkpoints folder.)
 
 Is your environment all ready to go? Awesome! You can either take SLIViT for a spin by training it yourself, or just grab our trained checkpoints right <a href="https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP?usp=sharing">here</a>. Heads up—our model runs smoothly on PyTorch, and this repository is fully equipped to harness PyTorch’s GPU powers (no TensorFlow here 😉).
 
@@ -66,7 +64,7 @@ python <pretrain.py/finetune.py/evaluate.py> -h
 ```
 
 Happy computing! 🚀
-### Pre-training SLIViT's backbone 
+### Pre-training SLIViT's feature extractor backbone 
 The general command to pre-train SLIViT is as follows:
 ```bash
 python pretrain.py --dataset <dataset type {oct2d,xray2d,custom2d}> --out_dir <out path> --meta <path to a meta file csv; ignore for an mnist dataset> --label <comma separated label column names; ignore for an mnist dataset>
@@ -117,12 +115,12 @@ You can grab the EchoNet Ultrasound videos right <a href="https://stanfordaimi.a
 
 For the binary classification task, you can use the following command:
 ```bash
-python finetune.py --dataset us3d --fe_path ./checkpoints/slivit_oct2d.pth --fe_classes 4 --out_dir ./results --meta ./meta/echonet.csv --label EF_b --task cls
+python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results --meta ./meta/echonet.csv --label EF_b --task cls
 ```
 
 For the regression task, you can use for example the following command:
 ```bash
-python finetune.py --dataset us3d --fe_path ./checkpoints/slivit_oct2d.pth --fe_classes 4 --out_dir ./results --meta ./meta/echonet.csv --label EF --task reg
+python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results --meta ./meta/echonet.csv --label EF --task reg
 ```
 
 
@@ -138,7 +136,7 @@ python finetune.py --dataset us3d --fe_path ./checkpoints/slivit_oct2d.pth --fe_
 The UKBB MRI dataset is available <a href="https://www.ukbiobank.ac.uk">here</a>. Once you have downloaded the data, please create an appropriate meta file<!--, or simply update the paths in `meta/ukbb.csv` to reflect the locations of your downloaded scans-->. To fine-tune SLIViT on the UKBB dataset set `--dataset` to `mri3d` (and `--task` to `reg`). Also, set `--img_suffix` to `dcm` to filter out unrelevant files in the directory.
 
 ```bash
-python finetune.py --dataset mri3d --fe_path ./checkpoints/slivit_oct2d.pth --fe_classes 4 --out_dir ./results --meta ./meta/ukbb.csv --label pdff --task reg --img_suffix dcm
+python finetune.py --dataset mri3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results --meta ./meta/ukbb.csv --label pdff --task reg --img_suffix dcm
 ```
 
 #### The 3D CT (NoduleMNIST) dataset
@@ -147,7 +145,7 @@ python finetune.py --dataset mri3d --fe_path ./checkpoints/slivit_oct2d.pth --fe
 The MNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `ct3d`. 
 
 ```bash
-python finetune.py --dataset ct3d --fe_path ./checkpoints/slivit_oct2d.pth --fe_classes 4 --out_dir ./results
+python finetune.py --dataset ct3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results
 ```
 
 #### A custom 3D dataset
@@ -156,7 +154,7 @@ Ready to fine-tune SLIViT on your own dataset? Just set `--dataset` to `custom3d
 ### Evaluating SLIViT
 The general command to evaluate a trained SLIViT model goes as follows:
 ```bash
-python evaluate.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <path to a pretrained SLIViT-like feature extractor> --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
+python evaluate.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <folder with a pretrained SLIViT-like feature extractor>/feature_extractor.pth --checkpoint <folder with a fine-tuned SLIViT>/slivit.pth --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
 ```
 
 By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_dim`, `--vit_depth`, `--heads`, `--mlp_dim`, and `--slices` are pulled from the automatically generated `finetune_options.txt` file in your fine-tuning results folder. If that file happens to be missing, you'll need to manually provide the correct hyperparameters as arguments (check out `python evaluate.py -h` for additional guidance). If you're having troubles to configure the architecture, you can always use `finetune.py` for both training and evaluation. 
