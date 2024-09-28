@@ -40,7 +40,7 @@ parser.add_argument('--finetune', action='store_true', help='Use learner.fine_tu
 
 # Fine-tuning and evaluation parameters
 parser.add_argument('--fe_path', type=str,
-                    default='./checkpoints/convnext_tiny_feature_extractor.pth',
+                    default='./checkpoints/kermany/feature_extractor.pth',
                     help='Path to the pretrained feature extractor.')
 parser.add_argument('--fe_classes', type=int, default=4,
                     help='Number of classes in the pretrained feature extractor '
