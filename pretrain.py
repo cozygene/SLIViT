@@ -2,7 +2,7 @@ from torch.utils.data import ConcatDataset
 
 from auxiliaries.slivit_auxiliaries import *
 from auxiliaries.misc import get_dataloaders
-from slivit import ConvNext
+from model.slivit import ConvNext
 from utils.load_backbone import AutoModelForImageClassification as amfic
 
 if args.wandb_name is not None:

@@ -11,7 +11,7 @@ from skimage import exposure
 from torch.utils.data import Subset
 from torchvision import transforms as tf
 from PIL import Image
-from slivit import SLIViT
+from model.slivit import SLIViT
 from auxiliaries.misc import *
 from utils.load_backbone import load_backbone
 
