@@ -14,7 +14,7 @@ if __name__ == '__main__':
     dls, test_loader, mnist = setup_dataloaders(args, out_dir)
 
     try:
-        slivit = SLIViT(backbone=load_backbone(args.fe_classes, args.fe_path),
+        slivit = SLIViT(backbone=load_backbone(args.fe_classes),
                         fi_dim=args.vit_dim, fi_depth=args.vit_depth,
                         heads=args.heads, mlp_dim=args.mlp_dim, num_of_patches=args.slices)
 
