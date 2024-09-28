@@ -6,7 +6,8 @@
 [*Submitted preprint*](https://www.researchsquare.com/article/rs-3044914/v2)  
 
 ### Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans.
-Oren Avram*, Berkin Durmus*, ... , Srinivas R. Sadda+,  Eran Halperin+
+Oren Avram*, Berkin Durmus*, ... , Jeffrey N. Chiang, Srinivas R. Sadda, Eran Halperin
+
 
 
 
