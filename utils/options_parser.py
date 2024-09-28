@@ -22,7 +22,7 @@ parser.add_argument('--wandb_name', type=str, default=None,
 
 # Advanced general parameters
 parser.add_argument('--gpu_id', type=str, default='0', help='GPU ID for training (default: 0).')
-parser.add_argument('--batch', type=int, default=16, help='Batch size for training.')
+parser.add_argument('--batch_size', type=int, default=4, help='Batch size for training.')
 parser.add_argument('--cpus', type=int, default=16, help='Number of CPU workers for data loading.')
 parser.add_argument('--epochs', type=int, default=10, help='Number of training epochs.')
 parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate for training.')

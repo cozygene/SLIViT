@@ -245,7 +245,7 @@ def init_out_dir(args):
 
 
 def create_learner(slivit, dls, out_dir, args, mnist):
-    best_model_name = f'finetuned_slivit'
+    best_model_name = 'feature_extractor' if get_script_name() == 'pretrain' else 'slivit'
     loss_f, metrics = get_loss_and_metrics(args.task)
     learner = Learner(dls, slivit, model_dir=out_dir, loss_func=loss_f, metrics=metrics,
                       cbs=[SaveModelCallback(fname=best_model_name),
