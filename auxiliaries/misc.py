@@ -163,11 +163,11 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
 
     logger.info(f'Num of cpus is {args.cpus}')
 
-    train_loader = DataLoader(train_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
+    train_loader = DataLoader(train_subset, batch_size=args.batch_size, num_workers=args.cpus, drop_last=True)
     logger.info(f'# of train batches is {len(train_loader)}')
-    valid_loader = DataLoader(valid_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
+    valid_loader = DataLoader(valid_subset, batch_size=args.batch_size, num_workers=args.cpus, drop_last=True)
     logger.info(f'# of validation batches is {len(valid_loader)}')
-    test_loader = DataLoader(test_subset, batch_size=args.batch, num_workers=args.cpus, drop_last=True)
+    test_loader = DataLoader(test_subset, batch_size=args.batch_size, num_workers=args.cpus, drop_last=True)
     logger.info(f'# of Test batches is {len(test_loader)}\n')
     return train_loader, valid_loader, test_loader
 
