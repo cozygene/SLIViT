@@ -1,5 +1,7 @@
-from auxiliaries.slivit_auxiliaries import *
-from auxiliaries.evaluate_auxiliaries import configure_hyperparam_values
+from auxiliaries.misc import *
+from auxiliaries.evaluate import configure_hyperparam_values
+from model.slivit import SLIViT
+from utils.load_backbone import load_backbone
 
 assert args.checkpoint is not None, 'No checkpoint provided. Please provide a checkpoint to evaluate the model.'
 
@@ -9,7 +11,7 @@ if __name__ == '__main__':
     # make sure hps (including num slices which becomes num_patches) are set correctly before setting up the dataloaders
     configure_hyperparam_values(args)
 
-    dls, test_loader, mnist = setup_dataloaders(args)
+    dls, test_loader, medmnist = setup_dataloaders(args)
 
     try:
         slivit = SLIViT(backbone=load_backbone(args.fe_classes),
@@ -22,7 +24,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
 
-    learner, _ = create_learner(slivit, dls, args, os.path.split(args.checkpoint)[0], mnist)
+    learner, _ = create_learner(slivit, dls, args, os.path.split(args.checkpoint)[0])
 
     # Evaluate and store results
     evaluate_and_store_results(learner, test_loader, args.checkpoint, args.meta, args.label, args.out_dir)
