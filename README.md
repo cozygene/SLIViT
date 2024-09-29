@@ -71,7 +71,7 @@ The general command to pre-train SLIViT is as follows:
 ```bash
 python pretrain.py --dataset <dataset type {oct2d,xray2d,custom2d}> --out_dir <out path> --meta <path to a meta file csv; ignore for an mnist dataset> --label <comma separated label column names; ignore for an mnist dataset>
 ```
-Just a heads-up: When using *any* MNIST dataset, you don't need to worry about providing a meta path or labels!
+Just a heads-up: if you want to try another MedMNIST dataset, simply tweak `get_dataset_class`. Also, when using *any* MedMNIST dataset, you don't need to worry about providing a meta path or labels!
 
 
 #### The 2D OCT (Kermany) dataset
@@ -156,10 +156,10 @@ Ready to fine-tune SLIViT on your own dataset? Just set `--dataset` to `custom3d
 ### Evaluating SLIViT
 The general command to evaluate a trained SLIViT model goes as follows:
 ```bash
-python evaluate.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <folder with a pretrained SLIViT-like feature extractor>/feature_extractor.pth --checkpoint <folder with a fine-tuned SLIViT>/slivit.pth --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
+python evaluate.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --checkpoint <folder with a fine-tuned SLIViT>/slivit.pth --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
 ```
 
-By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_dim`, `--vit_depth`, `--heads`, `--mlp_dim`, and `--slices` are pulled from the automatically generated `finetune_options.txt` file in your fine-tuning results folder. If that file happens to be missing, you'll need to manually provide the correct hyperparameters as arguments (check out `python evaluate.py -h` for additional guidance). If you're having troubles to configure the architecture, you can always use `finetune.py` for both training and evaluation. 
+By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_dim`, `--vit_depth`, `--heads`, `--mlp_dim`, and `--slices` (serves as well as the ViT's number of patches) are pulled from the automatically generated `finetune_options.txt` file in your fine-tuning results folder. If that file happens to be missing, you'll need to manually provide the correct hyperparameters as arguments (check out `python evaluate.py -h` for additional guidance). If you're having troubles to configure the architecture, you can always use `finetune.py` for both training and evaluation. 
 
 ### Credits
 

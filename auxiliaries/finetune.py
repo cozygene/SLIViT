@@ -1,17 +1,13 @@
-from auxiliaries.misc import *
 import sys
-import torch
 import PIL
-from fastai.data.load import DataLoader
 from fastai.imports import *
-from fastai.learner import Learner
-from fastai.metrics import RocAucMulti, APScoreMulti, R2Score, ExplainedVariance, PearsonCorrCoef
 from fastai.vision.all import *
 from skimage import exposure
-from torch.utils.data import Subset
 from torchvision import transforms as tf
 from model.slivit import SLIViT
 from utils.load_backbone import load_backbone
+from auxiliaries.misc import *
+
 
 if args.wandb_name is not None:
     from fastai.callback.wandb import *

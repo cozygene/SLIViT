@@ -1,9 +1,7 @@
 import os
-import numpy as np
+from numpy import float64
 import pydicom as dicom
-from datasets.SLIViTDataset3D import SLIViTDataset3D
-from auxiliaries.slivit_auxiliaries import default_transform_gray
-from auxiliaries.misc import to_tensor
+from datasets.SLIViTDataset3D import SLIViTDataset3D, ToTensor
 
 
 class MRIDataset3D(SLIViTDataset3D):
@@ -19,6 +17,6 @@ class MRIDataset3D(SLIViTDataset3D):
         vol = []
         for img_name in img_paths:
             img = dicom.dcmread(f'{path}/{img_name}')
-            vol.append(to_tensor(img.pixel_array.astype(np.float64)))
+            vol.append(ToTensor()(img.pixel_array.astype(float64)))
 
         return vol
