@@ -42,8 +42,8 @@ class ConvNext(nn.Module):
 
 
 class SLIViT(nn.Module):
-
-    def __init__(self, *, backbone, fi_dim, fi_depth, heads, mlp_dim,
+    # TODO: inherit from ViT as much as possible
+    def __init__(self, *, backbone, vit_dim, vit_depth, heads, mlp_dim,
                  num_of_patches, patch_height=768, patch_width=64, rnd_pos_emb=False,
                  num_classes=1, dim_head=64, dropout=0., emb_dropout=0.):
         super().__init__()
@@ -53,7 +53,7 @@ class SLIViT(nn.Module):
         # assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b c (h p1) (w p2) -> b (c h w) (p1 p2)', p1=patch_height, p2=patch_width),
-            nn.Linear(patch_dim, fi_dim),
+            nn.Linear(patch_dim, vit_dim),
         )
         # tmpp = torch.zeros((1, fi_width))
         # positional_embeddings = torch.arange(self.num_patches) + 1
@@ -64,20 +64,20 @@ class SLIViT(nn.Module):
             # initialize positional embeddings randomly
             # TODO: investigate if this is the best way to initialize positional embeddings
             # TODO: it seems to work better for external crora
-            self.pos_embedding = nn.Parameter(torch.randn(1, self.num_patches + 1, fi_dim))
+            self.pos_embedding = nn.Parameter(torch.randn(1, self.num_patches + 1, vit_dim))
         else:
             # initialize positional embeddings with the slice number
-            self.pos_embedding = nn.Parameter(torch.arange(self.num_patches+1).repeat(fi_dim, 1).t().unsqueeze(0).float())  # require
+            self.pos_embedding = nn.Parameter(torch.arange(self.num_patches+1).repeat(vit_dim, 1).t().unsqueeze(0).float())  # require
 
-        self.cls_token = nn.Parameter(torch.randn(1, 1, fi_dim))
+        self.cls_token = nn.Parameter(torch.randn(1, 1, vit_dim))
         self.dropout = nn.Dropout(emb_dropout)
 
-        self.transformer = Transformer(fi_dim, fi_depth, heads, dim_head, mlp_dim, dropout)
+        self.transformer = Transformer(vit_dim, vit_depth, heads, dim_head, mlp_dim, dropout)
         self.pool = 'cls'
         self.to_latent = nn.Identity()
         self.mlp_head = nn.Sequential(
-            nn.LayerNorm(fi_dim),
-            nn.Linear(fi_dim, num_classes)
+            nn.LayerNorm(vit_dim),
+            nn.Linear(vit_dim, num_classes)
             #,nn.LayerNorm(num_classes)  #TODO: check if this is needed
         )
         self.act = nn.Sigmoid()
