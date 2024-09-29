@@ -1,35 +1,41 @@
-import PIL
-from fastai.data.load import DataLoader
-from skimage import exposure
-from torch.utils.data import Subset
-from fastai.imports import *
 import torch
+import logging
+from sklearn.model_selection import GroupShuffleSplit
+from torch.utils.data import Subset, ConcatDataset
+from fastai.imports import *
+from fastai.callback.progress import CSVLogger
+from fastai.callback.tracker import EarlyStoppingCallback, SaveModelCallback
+from fastai.callback.wandb import WandbCallback
+from fastai.data.core import DataLoaders
+from fastai.data.load import DataLoader
+from fastai.learner import Learner
+from fastai.metrics import RocAucMulti, APScoreMulti, R2Score, ExplainedVariance, PearsonCorrCoef
 from utils.options_parser import args
-import os
+
+if args.wandb_name is not None:
+    import wandb
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
-import sys
-if args.wandb_name is not None:
-    import wandb
 
-import numpy as np
-import pandas as pd
-
-from sklearn.model_selection import GroupShuffleSplit
-from torchvision.transforms import ToTensor
-
-
+def set_seed(seed=42):
+    """Sets the seed for reproducibility."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if using multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 def init_out_dir(args):
     out_dir = args.out_dir.rstrip('/')
     if not args.drop_default_suffix:
-        # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
+        # by default, the csv file name (or dataset name in case of medmnist) is added to the output directory
         if args.meta is not None:
-            # example args.meta:
-            # ./meta/echonet.csv
+            # example args.meta: ./meta/echonet.csv
             csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
             out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label}' if len(args.label.split(',')) == 1 else '')
         else:
@@ -43,7 +49,28 @@ def init_out_dir(args):
 
     args.out_dir = out_dir.rstrip('/')
 
-logger = logging.getLogger()
+
+def save_options(args):
+    arguments = []
+    for arg in vars(args):
+        value = getattr(args, arg)
+        if isinstance(value, bool):
+            if value:
+                arguments.append(f'--{arg}')
+        else:  # if value is not None:
+            arguments.append(f'--{arg} "{value}"')
+
+    command_file = f'{args.out_dir}/{script_name}_command.txt'
+    with open(command_file, 'w') as f:
+        f.write(' '.join(sys.argv) + "\n\n")
+
+    # all options, including default values
+    options_file = f'{args.out_dir}/{script_name}_options.txt'
+    with open(options_file, 'w') as f:
+        f.write(f"python {sys.argv[0]} {' '.join(arguments)}\n\n")
+
+    logger.info(f'Running command is saved at:\n{command_file}\n')
+    logger.info(f'Full running configuration (including default parameters) is saved at:\n{options_file}\n')
 
 
 def to_tensor(x):
@@ -55,7 +82,7 @@ def get_script_name():
 
 
 def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col):
-
+    # TODO add an informative message about the split
     df = pd.read_csv(meta)
     if split_col in df.columns:
         # Get indices for train, val and test
@@ -71,9 +98,9 @@ def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col)
             train_idx, temp_idx = next(gss.split(df,
                                                  y=None if get_script_name() == 'pretrain' else df[pathology],
                                                  groups=df[pid_col]))  # split by patient
-                                                 # TODO: check if split "by file" for kermany
-                                                 # helps getting the high performance
-                                                 # groups=df['path']))  # split by patient
+            # TODO: check if split "by file" for kermany
+            # helps getting the high performance
+            # groups=df['path']))  # split by patient
 
             if split_ratio[2] == 0:
                 # using external test set
@@ -107,9 +134,20 @@ def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col)
     return train_idx, val_idx, test_idx
 
 
-def get_dataloaders(dataset_class, args, mnist=None):
+def setup_dataloaders(args):
+    dataset_class, medmnist = get_dataset_class(args.dataset)
+    assert args.meta is not None or \
+           medmnist is not None, \
+        'Meta file is required for non-MedMNIST datasets. Please provide the meta file path.'
+    train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, medmnist)
+    dls = DataLoaders(train_loader, valid_loader)
+    dls.c = 2
+    return dls, test_loader, medmnist
+
+
+def get_dataloaders(dataset_class, args, medmnist=None):
     msg = ''
-    if mnist is not None:
+    if medmnist is not None:
         # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
         if args.mnist_mocks:
             size = 28
@@ -120,11 +158,11 @@ def get_dataloaders(dataset_class, args, mnist=None):
             # nodulemnist
             size = 64
         os.makedirs(args.mnist_root, exist_ok=True)
-        train_subset = dataset_class(mnist(split="train", download=True, root=args.mnist_root, size=size),
+        train_subset = dataset_class(medmnist(split="train", download=True, root=args.mnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        valid_subset = dataset_class(mnist(split="val", download=True, root=args.mnist_root, size=size),
+        valid_subset = dataset_class(medmnist(split="val", download=True, root=args.mnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        test_subset = dataset_class(mnist(split="test", download=True, root=args.mnist_root, size=size),
+        test_subset = dataset_class(medmnist(split="test", download=True, root=args.mnist_root, size=size),
                                     num_slices_to_use=args.slices)
 
         if args.mnist_mocks is not None:
@@ -140,7 +178,7 @@ def get_dataloaders(dataset_class, args, mnist=None):
                                                                        args.split_ratio, args.label,
                                                                        args.split_col, args.pid_col)
         dataset = dataset_class(args.meta,
-                                args.label,#.split(','),
+                                args.label,  # .split(','),
                                 args.path_col,
                                 # **kwargs
                                 num_slices_to_use=args.slices,
@@ -166,7 +204,6 @@ def get_dataloaders(dataset_class, args, mnist=None):
                 msg = f'Using external test set for final model evaluation from:\n{args.test_meta}'
                 test_df = pd.read_csv(args.test_meta)
                 test_subset = Subset(dataset_class(test_df, args.label, args.path_col,
-                                                   #**kwargs
                                                    num_slices_to_use=args.slices,
                                                    sparsing_method=args.sparsing_method,
                                                    img_suffix=args.img_suffix),
@@ -215,22 +252,164 @@ def get_dataset_class(dataset_name):
     return dataset_class, medmnist
 
 
-def apply_contrast_stretch(img, low=2, high=98):
-    img = np.array(img)
-    plow, phigh = np.percentile(img, (low, high))
-    return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
+def get_loss_and_metrics(task):
+    if task == 'cls':
+        loss_f = torch.nn.BCEWithLogitsLoss()  # TODO: consider using CrossEntropyLoss
+        # metrics = [RocAucMulti(average=None), APScoreMulti(average=None)]
+        metrics = [RocAucMulti(), APScoreMulti()]
+    elif task == 'reg':
+        loss_f = torch.nn.L1Loss()
+        metrics = [R2Score(), ExplainedVariance(), PearsonCorrCoef()]
+    else:
+        raise ValueError('Unknown task option')
+
+    return loss_f, metrics
 
 
-def set_seed(seed=42):
-    """Sets the seed for reproducibility."""
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)  # if using multi-GPU
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+def create_learner(slivit, dls, args, model_dir):
+    best_model_name = 'feature_extractor' if get_script_name() == 'pretrain' else 'slivit'
+    loss_f, metrics = get_loss_and_metrics(args.task)
+    learner = Learner(dls, slivit, model_dir=model_dir, loss_func=loss_f, metrics=metrics,
+                      cbs=[SaveModelCallback(fname=best_model_name),
+                           EarlyStoppingCallback(min_delta=args.min_delta, patience=args.patience),
+                           CSVLogger(fname=logger.handlers[0].baseFilename, append=True)] +
+                          ([WandbCallback()] if (args.wandb_name is not None and script_name != 'evaluate') else []))
+    return learner, best_model_name
+
+
+def train_and_evaluate(args, learner, best_model_name, test_loader=None):
+    gpus = os.environ["CUDA_VISIBLE_DEVICES"].split(',')
+    for gpu in range(len(gpus)):
+        try:
+            # Set the current GPU
+            logger.info(f'Trying GPU {gpus[gpu]}')
+            torch.cuda.set_device(gpu)  # Switch to the current GPU
+            learner.model.to(f'cuda:{gpu}')  # Move model to the current GPU
+
+            # Release previous GPU's memory if not on the first GPU
+            if gpu > 0:
+                torch.cuda.set_device(gpu - 1)  # Switch to the previous GPU
+                torch.cuda.empty_cache()  # Release the memory of the previous GPU
+                torch.cuda.set_device(gpu)  # Switch back to the current GPU
+
+            # fit or fine-tune the model
+            if args.finetune:
+                learner.fine_tune(args.epochs, args.lr)
+            else:
+                # default
+                learner.fit(args.epochs, args.lr)
+
+            logger.info(f'Best model is stored at:\n{args.out_dir}/{best_model_name}.pth\n')
+
+            # TODO: comment out this condition if medmnist dataset split is handled internally
+            if get_script_name() != 'pretrain':
+                # Evaluate the model on the test set if provided
+                if len(test_loader):
+                    evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label,
+                                               args.out_dir)
+                else:
+                    logger.info('Skipping evaluation... (test set was not provided)')
+
+            # successful running
+            return
+
+        except RuntimeError as e:
+            if 'out of memory' in e.args[0]:
+                if gpu < len(gpus) - 1:
+                    logger.error(f'GPU ran out of memory. Trying next GPU...\n')
+                else:
+                    # Handle failure case where all GPUs run out of memory or error out
+                    logger.error('Out of memory error occurred on all GPUs.\n'
+                                 'You may want to try reducing the batch size or using a larger GPU.'
+                                 'Exiting...\n')
+                    # Re-raise the exception for proper handling outside this function
+                    raise e
+            else:
+                logger.error(f'Unrecognized error occurred: {e.args[0]}. Exiting...\n')
+                raise e
+
+
+def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
+    if preds is None:
+        logger.info(f'Computing scores...')
+        metric_scores = learner.validate(dl=evaluation_loader)
+
+        logger.info('\n' + '*' * 100 + f'\nModel evaluation performance on test set is:')
+        metric_names = ['loss_score'] + [m.name for m in learner.metrics]  # loss is not included in the metrics
+    else:
+        # TODO: implement score computation from predictions (instead of re-running inference)
+        pass
+
+    for metric_score, metric_name in zip(metric_scores, metric_names):
+        logger.info(f'{metric_name}: {metric_score:.5f}' + (('\n' + '*' * 100)
+                                                            if metric_name == metric_names[-1] else ''))
+        with open(f'{out_dir}/{metric_name}.txt', 'w') as f:
+            f.write(f'{metric_score:.5f}\n')
+    logger.info(f'Running result is saved at:\n{out_dir}')
+
+
+def evaluate_and_store_results(learner, data_loader, weights_path, meta, pathology, out_dir):
+    if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
+            hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
+        learner.model.to('cuda')
+        try:
+            # fastai's learner already has the path in model_dir and expects just the model's name
+            learner.load(weights_path.split('/')[-1].split('.pth')[0])
+        except Exception as e:
+            # Load the state_dict
+            state_dict = torch.load(weights_path)
+
+            # Define key translations from loaded keys to model's expected keys
+            key_translations = {}
+            for key in state_dict.keys():
+                if 'fn.' in key:
+                    new_key = key.replace('fn.', '')
+                    key_translations[key] = new_key
+                elif 'net.' in key:
+                    new_key = key.replace('net.', '')
+                    key_translations[key] = new_key
+
+            # Translate keys
+            new_state_dict = {}
+            for key, value in state_dict.items():
+                new_key = key_translations.get(key, key)  # Get new key if it exists, else keep the old key
+                new_state_dict[new_key] = value
+
+            # Now load the translated state_dict
+            learner.load_state_dict(new_state_dict)
+
+        results_file = f'{out_dir}/predicted_scores.csv'
+        # preds = store_predictions(learner, data_loader, meta, pathology, results_file)
+        evaluate_model(learner, data_loader, out_dir)
+    else:
+        # evaluation_loader is empty
+        logger.info('Evaluation loader is empty. No evaluation is performed.')
+
+
+def wrap_up(out_dir, e=None):
+    with open(f'{out_dir}/done_{script_name}', 'w') as f:
+        if e is None:
+            # done file should be empty when successful
+            logger.info('Done successfully!')
+            logger.info('_' * 100 + '\n')
+        else:
+            f.write(f'{e}\n')
+            raise e
 
 
 if args.seed is not None:
     set_seed(args.seed)
+
+# running setup
+script_name = get_script_name()
+init_out_dir(args)
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    handlers=[
+                        logging.FileHandler(f'{args.out_dir}/{script_name}.log', mode='w'),
+                        logging.StreamHandler()  # Log messages to the console
+                    ])
+logger = logging.getLogger()
+save_options(args)
+logger.info(f'Output direcory is\n{args.out_dir}\n')

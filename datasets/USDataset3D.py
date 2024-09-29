@@ -1,8 +1,5 @@
-from PIL import Image
-
-from datasets.SLIViTDataset3D import SLIViTDataset3D
-from auxiliaries.slivit_auxiliaries import default_transform_gray
-from auxiliaries.misc import to_tensor
+import PIL
+from datasets.SLIViTDataset3D import SLIViTDataset3D, ToTensor
 
 
 class USDataset3D(SLIViTDataset3D):
@@ -16,6 +13,6 @@ class USDataset3D(SLIViTDataset3D):
 
         scan = []
         for frame in frames_to_use:
-            frame = Image.open(f'{path}/{frame}.tiff')
-            scan.append(to_tensor(frame))
+            frame = PIL.Image.open(f'{path}/{frame}.tiff')
+            scan.append(ToTensor()(frame))
         return scan

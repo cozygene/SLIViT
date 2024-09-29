@@ -1,8 +1,6 @@
 import os
-from datasets.SLIViTDataset3D import SLIViTDataset3D
-from auxiliaries.pretrain_auxiliaries import *
-from auxiliaries.slivit_auxiliaries import default_transform_gray
-from auxiliaries.misc import to_tensor
+from datasets.SLIViTDataset3D import SLIViTDataset3D, ToTensor
+from auxiliaries.pretrain import *
 
 
 class OCTDataset3D(SLIViTDataset3D):
@@ -16,6 +14,6 @@ class OCTDataset3D(SLIViTDataset3D):
         # sort by slice order
         for i, slice_name in enumerate(sorted(slices, key=lambda x: int(x.split('_')[-1].split('.')[0]))):
             if i in slc_idxs:
-                img = Image.open(f'{vol_path}/{slice_name}')
-                vol.append(to_tensor(img))
+                img = PIL.Image.open(f'{vol_path}/{slice_name}')
+                vol.append(ToTensor()(img))
         return vol

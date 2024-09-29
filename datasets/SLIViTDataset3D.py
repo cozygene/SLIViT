@@ -1,9 +1,9 @@
 import os
 import torch
 import numpy as np
-
-from auxiliaries.slivit_auxiliaries import default_transform_gray
+from auxiliaries.finetune import default_transform_gray
 from datasets.SLIViTDataset import SLIViTDataset
+from torchvision.transforms import ToTensor
 
 
 class SLIViTDataset3D(SLIViTDataset):
