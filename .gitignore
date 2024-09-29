@@ -4,7 +4,4 @@
 *__pycache__*
 old*
 .gitignore
-runs.txt
 snippets/
-stam.py
-utils/2DResNet18.py
