@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-from auxiliaries.slivit_auxiliaries import default_transform_gray
+from auxiliaries.finetune import default_transform_gray
 # from torchvision.transforms import (
 #     Compose,
 #     Normalize,
@@ -34,7 +34,7 @@ from auxiliaries.slivit_auxiliaries import default_transform_gray
 #     ])
 
 # TODO: clean up this class
-class MNISTDataset3D(Dataset):
+class MedMNISTDataset3D(Dataset):
     def __init__(self, dataset, num_slices_to_use, **kwargs):
         super().__init__()
         self.dataset = dataset
