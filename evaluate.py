@@ -8,7 +8,7 @@ assert args.checkpoint is not None, 'No checkpoint provided. Please provide a ch
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
 
-    # make sure hps (including num slices which becomes num_patches) are set correctly before setting up the dataloaders
+    # set hps (including num slices which becomes num_patches) correctly before setting up the dataloaders
     configure_hyperparam_values(args)
 
     dls, test_loader, medmnist = setup_dataloaders(args)
