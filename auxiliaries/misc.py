@@ -187,13 +187,13 @@ def get_dataloaders(dataset_class, args, mnist=None):
 
 
 def get_dataset_class(dataset_name):
-    mnist = None
+    medmnist = None
     if dataset_name == 'xray2d':
-        from medmnist import ChestMNIST as mnist
-        from datasets.MNISTDataset2D import MNISTDataset2D as dataset_class
+        from medmnist import ChestMNIST as medmnist
+        from datasets.MedMNISTDataset2D import MedMNISTDataset2D as dataset_class
     elif dataset_name == 'ct3d':
-        from medmnist import NoduleMNIST3D as mnist
-        from datasets.MNISTDataset3D import MNISTDataset3D as dataset_class
+        from medmnist import NoduleMNIST3D as medmnist
+        from datasets.MedMNISTDataset3D import MedMNISTDataset3D as dataset_class
     elif dataset_name == 'oct2d':
         from datasets.OCTDataset2D import OCTDataset2D as dataset_class
     elif dataset_name == 'oct3d':
@@ -210,7 +210,7 @@ def get_dataset_class(dataset_name):
         raise ValueError('Unknown dataset option. Please choose from: '
                          'xray2d, ct3d, oct2d, oct3d, us3d, mri3d, custom2d, custom3d.')
 
-    return dataset_class, mnist
+    return dataset_class, medmnist
 
 
 def apply_contrast_stretch(img, low=2, high=98):
