@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     try:
         slivit = SLIViT(backbone=load_backbone(args.fe_classes),
-                        fi_dim=args.vit_dim, fi_depth=args.vit_depth,
+                        vit_dim=args.vit_dim, vit_depth=args.vit_depth,
                         heads=args.heads, mlp_dim=args.mlp_dim, num_of_patches=args.slices)
 
     except RuntimeError as e:
