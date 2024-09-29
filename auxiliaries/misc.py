@@ -187,28 +187,30 @@ def get_dataloaders(dataset_class, args, mnist=None):
 
 
 def get_dataset_class(dataset_name):
+    # Dictionary mapping dataset names to dataset classes
+    dataset_name_to_class_name = {'xray2d': 'MedMNISTDataset2D', 'oct2d': 'OCTDataset2D',
+                                  'custom2d': 'CustomDataset2D',
+                                  'oct3d': 'OCTDataset3D', 'us3d': 'USDataset3D',
+                                  'mri3d': 'MRIDataset3D', 'ct3d': 'MedMNISTDataset3D',
+                                  'custom3d': 'CustomDataset3D'}
+
+    assert dataset_name in dataset_name_to_class_name, \
+        f'Unknown dataset option. Please choose from: {list(dataset_name_to_class_name.keys())}'
+
+    # Import the dataset class dynamically
+    class_name = dataset_name_to_class_name[dataset_name]
+    dataset_module = __import__(f'datasets.{class_name}', fromlist=[class_name])
+    dataset_class = getattr(dataset_module, class_name)
+
+    # Dictionary mapping dataset names to optional medmnist classes
+    medmnist_classes = {'xray2d': 'ChestMNIST', 'ct3d': 'NoduleMNIST3D'}
+
+    # Import the optional medmnist class if present
     medmnist = None
-    if dataset_name == 'xray2d':
-        from medmnist import ChestMNIST as medmnist
-        from datasets.MedMNISTDataset2D import MedMNISTDataset2D as dataset_class
-    elif dataset_name == 'ct3d':
-        from medmnist import NoduleMNIST3D as medmnist
-        from datasets.MedMNISTDataset3D import MedMNISTDataset3D as dataset_class
-    elif dataset_name == 'oct2d':
-        from datasets.OCTDataset2D import OCTDataset2D as dataset_class
-    elif dataset_name == 'oct3d':
-        from datasets.OCTDataset3D import OCTDataset3D as dataset_class
-    elif dataset_name == 'us3d':
-        from datasets.USDataset3D import USDataset3D as dataset_class
-    elif dataset_name == 'mri3d':
-        from datasets.MRIDataset3D import MRIDataset3D as dataset_class
-    elif dataset_name == 'custom2d':
-        from datasets.CustomDataset2D import CustomDataset2D as dataset_class
-    elif dataset_name == 'custom3d':
-        from datasets.CustomDataset3D import CustomDataset3D as dataset_class
-    else:
-        raise ValueError('Unknown dataset option. Please choose from: '
-                         'xray2d, ct3d, oct2d, oct3d, us3d, mri3d, custom2d, custom3d.')
+    if dataset_name in medmnist_classes:
+        medmnist_class_name = medmnist_classes[dataset_name]
+        medmnist_module = __import__('medmnist', fromlist=[medmnist_class_name])
+        medmnist = getattr(medmnist_module, medmnist_class_name)
 
     return dataset_class, medmnist
 
