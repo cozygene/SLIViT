@@ -6,12 +6,10 @@ assert args.checkpoint is not None, 'No checkpoint provided. Please provide a ch
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
 
-    out_dir = init_out_dir(args)
-
     # make sure hps (including num slices which becomes num_patches) are set correctly before setting up the dataloaders
     configure_hyperparam_values(args)
 
-    dls, test_loader, mnist = setup_dataloaders(args, out_dir)
+    dls, test_loader, mnist = setup_dataloaders(args)
 
     try:
         slivit = SLIViT(backbone=load_backbone(args.fe_classes),
@@ -23,9 +21,10 @@ if __name__ == '__main__':
                      f"correctly set up and compatible with the model. This will ensure everything runs smoothly!\n")
         sys.exit(1)
 
-    learner, _ = create_learner(slivit, dls, out_dir, args, mnist)
+
+    learner, _ = create_learner(slivit, dls, args, os.path.split(args.checkpoint)[0], mnist)
 
     # Evaluate and store results
-    evaluate_and_store_results(learner, test_loader, args.checkpoint, args.meta, args.label, out_dir)
+    evaluate_and_store_results(learner, test_loader, args.checkpoint, args.meta, args.label, args.out_dir)
 
-    wrap_up(out_dir)
+    wrap_up(args.out_dir)

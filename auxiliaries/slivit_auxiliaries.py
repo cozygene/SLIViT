@@ -27,7 +27,7 @@ def get_label(sample, labels, pathologies):
     return label
 
 
-def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None):
+def train_and_evaluate(args, learner, best_model_name, test_loader=None):
     gpus = os.environ["CUDA_VISIBLE_DEVICES"].split(',')
     for gpu in range(len(gpus)):
         try:
@@ -49,13 +49,13 @@ def train_and_evaluate(learner, out_dir, best_model_name, args, test_loader=None
                 # default
                 learner.fit(args.epochs, args.lr)
 
-            logger.info(f'Best model is stored at:\n{out_dir}/{best_model_name}.pth')
+            logger.info(f'Best model is stored at:\n{args.out_dir}/{best_model_name}.pth')
 
             # TODO: comment out this condition if mnist dataset split is handled internally
             if get_script_name() != 'pretrain':
                 # Evaluate the model on the test set if provided
                 if len(test_loader):
-                    evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label, out_dir)
+                    evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label, args.out_dir)
                 else:
                     logger.info('Skipping evaluation... (test set was not provided)')
 
@@ -207,47 +207,21 @@ def wrap_up(out_dir, e=None):
             raise e
 
 
-def setup_dataloaders(args, out_dir):
+def setup_dataloaders(args):
     dataset_class, mnist = get_dataset_class(args.dataset)
     assert args.meta is not None or \
            mnist is not None, \
         'Meta file is required for non-mnist datasets. Please provide the meta file path.'
-    train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, out_dir, mnist)
+    train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, mnist)
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
     return dls, test_loader, mnist
 
 
-def init_out_dir(args):
-    out_dir = args.out_dir.rstrip('/')
-    if not args.drop_default_suffix:
-        # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
-        if args.meta is not None:
-            # example args.meta:
-            # ./meta/echonet.csv
-            csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
-            out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label}' if len(args.label.split(',')) == 1 else '')
-        else:
-            out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
-
-    if args.out_suffix is not None:
-        # subfolders for hp search
-        out_dir += f'/{args.out_suffix}'
-
-    logger.info(f'\nOutput direcory is\n{out_dir}\n')
-    os.makedirs(out_dir, exist_ok=True)
-
-    command_file = f'{out_dir}/{script_name}_command.txt'
-    options_file = f'{out_dir}/{script_name}_options.txt'
-    save_options(command_file, options_file, args)
-
-    return out_dir
-
-
-def create_learner(slivit, dls, out_dir, args, mnist):
+def create_learner(slivit, dls, args, model_dir, mnist):
     best_model_name = 'feature_extractor' if get_script_name() == 'pretrain' else 'slivit'
     loss_f, metrics = get_loss_and_metrics(args.task)
-    learner = Learner(dls, slivit, model_dir=out_dir, loss_func=loss_f, metrics=metrics,
+    learner = Learner(dls, slivit, model_dir=model_dir, loss_func=loss_f, metrics=metrics,
                       cbs=[SaveModelCallback(fname=best_model_name),
                            EarlyStoppingCallback(min_delta=args.min_delta, patience=args.patience),
                            CSVLogger()] +
