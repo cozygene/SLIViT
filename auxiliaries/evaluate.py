@@ -27,5 +27,5 @@ def configure_hyperparam_values(args):
     result = {'fe_classes': args.fe_classes, 'vit_dim': args.vit_dim, 'vit_depth': args.vit_depth,
               'heads': args.heads, 'mlp_dim': args.mlp_dim, 'slices': args.slices}
 
-    logger.info(f"Hyperparameters:\n{result}\n")
+    logger.info(f"Hyperparameters: {result}")
     return
