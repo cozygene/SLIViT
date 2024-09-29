@@ -20,14 +20,28 @@ import pandas as pd
 from sklearn.model_selection import GroupShuffleSplit
 from torchvision.transforms import ToTensor
 
-import logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',
-                    handlers=[
-                        logging.FileHandler('./log.txt'),
-                        logging.StreamHandler()  # Log messages to the console
-                    ])
+
+
+
+def init_out_dir(args):
+    out_dir = args.out_dir.rstrip('/')
+    if not args.drop_default_suffix:
+        # by default, the csv file name (or dataset name in case of mnist) is added to the output directory
+        if args.meta is not None:
+            # example args.meta:
+            # ./meta/echonet.csv
+            csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
+            out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label}' if len(args.label.split(',')) == 1 else '')
+        else:
+            out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
+
+    if args.out_suffix is not None:
+        # subfolders for hp search
+        out_dir += f'/{args.out_suffix}'
+
+    os.makedirs(out_dir, exist_ok=True)
+
+    args.out_dir = out_dir.rstrip('/')
 
 logger = logging.getLogger()
 
@@ -93,7 +107,7 @@ def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col)
     return train_idx, val_idx, test_idx
 
 
-def get_dataloaders(dataset_class, args, out_dir, mnist=None):
+def get_dataloaders(dataset_class, args, mnist=None):
     msg = ''
     if mnist is not None:
         # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
@@ -122,7 +136,7 @@ def get_dataloaders(dataset_class, args, out_dir, mnist=None):
 
         # dataset  = ConcatDataset([train_subset, valid_subset, test_subset])
     else:
-        train_indices, valid_indices, test_indices = get_split_indices(args.meta, out_dir,
+        train_indices, valid_indices, test_indices = get_split_indices(args.meta, args.out_dir,
                                                                        args.split_ratio, args.label,
                                                                        args.split_col, args.pid_col)
         dataset = dataset_class(args.meta,

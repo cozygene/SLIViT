@@ -11,23 +11,21 @@ if args.wandb_name is not None:
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
 
-    out_dir = init_out_dir(args)
-
-    dls, empty_test_set, mnist = setup_dataloaders(args, out_dir)  # no test here...
+    dls, empty_test_set, mnist = setup_dataloaders(args)  # no test here...
 
     convnext = ConvNext(amfic.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
                                               # length of the target vector
                                               num_labels=dls.train.dataset.dataset.get_num_classes(),
                                               ignore_mismatched_sizes=True))
 
-    learner, best_model_name = create_learner(convnext, dls, out_dir, args, mnist)
+    learner, best_model_name = create_learner(convnext, dls, args, args.out_dir, mnist)
 
+    err = None
     try:
-        train_and_evaluate(learner, out_dir, best_model_name, args, empty_test_set)
-        wrap_up(out_dir)
-    except Exception as e:
-        wrap_up(out_dir, e)
-    finally:
-        if args.wandb_name is not None:
-            wandb.finish()
+        train_and_evaluate(args, learner, best_model_name, empty_test_set)
+    except Exception as err:
+        pass
+    wrap_up(args.out_dir, err)
+    if args.wandb_name is not None:
+        wandb.finish()
 
