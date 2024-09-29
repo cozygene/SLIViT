@@ -22,6 +22,9 @@ def setup_parser():
     # Number of configurations to process
     parser.add_argument('--num_configs', type=int, required=True, help='Number of configurations to process.')
 
+    # Feature extractor path
+    parser.add_argument('--fe_path', type=str, default='./checkpoints/feature_extractor.pth',
+                        help='Path to the pretrained feature extractor.')
     # GPU ID to use
     parser.add_argument('--gpu_id', type=str, default='3,1', help='GPU ID for training')
 
@@ -88,7 +91,7 @@ def get_configurations(num_configs):
     return configs
 
 
-def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
+def run_commands(fe_path, csv_path, test_path, num_configs, gpu, labels, out_dir):
     os.makedirs(out_dir, exist_ok=True)
 
     configs = get_configurations(num_configs)
@@ -110,6 +113,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
             command += f"--seed 1 --dataset oct3d "
             command += f'--fe_classes 4 '
             command += f'--meta {csv_path} '
+            command += f'--fe_path {fe_path} '
             command += f'--test_meta {test_path} '
             command += f"--label {label} --gpu_id {gpu} --cpus 40 "
             command += f"--drop_default_suffix "
@@ -140,6 +144,7 @@ def run_commands(csv_path, test_path, num_configs, gpu, labels, out_dir):
                 time.sleep(10)
 
 
-run_commands(args.train_csv_path, args.test_meta_path, args.num_configs,
-             args.gpu_id, args.labels, args.out)
+run_commands(args.fe_path, args.train_csv_path, args.test_meta_path,
+             args.num_configs, args.gpu_id, args.labels, args.out)
+
 print(f"Ran {args.num_configs} configurations.")
