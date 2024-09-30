@@ -1,6 +1,6 @@
 from auxiliaries.misc import *
 from model.slivit import ConvNext
-from utils.load_backbone import AutoModelForImageClassification as amfic
+from model.feature_extractor import AutoModelForImageClassification as amfic
 
 if args.wandb_name is not None:
     wandb.init(project=args.wandb_name)
