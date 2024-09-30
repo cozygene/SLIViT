@@ -28,9 +28,9 @@ parser.add_argument('--epochs', type=int, default=10, help='Number of training e
 parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate for training.')
 parser.add_argument('--task', type=str, default='cls', help='Task type: "cls" (classification) or "reg" (regression).')
 parser.add_argument('--seed', type=int, default=1, help='Set random seed for reproducibility.')
-parser.add_argument('--mnist_mocks', type=int,
+parser.add_argument('--medmnist_mocks', type=int,
                     help='Number of MedMNIST samples to use for this run (default: all samples).')
-parser.add_argument('--mnist_root', type=str, default='./data', help='Root directory for MedMNIST dataset downloads.')
+parser.add_argument('--medmnist_root', type=str, default='./data', help='Root directory for MedMNIST dataset downloads.')
 parser.add_argument('--split_ratio', type=lambda x: [float(i) for i in x.split(',')], default=[0.85, 0.15, 0],
                     help='Train/Val/Test split ratio (comma-separated).')
 parser.add_argument('--min_delta', type=float, default=0, help='Minimum delta for early stopping.')
