@@ -2,36 +2,6 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from auxiliaries.finetune import default_transform_gray
-# from torchvision.transforms import (
-#     Compose,
-#     Normalize,
-#     RandomHorizontalFlip,
-#     RandomResizedCrop,
-#     ToTensor,
-# )
-
-
-# class pil_contrast_strech(object):
-#     def __init__(self, low=2, high=98):
-#         self.low, self.high = low, high
-#
-#     def __call__(self, img):
-#         # Contrast stretching
-#         img = np.array(img)
-#         plow, phigh = np.percentile(img, (self.low, self.high))
-#         return PIL.Image.fromarray(exposure.rescale_intensity(img, in_range=(plow, phigh)))
-
-
-# transform_new = tf.Compose(
-#     [
-#         tf.ToPILImage(),
-#         tf.Resize((256, 256)),
-#         # pil_contrast_strech(),
-#         # RandomResizedCrop((256,256)),
-#         # RandomHorizontalFlip(),
-#         ToTensor(),
-#         gray2rgb
-#     ])
 
 # TODO: clean up this class
 class MedMNISTDataset3D(Dataset):

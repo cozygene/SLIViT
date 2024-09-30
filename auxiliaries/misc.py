@@ -340,7 +340,7 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
 
 
 def evaluate(learner, data_loader, weights_path, out_dir):
-    # TODO: conmigrate this logic into evaluate_model() instead
+    # TODO: migrate this logic into evaluate_model() instead
     # Evaluate the model on the test set if provided
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:

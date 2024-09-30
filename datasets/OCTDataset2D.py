@@ -11,4 +11,4 @@ class OCTDataset2D(SLIViTDataset):
         sample_path, label = super().__getitem__(idx)
         scan = PILToTensor()(PIL.Image.open(sample_path))
         transformed_scan = self.t(scan)
-        return transformed_scan, label.squeeze()  # TODO: Consider adding EHR info
+        return transformed_scan, label.squeeze()

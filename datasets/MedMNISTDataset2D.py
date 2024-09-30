@@ -4,22 +4,6 @@ from torchvision import transforms as tf
 
 from auxiliaries.pretrain import apply_contrast_stretch
 
-# gray2rgb = tf.Lambda(lambda x: x.expand(3, -1, -1))
-
-# transform_new = tf.Compose(
-#     [  # TODO: check why here no need for ToPILImage in contrast to the 3D version
-#         # tf.Resize((256, 256)),
-#         # tf.Resize((224, 224)),
-#         # pil_contrast_strech(),
-#         # RandomResizedCrop((256, 256)),
-#         # ToTensor(),
-#         # gray2rgb
-#     ])
-'''
-epoch     train_loss  valid_loss  roc_auc_score  average_precision_score  time    
-0         0.485304    0.322785    0.518210       0.069442                 00:12     
-Better model found at epoch 0 with valid_loss value: 0.3227846324443817.
-'''
 
 class MedMNISTDataset2D(Dataset):
     def __init__(self, dataset, **kwargs):
@@ -44,8 +28,3 @@ class MedMNISTDataset2D(Dataset):
     def get_num_classes(self):
         return self.num_classes
 
-'''
-epoch     train_loss  valid_loss  roc_auc_score  average_precision_score  time    
-0         0.492240    0.325151    0.500485       0.077712                 00:12     
-Better model found at epoch 0 with valid_loss value: 0.3251511752605438.
-'''

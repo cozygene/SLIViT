@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--out_dir', type=str, required=True, help='Output directory to save the trained model.')
 parser.add_argument('--out_suffix', type=str, help='Subfolder name for hyperparameter tuning.')
 parser.add_argument('--meta', type=str, help='Path to the metadata CSV file.')
-parser.add_argument('--test_meta', type=str, default=None,  #TODO: change to --test_meta
+parser.add_argument('--test_meta', type=str, default=None,
                     help='Path to external test set CSV file (uses internal test set by default).')
 parser.add_argument('--label', type=str, help='Goal of the learning task (comma-separated if more than one).')
 parser.add_argument('--dataset', type=str, required=True,
@@ -51,7 +51,7 @@ parser.add_argument('--ignore_options_file', action='store_true',
 parser.add_argument('--vit_depth', type=int, default=5, help='Depth of the Vision Transformer (ViT).')
 parser.add_argument('--vit_dim', type=int, default=256, help='Dimension of the Vision Transformer (ViT).')
 parser.add_argument('--mlp_dim', type=int, default=512, help='Dimension of the MLP layer.')
-parser.add_argument('--slices', type=int, default=28, help='Number of 2D slices to use from the 3D volume.')  #TODO: consider changing to 32
+parser.add_argument('--slices', type=int, default=28, help='Number of 2D slices to use from the 3D volume.')  # TODO: consider changing the default to 32
 parser.add_argument('--heads', type=int, default=20, help='Number of heads in the multi-head attention mechanism.')
 parser.add_argument('--dropout', type=float, default=0, help='Dropout rate for training.')
 parser.add_argument('--emb_dropout', type=float, default=0, help='Dropout rate for embeddings.')
