@@ -1,17 +1,20 @@
 <div style="text-align: justify">
+<a href='https://www.nature.com/articles/s41551-024-01257-9'>
 
-# SLIViT  <!--<img src="visuals/cover.png" width="500" align="right">--> 
+# SLIViT  
+</a>
 
- [//]: # ([*Nature Biomedical Engineering*]&#40;https://www.nature.com/articles/s41551-024-01257-9&#41;  )
-[*Submitted preprint*](https://www.researchsquare.com/article/rs-3044914/v2)  
 
-### Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans.
+### Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans
+
 Oren Avram*, Berkin Durmus*, ... , Jeffrey N. Chiang, Srinivas R. Sadda, Eran Halperin
+<br>
+**Nature Biomedical Engineering, 2024**
 
 
-
-
-<br><img src="visuals/SLIViT.png" width="1000px"/><br>
+<a href='https://www.nature.com/articles/s41551-024-01257-9'>
+<br><img src="visuals/SLIViT.png" width="1640px"/><br>
+</a>
 
 ## What is SLIViT?
 
@@ -154,6 +157,16 @@ By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_di
 
 We kindly request that users cite the corresponding paper when using our code, checkpoints, or conclusions in any capacity. Proper credit not only supports the original creators but also acknowledges their contributions.
 
+```
+@article{avram2024accurate,
+  title={Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans},
+  author={Avram, Oren; Durmus, Berkin; Rakocz, Nadav; Corradetti, Giulia; An, Ulzee; Nitalla, Muneeswar G.; Terway, Prerit; Rudas, Akos; Chen, Zeyuan; Wakatsuki, Yu; et al.},
+  doi={10.1038/s41551-024-01257-9},
+  journal={Nature Biomedical Engineering},
+  year={2024},
+  publisher={Nature Publishing Group}
+}
+```
 
 ### References
 
