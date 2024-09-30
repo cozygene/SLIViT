@@ -1,6 +1,6 @@
 from auxiliaries.misc import *
 from model.slivit import ConvNext
-from model.feature_extractor import AutoModelForImageClassification as amfic
+from model.feature_extractor import amfic
 
 if args.wandb_name is not None:
     wandb.init(project=args.wandb_name)
@@ -10,12 +10,11 @@ if __name__ == '__main__':
 
     dls, empty_test_set, medmnist = setup_dataloaders(args)  # no test here...
 
-    convnext = ConvNext(amfic.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
-                                              # length of the target vector
-                                              num_labels=dls.train.dataset.dataset.get_num_classes(),
-                                              ignore_mismatched_sizes=True))
+    feature_extractor = ConvNext(amfic.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
+                                                       num_labels=dls.train.dataset.dataset.get_num_classes(),
+                                                       ignore_mismatched_sizes=True))
 
-    learner, best_model_name = create_learner(convnext, dls, args, args.out_dir)
+    learner, best_model_name = create_learner(feature_extractor, dls, args, args.out_dir)
 
     err = None
     try:

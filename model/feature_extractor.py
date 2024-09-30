@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from transformers import AutoModelForImageClassification
+from transformers import AutoModelForImageClassification as amfic
 
 class CustomHuggingFaceModel(nn.Module):
     def __init__(self, hugging_face_model):
@@ -12,8 +12,8 @@ class CustomHuggingFaceModel(nn.Module):
         return self.model(x).logits
 
 def get_feature_extractor(num_labels, pretrained_weights=''):
-    hugging_face_model = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
-                                                             num_labels=num_labels, ignore_mismatched_sizes=True)
+    hugging_face_model = amfic.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
+                                               num_labels=num_labels, ignore_mismatched_sizes=True)
 
     # weights from the Hugging Face model cannot be correctly loaded into the fastai model due to mismatched layers
     # so we wrap the Hugging Face model in a custom model that only returns the logits
