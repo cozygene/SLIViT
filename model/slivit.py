@@ -14,40 +14,19 @@ class ConvNext(nn.Module):
         return x
 
 
-## TODO: check for code reuse for constructor
-# class SLIViT(ViT):
-#     def __init__(self, *, backbone, fi_dim, fi_depth, heads, mlp_dim, num_vol_frames, patch_height=768, patch_width=64, rnd_pos_emb=False, num_classes=1, dim_head=64, dropout=0., emb_dropout=0.):
-#         super().__init__(
-#             image_size=(patch_height, patch_width),
-#             patch_size=(patch_height, patch_width),  # Assuming you have similar args
-#             num_classes=num_classes,
-#             dim=fi_dim,
-#             depth=fi_depth,  # Adjust based on original ViT arguments
-#             heads=heads,  # Adjust based on original ViT arguments
-#             mlp_dim=mlp_dim,  # Adjust based on original ViT arguments
-#             pool='cls',
-#             channels=3,  # This might need adjustment if different
-#             dim_head=dim_head,
-#             dropout=dropout,
-#             emb_dropout=emb_dropout
-#         )
-#         patch_dim = patch_height * patch_width  # 768 * 64
-#
-#         self.backbone = backbone
-#         self.num_patches = num_vol_frames
-#         self.to_patch_embedding = nn.Sequential(
-#             Rearrange('b c (h p1) (w p2) -> b (c h w) (p1 p2)', p1=patch_height, p2=patch_width),
-#             nn.Linear(patch_dim, fi_dim),
-#         )
+class SLIViT(ViT):
+    def __init__(self, *, feature_extractor, vit_dim, vit_depth, heads, mlp_dim,
+                 num_of_patches, dropout=0., emb_dropout=0., patch_height=768,
+                 patch_width=64, rnd_pos_emb=False, num_classes=1, dim_head=64):
 
+        super().__init__(image_size=(patch_height * num_of_patches, patch_width),
+                         patch_size=(patch_height, patch_width),
+                         num_classes=num_classes, dim=vit_dim, depth=vit_depth,
+                         heads=heads, mlp_dim=mlp_dim, channels=1,  # Adjust if necessary
+                         dim_head=dim_head, dropout=dropout, emb_dropout=emb_dropout)
 
-class SLIViT(nn.Module):
-    # TODO: inherit from ViT as much as possible
-    def __init__(self, *, backbone, vit_dim, vit_depth, heads, mlp_dim,
-                 num_of_patches, patch_height=768, patch_width=64, rnd_pos_emb=False,
-                 num_classes=1, dim_head=64, dropout=0., emb_dropout=0.):
-        super().__init__()
-        self.backbone = backbone  # TODO: call load_backbone here
+        # SLIViT-specific attributes
+        self.feature_extractor = feature_extractor  # Initialize the feature_extractor
         self.num_patches = num_of_patches
 
         # Override random positional embedding initialization (by default)
