@@ -57,13 +57,9 @@ class SLIViT(nn.Module):
             )
 
         # Override the patch embedding layer to handle feature-map patching (rather than image pathcing)
-        self.to_patch_embedding = nn.Sequential(
-            Rearrange('b c (h p1) (w p2) -> b (c h w) (p1 p2)', p1=patch_height, p2=patch_width),
-            nn.LayerNorm(patch_height * patch_width),
-            nn.Linear(patch_height * patch_width, vit_dim),
-            nn.LayerNorm(vit_dim),
-        )
-        self.act = nn.Sigmoid()
+        self.to_patch_embedding[0] = Rearrange('b c (h p1) (w p2) -> b (c h w) (p1 p2)',
+                                               p1=patch_height, p2=patch_width)
+
 
     def forward(self, x):
         x = self.feature_extractor(x).last_hidden_state
