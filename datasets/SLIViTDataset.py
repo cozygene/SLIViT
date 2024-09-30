@@ -25,7 +25,7 @@ class SLIViTDataset(Dataset):
     def __getitem__(self, idx):
         scan_path = self.scan_paths[idx]
         label = torch.FloatTensor(np.array([self.labels[idx]]))  # unwrap two-dimensional array
-        return scan_path, label  # TODO: Consider adding EHR info
+        return scan_path, label
 
     def load_scan(self, *args):
         raise NotImplementedError('load_scan method must be implemented in child class')
