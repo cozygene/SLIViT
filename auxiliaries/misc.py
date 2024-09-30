@@ -156,7 +156,7 @@ def get_dataloaders(dataset_class, args, medmnist=None):
             size = 224
         else:
             # nodulemnist
-            size = 64
+            size = 28  # TODO: change to 64 (and adjust the relevant transformation processing)
         os.makedirs(args.medmnist_root, exist_ok=True)
         train_subset = dataset_class(medmnist(split="train", download=True, root=args.medmnist_root, size=size),
                                      num_slices_to_use=args.slices)
