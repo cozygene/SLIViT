@@ -17,18 +17,8 @@ Oren Avram*, Berkin Durmus*, ... , Jeffrey N. Chiang, Srinivas R. Sadda, Eran Ha
 
 SLIViT (SLice Integration by ViT) is a data-efficient deep-learning framework designed for precise measurement of disease-related risk factors in volumetric biomedical imaging scans. This includes applications across various imaging modalities such as Magnetic Resonance Imaging (MRI), Optical Coherence Tomography (OCT), Ultrasound, and Computed Tomography (CT).
 
-Below, you'll find step-by-step instructions on how to pre-train, fine-tune, and evaluate SLIViT. For more detailed information, please refer to <a href="https://www.researchsquare.com/article/rs-3044914/latest">our manuscript</a>. If you have any concerns or issues with SLIViT, feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
-out</a> to us.
-
-
-<!--
-Below, you'll find step-by-step instructions on how to pre-train, fine-tune, and evaluate SLIViT. For more detailed information, please refer to <a href="https://doi.org/10.1038/s41551-024-01257-9">our manuscript</a> . If you have any concerns or issues with SLIViT, feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
-out</a> to us.
--->
-
-[//]: # (#TL;DR )
-
-[//]: # (TODO)
+Below, you'll find step-by-step instructions on how to pre-train, fine-tune, and evaluate SLIViT. For more detailed information, please refer to <a href="https://www.nature.com/articles/s41551-024-01257-9">our Nature Biomedical Engineering paper</a>. If you have any issues with SLIViT, suggestions, or general feedback, feel free to <a href="mailto:orenavram@gmail.com,berkin1997@g.ucla.edu?subject=A%20SLIViT%20question"> reach
+out</a> to us. We'd love to hear you!
 
 ## Usage instructions
 Running SLIViT is straightforward, as detailed below. But first, please ensure you have a cozy conda environment set up with all the necessary packages installed.
@@ -42,8 +32,9 @@ conda create --name slivit python=3.8
 Next up, activate your conda environment and light up the torch:
 ```bash
 conda activate slivit
-conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install pytorch torchvision==0.11.1 pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
+
 Install a few more required packages:
 ```bash
 cd SLIViT
@@ -56,8 +47,6 @@ pip install gdown
 gdown --folder `https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP`
 ```
 
-[//]: # (gdown --folder `https://drive.google.com/open?id=1f8P3g8ofBTWMFiuNS8vc01s98HyS7oRT`)
-
 Is your environment all ready to go? Awesome! You can either take SLIViT for a spin by training it yourself, or just grab our aforementioned trained checkpoints. Heads up—our model runs smoothly on PyTorch, and this repository is fully equipped to harness PyTorch’s GPU powers (no TensorFlow here 😉).
 
 Curious about more advanced features? Run the help command on any of SLIViT's main scripts to get a full list of options:
@@ -69,14 +58,14 @@ Happy computing! 🚀
 ### Pre-training SLIViT's feature extractor backbone 
 The general command to pre-train SLIViT is as follows:
 ```bash
-python pretrain.py --dataset <dataset type {oct2d,xray2d,custom2d}> --out_dir <out path> --meta <path to a meta file csv; ignore for an mnist dataset> --label <comma separated label column names; ignore for an mnist dataset>
+python pretrain.py --dataset <dataset type {oct2d,xray2d,custom2d}> --out_dir <out path> --meta <path to a meta file csv; ignore for a MedMNIST dataset> --label <comma separated label column names; ignore for a MedMNIST dataset>
 ```
 Just a heads-up: if you want to try another MedMNIST dataset, simply tweak `get_dataset_class`. Also, when using *any* MedMNIST dataset, you don't need to worry about providing a meta path or labels!
 
 
 #### The 2D OCT (Kermany) dataset
 <img src="visuals/OCT2D.png" width="600px"/><br>
-<small>(Figure sourced from Kermany, et al., 2018 [1])</small>
+<small>Figure sourced from [1]</small>
 
 Download the dataset <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">here</a>. After downloading and unzipping the data, please create a meta file for the dataloader that reflects the locations of your downloaded scans (you can use `utils/get_kermany_csv.py` for this purpose). To pre-train SLIViT on the Kermany dataset set `--dataset` to `oct2d` and `label` to `Drusen,CNV,DME,Normal`:
 
@@ -86,9 +75,9 @@ python pretrain.py --dataset oct2d --out_dir ./results/ --meta ./meta/kermany.cs
 
 #### The 2D X-ray (ChestMNIST) dataset
 <img src="visuals/Xray2D.png" width="450px"/><br>
-<small>(Figure borrowed from Wang, et al., 2017 [2])</small>
+<small>Figure borrowed from [2]</small>
 
-The MNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `xray2d`. 
+The MedMNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `xray2d`. 
 ```bash
 python pretrain.py --dataset xray2d --out_dir ./results/
 ```
@@ -144,7 +133,7 @@ python finetune.py --dataset mri3d --fe_path ./checkpoints/oct2d/feature_extract
 #### The 3D CT (NoduleMNIST) dataset
 <img src="visuals/ct.gif" width="450px"/><br>
 
-The MNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `ct3d`. 
+The MedMNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `ct3d`. 
 
 ```bash
 python finetune.py --dataset ct3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results
@@ -168,7 +157,8 @@ We kindly request that users cite the corresponding paper when using our code, c
 
 ### References
 
-[1] Kermany DS, Goldbaum M, Cai W, Valentim CCS, Liang H, Baxter SL, McKeown A, Yang G, Wu X, Yan F, Dong J, Prasadha MK, Pei J, Ting MYL, Zhu J, Li C, Hewett S, Dong J, Ziyar I, Shi A, Zhang R, Zheng L, Hou R, Shi W, Fu X, Duan Y, Huu VAN, Wen C, Zhang ED, Zhang CL, Li O, Wang X, Singer MA, Sun X, Xu J, Tafreshi A, Lewis MA, Xia H, Zhang K. Identifying Medical Diagnoses and Treatable Diseases by Image-Based Deep Learning. Cell. 2018 Feb 22;172(5):1122-1131.e9. doi: 10.1016/j.cell.2018.02.010. PMID: 29474911.
+[1] Kermany, D. S. et al., Identifying Medical Diagnoses and Treatable Diseases by Image-Based Deep Learning. <i>Cell</i> <b>172</b>, 1122–1131.e9 (2018).
 
-[2] Wang, X., Peng, Y., Lu, L., Lu, Z., Bagheri, M., & Summers, R. (2017). ChestX-Ray8: Hospital-Scale Chest X-Ray Database and Benchmarks on Weakly-Supervised Classification and Localization of Common Thorax Diseases. In 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR). IEEE.
+[2] Wang, X. et al., ChestX-Ray8: Hospital-Scale Chest X-Ray Database and Benchmarks on Weakly-Supervised Classification and Localization of Common Thorax Diseases. <i>IEEE/CVF Conference on Computer Vision and Pattern Recognition</i>, 3462-3471, (2017).
+
 </div>
