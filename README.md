@@ -1,5 +1,4 @@
 <div style="text-align: justify">
-<a href='https://www.nature.com/articles/s41551-024-01257-9'>
 
 # SLIViT  
 </a>
@@ -9,7 +8,9 @@
 
 Oren Avram*, Berkin Durmus*, ... , Jeffrey N. Chiang, Srinivas R. Sadda, Eran Halperin
 <br>
-**Nature Biomedical Engineering (2024)**
+<br>
+<i><a href='https://www.nature.com/articles/s41551-024-01257-9'>**Nature Biomedical Engineering (2024)**</a></i>
+<br>
 
 
 <a href='https://www.nature.com/articles/s41551-024-01257-9'>
