@@ -11,7 +11,7 @@ class CustomHuggingFaceModel(nn.Module):
         # Get logits from the Hugging Face model
         return self.model(x).logits
 
-def load_backbone(num_labels, pretrained_weights=''):
+def get_feature_extractor(num_labels, pretrained_weights=''):
     hugging_face_model = AutoModelForImageClassification.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
                                                              num_labels=num_labels, ignore_mismatched_sizes=True)
 

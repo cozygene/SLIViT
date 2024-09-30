@@ -1,4 +1,5 @@
 from auxiliaries.finetune import *
+from model.feature_extractor import get_feature_extractor
 
 if args.wandb_name is not None:
     wandb.init(project=args.wandb_name)
@@ -8,7 +9,7 @@ if __name__ == '__main__':
 
     dls, test_loader, medmnist = setup_dataloaders(args)
     try:
-        slivit = SLIViT(backbone=load_backbone(args.fe_classes, args.fe_path),
+        slivit = SLIViT(feature_extractor=get_feature_extractor(args.fe_classes, args.fe_path),
                         vit_dim=args.vit_dim, vit_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
                         num_of_patches=args.slices, dropout=args.dropout, emb_dropout=args.emb_dropout)
     except RuntimeError as e:

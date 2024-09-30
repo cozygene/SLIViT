@@ -277,7 +277,7 @@ def create_learner(slivit, dls, args, model_dir):
     return learner, best_model_name
 
 
-def train_and_evaluate(args, learner, best_model_name, test_loader=None):
+def train(args, learner, best_model_name):
     gpus = os.environ["CUDA_VISIBLE_DEVICES"].split(',')
     for gpu in range(len(gpus)):
         try:
@@ -301,16 +301,7 @@ def train_and_evaluate(args, learner, best_model_name, test_loader=None):
 
             logger.info(f'Best model is stored at:\n{args.out_dir}/{best_model_name}.pth\n')
 
-            # TODO: comment out this condition if medmnist dataset split is handled internally
-            if get_script_name() != 'pretrain':
-                # Evaluate the model on the test set if provided
-                if len(test_loader):
-                    evaluate_and_store_results(learner, test_loader, best_model_name, args.meta, args.label,
-                                               args.out_dir)
-                else:
-                    logger.info('Skipping evaluation... (test set was not provided)')
-
-            # successful running
+            # successful training
             return
 
         except RuntimeError as e:
@@ -348,36 +339,13 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
     logger.info(f'Running result is saved at:\n{out_dir}')
 
 
-def evaluate_and_store_results(learner, data_loader, weights_path, meta, pathology, out_dir):
+def evaluate(learner, data_loader, weights_path, out_dir):
+    # TODO: conmigrate this logic into evaluate_model() instead
+    # Evaluate the model on the test set if provided
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
         learner.model.to('cuda')
-        try:
-            # fastai's learner already has the path in model_dir and expects just the model's name
-            learner.load(weights_path.split('/')[-1].split('.pth')[0])
-        except Exception as e:
-            # Load the state_dict
-            state_dict = torch.load(weights_path)
-
-            # Define key translations from loaded keys to model's expected keys
-            key_translations = {}
-            for key in state_dict.keys():
-                if 'fn.' in key:
-                    new_key = key.replace('fn.', '')
-                    key_translations[key] = new_key
-                elif 'net.' in key:
-                    new_key = key.replace('net.', '')
-                    key_translations[key] = new_key
-
-            # Translate keys
-            new_state_dict = {}
-            for key, value in state_dict.items():
-                new_key = key_translations.get(key, key)  # Get new key if it exists, else keep the old key
-                new_state_dict[new_key] = value
-
-            # Now load the translated state_dict
-            learner.load_state_dict(new_state_dict)
-
+        learner.load(weights_path.split('/')[-1].split('.pth')[0])
         results_file = f'{out_dir}/predicted_scores.csv'
         # preds = store_predictions(learner, data_loader, meta, pathology, results_file)
         evaluate_model(learner, data_loader, out_dir)

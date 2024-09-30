@@ -5,7 +5,6 @@ from fastai.vision.all import *
 from skimage import exposure
 from torchvision import transforms as tf
 from model.slivit import SLIViT
-from utils.load_backbone import load_backbone
 from auxiliaries.misc import *
 
 
