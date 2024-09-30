@@ -1,6 +1,5 @@
 from auxiliaries.misc import *
-from model.slivit import ConvNext
-from model.feature_extractor import amfic
+from model.feature_extractor import ConvNext, amfic
 
 if args.wandb_name is not None:
     wandb.init(project=args.wandb_name)

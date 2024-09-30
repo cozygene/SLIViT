@@ -1,17 +1,7 @@
 import torch
 from torch import nn
-from vit_pytorch.vit import ViT, Transformer
+from vit_pytorch.vit import ViT
 from einops.layers.torch import Rearrange
-
-
-class ConvNext(nn.Module):
-    def __init__(self, model):
-        super(ConvNext, self).__init__()
-        self.model = model
-
-    def forward(self, x):
-        x = self.model(x)[0]
-        return x
 
 
 class SLIViT(ViT):
