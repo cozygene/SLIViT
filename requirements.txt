@@ -1,10 +1,7 @@
-fastai==2.7.14
-batchgenerators==0.25
+fastai==2.7.17
+wandb==0.18.2
+transformers==4.45.1
 scikit-image==0.21.0
-pandas==2.0.3
-medmnist==3.0.1
-wandb==0.16.6
+medmnist==3.0.2
 pydicom==2.4.4
-vit_pytorch==1.6.5
-opencv-python==4.9.0.80
-transformers==4.39.3
+vit_pytorch==1.7.12
