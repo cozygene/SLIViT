@@ -26,6 +26,6 @@ if __name__ == '__main__':
     learner, _ = create_learner(slivit, dls, args, os.path.split(args.checkpoint)[0])
 
     # Evaluate and store results
-    evaluate_and_store_results(learner, test_loader, args.checkpoint, args.meta, args.label, args.out_dir)
+    evaluate(learner, test_loader, args.checkpoint, args.out_dir)
 
     wrap_up(args.out_dir)

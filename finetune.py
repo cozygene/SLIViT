@@ -22,7 +22,9 @@ if __name__ == '__main__':
 
     err = None
     try:
-        train_and_evaluate(args, learner, best_model_name, test_loader)
+        train(args, learner, best_model_name)
+        if len(test_loader) > 0:
+            evaluate(learner, test_loader, best_model_name, args.out_dir)
     except Exception as e:
         err = e
     wrap_up(args.out_dir, err)

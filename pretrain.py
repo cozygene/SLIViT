@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     err = None
     try:
-        train_and_evaluate(args, learner, best_model_name, empty_test_set)
+        train(args, learner, best_model_name)
     except Exception as e:
         err = e
     wrap_up(args.out_dir, err)
