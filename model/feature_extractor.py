@@ -17,12 +17,11 @@ def get_feature_extractor(num_labels, pretrained_weights=''):
 
     # weights from the Hugging Face model cannot be correctly loaded into the fastai model due to mismatched layers
     # so we wrap the Hugging Face model in a custom model that only returns the logits
-    model = CustomHuggingFaceModel(hugging_face_model)
+    chf = CustomHuggingFaceModel(hugging_face_model)
 
     if pretrained_weights:
-        model.load_state_dict(torch.load(pretrained_weights, map_location=torch.device("cuda")))
+        chf.load_state_dict(torch.load(pretrained_weights, map_location=torch.device("cuda")))
 
-    model_tmp = list(model.children())[0]
-    model = torch.nn.Sequential(
-        *[list(list(model_tmp.children())[0].children())[0], list(list(model_tmp.children())[0].children())[1]])
-    return model
+    nested_model = list(chf.model.children())[0]
+
+    return torch.nn.Sequential(*list(nested_model.children())[:2])  # drop last LayerNorm layer
