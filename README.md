@@ -158,7 +158,7 @@ By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_di
 
 We kindly request that users cite the corresponding paper when using our code, checkpoints, or conclusions in any capacity. Proper credit not only supports the original creators but also acknowledges their contributions.
 
-```
+
 @article{avram2024accurate,
   title={Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans},
   author={Avram, Oren; Durmus, Berkin; Rakocz, Nadav; Corradetti, Giulia; An, Ulzee; Nitalla, Muneeswar G.; Terway, Prerit; Rudas, Akos; Chen, Zeyuan; Wakatsuki, Yu; et al.},
@@ -167,7 +167,7 @@ We kindly request that users cite the corresponding paper when using our code, c
   year={2024},
   publisher={Nature Publishing Group}
 }
-```
+
 
 ### References
 
