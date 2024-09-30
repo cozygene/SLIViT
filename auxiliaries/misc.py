@@ -39,7 +39,7 @@ def init_out_dir(args):
             csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
             out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label}' if len(args.label.split(',')) == 1 else '')
         else:
-            out_dir = f'{out_dir}/{"mock_" if args.mnist_mocks else ""}{args.dataset}'
+            out_dir = f'{out_dir}/{"mock_" if args.medmnist_mocks else ""}{args.dataset}'
 
     if args.out_suffix is not None:
         # subfolders for hp search
@@ -149,7 +149,7 @@ def get_dataloaders(dataset_class, args, medmnist=None):
     msg = ''
     if medmnist is not None:
         # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
-        if args.mnist_mocks:
+        if args.medmnist_mocks:
             size = 28
         elif 'xray' in args.dataset:
             # chestmnist
@@ -157,20 +157,20 @@ def get_dataloaders(dataset_class, args, medmnist=None):
         else:
             # nodulemnist
             size = 64
-        os.makedirs(args.mnist_root, exist_ok=True)
-        train_subset = dataset_class(medmnist(split="train", download=True, root=args.mnist_root, size=size),
+        os.makedirs(args.medmnist_root, exist_ok=True)
+        train_subset = dataset_class(medmnist(split="train", download=True, root=args.medmnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        valid_subset = dataset_class(medmnist(split="val", download=True, root=args.mnist_root, size=size),
+        valid_subset = dataset_class(medmnist(split="val", download=True, root=args.medmnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        test_subset = dataset_class(medmnist(split="test", download=True, root=args.mnist_root, size=size),
+        test_subset = dataset_class(medmnist(split="test", download=True, root=args.medmnist_root, size=size),
                                     num_slices_to_use=args.slices)
 
-        if args.mnist_mocks is not None:
-            msg += f'Running a mock version of the dataset with {args.mnist_mocks} samples only!!'
+        if args.medmnist_mocks is not None:
+            msg += f'Running a mock version of the dataset with {args.medmnist_mocks} samples only!!'
 
-        train_subset = Subset(train_subset, np.arange(args.mnist_mocks if args.mnist_mocks else len(train_subset)))
-        valid_subset = Subset(valid_subset, np.arange(args.mnist_mocks if args.mnist_mocks else len(valid_subset)))
-        test_subset = Subset(test_subset, np.arange(args.mnist_mocks if args.mnist_mocks else len(test_subset)))
+        train_subset = Subset(train_subset, np.arange(args.medmnist_mocks if args.medmnist_mocks else len(train_subset)))
+        valid_subset = Subset(valid_subset, np.arange(args.medmnist_mocks if args.medmnist_mocks else len(valid_subset)))
+        test_subset = Subset(test_subset, np.arange(args.medmnist_mocks if args.medmnist_mocks else len(test_subset)))
 
         # dataset  = ConcatDataset([train_subset, valid_subset, test_subset])
     else:
