@@ -1,17 +1,16 @@
 <div style="text-align: justify">
 
-# SLIViT  <!--<img src="visuals/cover.png" width="500" align="right">--> 
+<h1><a href='https://www.nature.com/articles/s41551-024-01257-9'>SLIViT</a></h1>  
 
- [//]: # ([*Nature Biomedical Engineering*]&#40;https://www.nature.com/articles/s41551-024-01257-9&#41;  )
-[*Submitted preprint*](https://www.researchsquare.com/article/rs-3044914/v2)  
 
-### Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans.
+<h3> Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans </h3>
 Oren Avram*, Berkin Durmus*, ... , Jeffrey N. Chiang, Srinivas R. Sadda, Eran Halperin
 
+<h4><i><a href='https://www.nature.com/articles/s41551-024-01257-9'>Nature Biomedical Engineering (2024)</a></i></h4>
 
-
-
-<br><img src="visuals/SLIViT.png" width="1000px"/><br>
+<a href='https://www.nature.com/articles/s41551-024-01257-9'>
+<br><img src="visuals/SLIViT.png" width="1640px"/><br>
+</a>
 
 ## What is SLIViT?
 
@@ -44,7 +43,7 @@ pip install -r requirements.txt
 If you would like to download the pre-trained feature-extractor backbone and the fine-tuned SLIViT checkpoints type in
 ```bash
 pip install gdown
-gdown --folder `https://drive.google.com/drive/folders/1SmmVeGaM7DU2pmLRM-4HVVWb6E8iSwtP`
+gdown --folder https://drive.google.com/open?id=1f8P3g8ofBTWMFiuNS8vc01s98HyS7oRT
 ```
 
 Is your environment all ready to go? Awesome! You can either take SLIViT for a spin by training it yourself, or just grab our aforementioned trained checkpoints. Heads up—our model runs smoothly on PyTorch, and this repository is fully equipped to harness PyTorch’s GPU powers (no TensorFlow here 😉).
@@ -70,7 +69,7 @@ Just a heads-up: if you want to try another MedMNIST dataset, simply tweak `get_
 Download the dataset <a href="https://data.mendeley.com/datasets/rscbjbr9sj/3">here</a>. After downloading and unzipping the data, please create a meta file for the dataloader that reflects the locations of your downloaded scans (you can use `utils/get_kermany_csv.py` for this purpose). To pre-train SLIViT on the Kermany dataset set `--dataset` to `oct2d` and `label` to `Drusen,CNV,DME,Normal`:
 
 ```bash
-python pretrain.py --dataset oct2d --out_dir ./results/ --meta ./meta/kermany.csv --label NORMAL,DRUSEN,CNV,DME
+python pretrain.py --dataset oct2d --out_dir ./results/ --label NORMAL,DRUSEN,CNV,DME --meta ./meta/kermany.csv
 ```
 
 #### The 2D X-ray (ChestMNIST) dataset
@@ -86,13 +85,13 @@ python pretrain.py --dataset xray2d --out_dir ./results/
 You can also pretrain SLIViT on your own 2D dataset by setting `--dataset` to `custom2d` and implementing the appropriate `Dataset` class (you can start with our template in `datasets/CustomDataset2D.py`). 
 
 ```bash
-python pretrain.py --dataset custom2d --out_dir ./results/ --meta <path to a meta file csv> --label <comma separated label column names>
+python pretrain.py --dataset custom2d --out_dir ./results/ --label <comma separated label column names> --meta <path to a meta file csv>
 ```
 
 ### Fine-tuning SLIViT
 The general command to fine-tune SLIViT is as follows:
 ```bash
-python finetune.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <path to a pretrained SLIViT-like feature extractor> --fe_classes <number of classes the feature extractor was pre-trained on> --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
+python finetune.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --fe_path <path to a pretrained SLIViT-like feature extractor> --out_dir <out path> --meta <path to a meta file> --label <label column name in the meta file>
 ```
 
 Just so you know, unless you specify a split column in the meta file (with `--split_col`), the data will automatically be divided according to the `--split_ratio` of `0.85,0.15,0` by default, designated for training, validation, and testing, respectively. This means that none of the samples are set aside for testing. While it's not necessary to provide a test set for fine-tuning (you can handle that separately with `evaluate.py`—more on that in the next section), you have options! Feel free to add an external test set meta file using `--test_csv`, or tweak `--split_ratio` to include some data for internal testing, allowing the model to evaluate itself right after training.
@@ -106,12 +105,12 @@ You can grab the EchoNet Ultrasound videos right <a href="https://stanfordaimi.a
 
 For the binary classification task, you can use the following command:
 ```bash
-python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results --meta ./meta/echonet.csv --label EF_b --task cls
+python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --out_dir ./results --meta ./meta/echonet.csv --label EF_b --task cls
 ```
 
 For the regression task, you can use for example the following command:
 ```bash
-python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results --meta ./meta/echonet.csv --label EF --task reg
+python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --out_dir ./results --meta ./meta/echonet.csv --label EF --task reg
 ```
 
 
@@ -127,7 +126,7 @@ python finetune.py --dataset us3d --fe_path ./checkpoints/oct2d/feature_extracto
 The UKBB MRI dataset is available <a href="https://www.ukbiobank.ac.uk">here</a>. Once you have downloaded the data, please create an appropriate meta file<!--, or simply update the paths in `meta/ukbb.csv` to reflect the locations of your downloaded scans-->. To fine-tune SLIViT on the UKBB dataset set `--dataset` to `mri3d` (and `--task` to `reg`). Also, set `--img_suffix` to `dcm` to filter out unrelevant files in the directory.
 
 ```bash
-python finetune.py --dataset mri3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results --meta ./meta/ukbb.csv --label pdff --task reg --img_suffix dcm
+python finetune.py --dataset mri3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --out_dir ./results --meta ./meta/ukbb.csv --label pdff --task reg --img_suffix dcm
 ```
 
 #### The 3D CT (NoduleMNIST) dataset
@@ -136,7 +135,7 @@ python finetune.py --dataset mri3d --fe_path ./checkpoints/oct2d/feature_extract
 The MedMNIST datasets will be automatically downloaded through the class API. To get started, simply set `--dataset` to `ct3d`. 
 
 ```bash
-python finetune.py --dataset ct3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --fe_classes 4 --out_dir ./results
+python finetune.py --dataset ct3d --fe_path ./checkpoints/oct2d/feature_extractor.pth --out_dir ./results
 ```
 
 #### A custom 3D dataset
@@ -154,6 +153,16 @@ By default, the architecture hyperparameters, that is, `--fe_classes`, `--vit_di
 
 We kindly request that users cite the corresponding paper when using our code, checkpoints, or conclusions in any capacity. Proper credit not only supports the original creators but also acknowledges their contributions.
 
+```
+@article{avram2024accurate,
+  title={Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans},
+  author={Avram, Oren; Durmus, Berkin; Rakocz, Nadav; Corradetti, Giulia; An, Ulzee; Nitalla, Muneeswar G.; Terway, Prerit; Rudas, Akos; Chen, Zeyuan; Wakatsuki, Yu; et al.},
+  doi={10.1038/s41551-024-01257-9},
+  journal={Nature Biomedical Engineering},
+  year={2024},
+  publisher={Nature Publishing Group}
+}
+```
 
 ### References
 
