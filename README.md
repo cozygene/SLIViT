@@ -6,7 +6,7 @@
 <h3> Accurate prediction of disease-risk factors from volumetric medical scans by a deep vision model pre-trained with 2D scans </h3>
 Oren Avram*, Berkin Durmus*, ... , Jeffrey N. Chiang, Srinivas R. Sadda, Eran Halperin
 
-<h3><i><a href='https://www.nature.com/articles/s41551-024-01257-9'>**Nature Biomedical Engineering (2024)**</a></i></h3>
+<h4><i><a href='https://www.nature.com/articles/s41551-024-01257-9'>Nature Biomedical Engineering (2024)</a></i></h4>
 
 <a href='https://www.nature.com/articles/s41551-024-01257-9'>
 <br><img src="visuals/SLIViT.png" width="1640px"/><br>
