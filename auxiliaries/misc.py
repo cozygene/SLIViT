@@ -54,13 +54,13 @@ def assert_input_is_valid(args):
 def check_split(args):
     meta = pd.read_csv(args.meta)
     args.script = get_script_name()
-    if args.script == 'evaluate.py':
+    if args.script == 'evaluate':
         assert args.split_col in meta.columns or \
                args.split_ratio[2] > 0 or \
                args.test_meta is not None, f'No test set was provided for evaluation (please provide either a ' \
                                            f'pre-defined split col, a positive test_ratio, or a --meta_test.'
     else:
-        # pretrained.py or finetune.py
+        # pretrain or finetune
         if args.split_col in meta.columns:
             logger.info(f'Pre-defined split column was detected: {args.split_col}')
             assert meta[args.split_col].str.contains('train', case=False).any(), \
