@@ -23,7 +23,7 @@ def setup_parser():
     parser.add_argument('--num_configs', type=int, required=True, help='Number of configurations to process.')
 
     # Feature extractor path
-    parser.add_argument('--fe_path', type=str, default='./checkpoints/feature_extractor.pth',
+    parser.add_argument('--fe_path', type=str, default='./checkpoints/kermany/feature_extractor.pth',
                         help='Path to the pretrained feature extractor.')
     # GPU ID to use
     parser.add_argument('--gpu_id', type=str, default='3,1', help='GPU ID for training')
