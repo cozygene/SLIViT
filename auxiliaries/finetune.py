@@ -47,22 +47,3 @@ default_transform_gray = tf.Compose([
     gray2rgb
 ])
 
-
-def store_predictions(learner, test_loader, meta, pathology, results_file, split_col='Split'):
-    logger.info(f'Computing predictions...')
-    preds = learner.get_preds(dl=test_loader)
-
-    df = pd.read_csv(meta).iloc[test_loader.indices.squeeze()]
-    assert df[split_col].str.contains('test', case=False).all()
-
-    with open(results_file, 'w') as f:
-        f.write(f'{",".join(df.columns.to_list() + ["Pred"])}\n')
-        for i in range(len(preds[1])):
-            if pathology == 'CRORA':  # and len(df.columns) > 1:
-                assert df.CRORA.iloc[i] == preds[1][i].item(), f'CRORA does not contain the true label!! Check failed at index {df.index[i]}'
-            # record = f'{df.index[i]},' + df.iloc[i].to_csv(header=False, index=False).rstrip().replace('\n', ',')
-            record = df.iloc[i].to_csv(header=False, index=False).rstrip().replace('\n', ',')
-            f.write(f'{record},{preds[0][i].item()}\n')
-
-    logger.info(f'Predictions are saved at:\n{results_file}')
-    return preds
