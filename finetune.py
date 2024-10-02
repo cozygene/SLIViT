@@ -7,7 +7,7 @@ if args.wandb_name is not None:
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
 
-    dls, test_loader, medmnist = setup_dataloaders(args)
+    dls, test_loader = setup_dataloaders(args)
     try:
         slivit = SLIViT(feature_extractor=get_feature_extractor(args.fe_classes, args.fe_path),
                         vit_dim=args.vit_dim, vit_depth=args.vit_depth, heads=args.heads, mlp_dim=args.mlp_dim,
@@ -24,7 +24,9 @@ if __name__ == '__main__':
     try:
         train(args, learner, best_model_name)
         if len(test_loader) > 0:
-            evaluate(learner, test_loader, best_model_name, args.out_dir)
+            evaluate(learner, test_loader, best_model_name, args.out_dir,
+                     args.test_meta if args.test_meta else args.meta,
+                     args.pid_col, args.path_col, args.split_col, args.label)
     except Exception as e:
         err = e
     wrap_up(args.out_dir, err)

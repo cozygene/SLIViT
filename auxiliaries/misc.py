@@ -30,6 +30,62 @@ def set_seed(seed=42):
     torch.backends.cudnn.benchmark = False
 
 
+def assert_input_is_valid(args):
+    # Dictionary mapping dataset names to optional medmnist classes
+    medmnist_classes = {'xray2d': 'ChestMNIST', 'ct3d': 'NoduleMNIST3D'}
+
+    # Import the optional medmnist class if present
+    args.medmnist_dataset = None
+    if args.dataset_name in medmnist_classes:
+        medmnist_class_name = medmnist_classes[args.dataset_name]
+        medmnist_module = __import__('medmnist', fromlist=[medmnist_class_name])
+        args.medmnist_dataset = getattr(medmnist_module, medmnist_class_name)
+
+        return  # no meta file, split, or labels should be checked
+
+    # non-medmnist datasets
+    # check labels
+    for label in args.label:
+        assert label in pd.read_csv(args.meta, nrows=0).columns, f'Label column {label} not found in the meta file.'
+
+    check_split(args)
+
+
+def check_split(args):
+    meta = pd.read_csv(args.meta)
+    args.script = get_script_name()
+    if args.script == 'evaluate.py':
+        assert args.split_col in meta.columns or \
+               args.split_ratio[2] > 0 or \
+               args.test_meta is not None, f'No test set was provided for evaluation (please provide either a ' \
+                                           f'pre-defined split col, a positive test_ratio, or a --meta_test.'
+    else:
+        # pretrained.py or finetune.py
+        if args.split_col in meta.columns:
+            logger.info(f'Pre-defined split column was detected: {args.split_col}')
+            assert meta[args.split_col].str.contains('train', case=False).any(), \
+                "Pre-defined split does not contain a training set"
+            assert meta[args.split_col].str.contains('val', case=False).any(), \
+                "Pre-defined split does not contain a validation set"
+            test_samples_in_split_col = meta[args.split_col].str.contains('test', case=False).any()
+            if test_samples_in_split_col:
+                logger.info(f'Pre-defined split column contains training, validation, and test sets.')
+                assert args.test_meta is None, 'Ambiguous test set. Please provide either a split column or a test ' \
+                                               'meta file, not both (a pre-defined split could be ignored "wrongly" ' \
+                                               'setting --split_col).'
+            else:
+                logger.info(f'Pre-defined split column contains training and validation sets.')
+                # args.test_meta could be None or a test meta file
+            logger.info(f'Ignoring --split_ratio.')
+        else:
+            # no pre-defined split
+            assert sum(args.split_ratio) == 1, "Split ratios must sum to 1"
+            train_ratio, val_ratio, test_ratio = args.split_ratio
+            assert train_ratio > 0, "Training set ratio must be greater than 0"
+            assert val_ratio > 0, "Validation set ratio must be greater than 0"
+            assert val_ratio >= 0, "Test set ratio must be greater than or equal to 0"
+
+
 def init_out_dir(args):
     out_dir = args.out_dir.rstrip('/')
     if not args.drop_default_suffix:
@@ -37,9 +93,9 @@ def init_out_dir(args):
         if args.meta is not None:
             # example args.meta: ./meta/echonet.csv
             csv_file_name = os.path.splitext(args.meta.split("/")[-1])[0]  # remove extension
-            out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label}' if len(args.label.split(',')) == 1 else '')
+            out_dir = f'{out_dir}/{csv_file_name}' + (f'_{args.label[0]}' if len(args.label) == 1 else '')
         else:
-            out_dir = f'{out_dir}/{"mock_" if args.medmnist_mocks else ""}{args.dataset}'
+            out_dir = f'{out_dir}/{"mock_" if args.medmnist_mocks else ""}{args.dataset_name}'
 
     if args.out_suffix is not None:
         # subfolders for hp search
@@ -73,8 +129,13 @@ def save_options(args):
     logger.info(f'Full running configuration (including default parameters) is saved at:\n{options_file}\n')
 
 
-def to_tensor(x):
-    return ToTensor()(x)
+def get_predefined_split_indices(df, split_col, out_csv):
+    # Get indices for train, val and test
+    train_idx = np.argwhere(df[split_col].str.contains('train', case=False))
+    val_idx = np.argwhere(df[split_col].str.contains('val', case=False))
+    test_idx = np.argwhere(df[split_col].str.contains('test', case=False))
+    df.to_csv(out_csv, index=False)
+    return train_idx, val_idx, test_idx
 
 
 def get_script_name():
@@ -82,28 +143,33 @@ def get_script_name():
 
 
 def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col):
-    # TODO add an informative message about the split
+    script_name = get_script_name()
     df = pd.read_csv(meta)
     if split_col in df.columns:
-        # Get indices for train, val and test
-        train_idx = np.argwhere(df[split_col].str.contains('train', case=False))
-        val_idx = np.argwhere(df[split_col].str.contains('val', case=False))
-        test_idx = np.argwhere(df[split_col].str.contains('test', case=False))
+        train_idx, val_idx, test_idx = get_predefined_split_indices(df, split_col,
+                                                                    f'{out_dir}/{os.path.split(meta)[-1]}')
     else:
-        if split_ratio[-1] < 1:
-            logger.info(f'Creating split indices according to the provided split ratio: {split_ratio}')
-            # Draw indices for train, val and test
-            # First split
-            gss = GroupShuffleSplit(n_splits=1, train_size=split_ratio[0])
+        train_ratio, val_ratio, test_ratio = split_ratio
+        if train_ratio + val_ratio == 0:
+            logger.info('Using all samples for evaluation.')
+            assert script_name == 'evaluate', 'Train and validation set should not be empty for training.'
+            train_idx = np.array([])
+            val_idx = np.array([])
+            test_idx = np.arange(0, len(df))
+        else:
+            logger.info(f'Splitting the dataset according to the provided --split_ratio: {split_ratio}')
+            gss = GroupShuffleSplit(n_splits=1, train_size=train_ratio)
             train_idx, temp_idx = next(gss.split(df,
-                                                 y=None if get_script_name() == 'pretrain' else df[pathology],
+                                                 y=None if script_name == 'pretrain' else df[pathology],
                                                  groups=df[pid_col]))  # split by patient
             # TODO: check if split "by file" for kermany
             # helps getting the high performance
             # groups=df['path']))  # split by patient
 
-            if split_ratio[2] == 0:
-                # using external test set
+            if test_ratio == 0:
+                # pre-training or fine-tuning
+                # using external test set if exists
+                logger.info('Split will include only train and validation sets (according to --split_ratio).')
                 val_idx = temp_idx
                 test_idx = temp_idx[[]]
             else:
@@ -123,53 +189,48 @@ def get_split_indices(meta, out_dir, split_ratio, pathology, split_col, pid_col)
             df.loc[val_idx, split_col] = 'val'
             df.loc[test_idx, split_col] = 'test'
             df.to_csv(f'{out_dir}/{os.path.split(meta)[-1]}', index=False)
-        else:
-            assert get_script_name() == 'evaluate', \
-                '--split_ratio was set inappropriately (empty train split is only allowed for evaluate.py)'
-            # evaluation_only
-            train_idx = np.array([])
-            val_idx = np.array([])
-            test_idx = np.arange(0, len(df))
 
     return train_idx, val_idx, test_idx
 
 
 def setup_dataloaders(args):
-    dataset_class, medmnist = get_dataset_class(args.dataset)
+    dataset_class = get_dataset_class(args.dataset_name)
     assert args.meta is not None or \
-           medmnist is not None, \
+           args.medmnist_dataset is not None, \
         'Meta file is required for non-MedMNIST datasets. Please provide the meta file path.'
-    train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args, medmnist)
+    train_loader, valid_loader, test_loader = get_dataloaders(dataset_class, args)
     dls = DataLoaders(train_loader, valid_loader)
     dls.c = 2
-    return dls, test_loader, medmnist
+    return dls, test_loader
 
 
-def get_dataloaders(dataset_class, args, medmnist=None):
+def get_dataloaders(dataset_class, args):
     msg = ''
-    if medmnist is not None:
+    if args.medmnist_dataset is not None:
         # TODO: make sure test returns empty when pretraining (use all samples for pretraining)
         if args.medmnist_mocks:
             size = 28
-        elif 'xray' in args.dataset:
+        elif 'xray' in args.dataset_name:
             # chestmnist
             size = 224
         else:
             # nodulemnist
             size = 28  # TODO: change to 64 (and adjust the relevant transformation processing)
         os.makedirs(args.medmnist_root, exist_ok=True)
-        train_subset = dataset_class(medmnist(split="train", download=True, root=args.medmnist_root, size=size),
+        train_subset = dataset_class(args.medmnist_dataset(split="train", download=True, root=args.medmnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        valid_subset = dataset_class(medmnist(split="val", download=True, root=args.medmnist_root, size=size),
+        valid_subset = dataset_class(args.medmnist_dataset(split="val", download=True, root=args.medmnist_root, size=size),
                                      num_slices_to_use=args.slices)
-        test_subset = dataset_class(medmnist(split="test", download=True, root=args.medmnist_root, size=size),
+        test_subset = dataset_class(args.medmnist_dataset(split="test", download=True, root=args.medmnist_root, size=size),
                                     num_slices_to_use=args.slices)
 
         if args.medmnist_mocks is not None:
             msg += f'Running a mock version of the dataset with {args.medmnist_mocks} samples only!!'
 
-        train_subset = Subset(train_subset, np.arange(args.medmnist_mocks if args.medmnist_mocks else len(train_subset)))
-        valid_subset = Subset(valid_subset, np.arange(args.medmnist_mocks if args.medmnist_mocks else len(valid_subset)))
+        train_subset = Subset(train_subset,
+                              np.arange(args.medmnist_mocks if args.medmnist_mocks else len(train_subset)))
+        valid_subset = Subset(valid_subset,
+                              np.arange(args.medmnist_mocks if args.medmnist_mocks else len(valid_subset)))
         test_subset = Subset(test_subset, np.arange(args.medmnist_mocks if args.medmnist_mocks else len(test_subset)))
 
         # dataset  = ConcatDataset([train_subset, valid_subset, test_subset])
@@ -177,10 +238,7 @@ def get_dataloaders(dataset_class, args, medmnist=None):
         train_indices, valid_indices, test_indices = get_split_indices(args.meta, args.out_dir,
                                                                        args.split_ratio, args.label,
                                                                        args.split_col, args.pid_col)
-        dataset = dataset_class(args.meta,
-                                args.label,  # .split(','),
-                                args.path_col,
-                                # **kwargs
+        dataset = dataset_class(args.meta, args.label, args.path_col,
                                 num_slices_to_use=args.slices,
                                 sparsing_method=args.sparsing_method,
                                 img_suffix=args.img_suffix)
@@ -239,17 +297,7 @@ def get_dataset_class(dataset_name):
     dataset_module = __import__(f'datasets.{class_name}', fromlist=[class_name])
     dataset_class = getattr(dataset_module, class_name)
 
-    # Dictionary mapping dataset names to optional medmnist classes
-    medmnist_classes = {'xray2d': 'ChestMNIST', 'ct3d': 'NoduleMNIST3D'}
-
-    # Import the optional medmnist class if present
-    medmnist = None
-    if dataset_name in medmnist_classes:
-        medmnist_class_name = medmnist_classes[dataset_name]
-        medmnist_module = __import__('medmnist', fromlist=[medmnist_class_name])
-        medmnist = getattr(medmnist_module, medmnist_class_name)
-
-    return dataset_class, medmnist
+    return dataset_class
 
 
 def get_loss_and_metrics(task):
@@ -320,17 +368,17 @@ def train(args, learner, best_model_name):
                 raise e
 
 
-def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
+def print_and_store_scores(learner, evaluation_loader, out_dir, preds=None):
     if preds is None:
         logger.info(f'Computing scores...')
         metric_scores = learner.validate(dl=evaluation_loader)
 
         logger.info('\n' + '*' * 100 + f'\nModel evaluation performance on test set is:')
-        metric_names = ['loss_score'] + [m.name for m in learner.metrics]  # loss is not included in the metrics
     else:
         # TODO: implement score computation from predictions (instead of re-running inference)
-        pass
+        metric_scores = None
 
+    metric_names = ['loss_score'] + [m.name for m in learner.metrics]  # loss is not included in the metrics
     for metric_score, metric_name in zip(metric_scores, metric_names):
         logger.info(f'{metric_name}: {metric_score:.5f}' + (('\n' + '*' * 100)
                                                             if metric_name == metric_names[-1] else ''))
@@ -339,19 +387,45 @@ def evaluate_model(learner, evaluation_loader, out_dir, preds=None):
     logger.info(f'Running result is saved at:\n{out_dir}')
 
 
-def evaluate(learner, data_loader, weights_path, out_dir):
+def evaluate(learner, data_loader, weights_path, out_dir, meta, pid_col, path_col, split_col, label):
     # TODO: migrate this logic into evaluate_model() instead
     # Evaluate the model on the test set if provided
     if hasattr(data_loader, 'indices') and len(data_loader.indices) > 0 or \
             hasattr(data_loader, 'get_idxs') and len(data_loader.get_idxs()) > 0:
         learner.model.to('cuda')
         learner.load(weights_path.split('/')[-1].split('.pth')[0])
-        results_file = f'{out_dir}/predicted_scores.csv'
-        # preds = store_predictions(learner, data_loader, meta, pathology, results_file)
-        evaluate_model(learner, data_loader, out_dir)
+        preds = store_predictions(learner, data_loader, out_dir, meta, label, pid_col, path_col, split_col)
+        print_and_store_scores(learner, data_loader, out_dir)
     else:
         # evaluation_loader is empty
         logger.info('Evaluation loader is empty. No evaluation is performed.')
+
+
+def store_predictions(learner, test_loader, out_dir, meta, label, pid_col, path_col, split_col):
+    logger.info(f'Computing predictions...')
+    results_file = f'{out_dir}/predicted_scores.csv'
+    preds = learner.get_preds(dl=test_loader)
+
+    if args.medmnist_dataset:
+        predictions = pd.DataFrame({'label': test_loader.dataset.dataset.dataset.labels.squeeze()[test_loader.indices.squeeze()]})
+    else:
+        df = pd.read_csv(meta).iloc[test_loader.indices.squeeze()]
+        # double-check that the (original) true label in the meta file matches the true label in the data loader
+        matches = np.isclose(preds[1].squeeze().numpy(), df[label].astype(float).values.squeeze())
+        assert matches.all(), f'True label in meta does not match true label in data loader at indices {df.iloc[matches[~matches].index.to_list(), :]}'
+
+        predictions = df[[pid_col, path_col, *label]].copy()  # only one label for evaluation
+        # TODO: assert df[split_col].str.contains('test', case=False).all()
+
+    if args.task == 'cls':
+        predictions.loc[:, 'rounded_preds'] = (preds[0].squeeze().numpy() > 0.5).astype(int)
+
+    predictions.loc[:, 'preds'] = preds[0].squeeze().numpy()
+
+    predictions.to_csv(results_file, index=False)
+
+    logger.info(f'Predictions are saved at:\n{results_file}')
+    return preds
 
 
 def wrap_up(out_dir, e=None):
@@ -380,4 +454,5 @@ logging.basicConfig(level=logging.INFO,
                     ])
 logger = logging.getLogger()
 save_options(args)
+assert_input_is_valid(args)
 logger.info(f'Output direcory is\n{args.out_dir}\n')

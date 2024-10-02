@@ -7,7 +7,7 @@ if args.wandb_name is not None:
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
 
-    dls, empty_test_set, medmnist = setup_dataloaders(args)  # no test here...
+    dls, empty_test_set = setup_dataloaders(args)  # no test here...
 
     feature_extractor = ConvNext(amfic.from_pretrained("facebook/convnext-tiny-224", return_dict=False,
                                                        num_labels=dls.train.dataset.dataset.get_num_classes(),

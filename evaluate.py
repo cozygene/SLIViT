@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # set hps (including num slices which becomes num_patches) correctly before setting up the dataloaders
     configure_hyperparam_values(args)
 
-    dls, test_loader, medmnist = setup_dataloaders(args)
+    dls, test_loader = setup_dataloaders(args)
 
     try:
         slivit = SLIViT(feature_extractor=get_feature_extractor(args.fe_classes),
@@ -26,6 +26,8 @@ if __name__ == '__main__':
     learner, _ = create_learner(slivit, dls, args, os.path.split(args.checkpoint)[0])
 
     # Evaluate and store results
-    evaluate(learner, test_loader, args.checkpoint, args.out_dir)
+    evaluate(learner, test_loader, args.checkpoint, args.out_dir,
+             args.test_meta if args.test_meta else args.meta,
+             args.pid_col, args.path_col, args.split_col, args.label)
 
     wrap_up(args.out_dir)
