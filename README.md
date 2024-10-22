@@ -48,7 +48,7 @@ gdown --folder https://drive.google.com/open?id=1f8P3g8ofBTWMFiuNS8vc01s98HyS7oR
 
 You can either take SLIViT for a spin by training it yourself, or just grab our aforementioned trained checkpoints. Heads up—our model runs smoothly on PyTorch, and this repository is fully equipped to harness PyTorch’s GPU powers.
 
-Curious about more advanced features? Run the help command on any of SLIViT's main scripts to get a full list of options:
+Run the help command on any of SLIViT's main scripts to get a full list of options:
 ```bash
 python <pretrain.py/finetune.py/evaluate.py> -h
 ```
