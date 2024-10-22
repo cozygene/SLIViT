@@ -53,7 +53,6 @@ Curious about more advanced features? Run the help command on any of SLIViT's ma
 python <pretrain.py/finetune.py/evaluate.py> -h
 ```
 
-Happy computing! 🚀
 ### Pre-training SLIViT's feature extractor backbone 
 The general command to pre-train SLIViT is as follows:
 ```bash
