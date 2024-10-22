@@ -96,7 +96,7 @@ python finetune.py --dataset <dataset type {oct3d,us3d,mri3d,ct3d,custom3d}> --f
 Unless you specify a split column in the meta file (with `--split_col`), the data will automatically be divided according to the `--split_ratio` of `0.85,0.15,0` by default, designated for training, validation, and testing, respectively. This means that none of the samples are set aside for testing. While it's not necessary to provide a test set for fine-tuning (you can handle that separately with `evaluate.py`—more on that in the next section). Feel free to add an external test set meta file using `--test_csv`, or tweak `--split_ratio` to include some data for internal testing, allowing the model to evaluate itself right after training.
 
 #### The 3D OCT (Houston) dataset
-Heads up! The 3D OCT datasets we used in this study aren't available because of some strict institutional rules and privacy concerns. But no worries! We've got the fine-tuned checkpoints ready for you to use for further fine-tuning or for evaluation purposes. Plus, if you've got your own 3D OCT dataset, we’re also sharing our Dataset class so you can fine-tune SLIViT on it. Dive in and see what you can discover!
+The 3D OCT datasets we used in this study aren't available because of some strict institutional rules and privacy concerns. But no worries! We've got the fine-tuned checkpoints ready for you to use for further fine-tuning or for evaluation purposes. Plus, if you've got your own 3D OCT dataset, we’re also sharing our Dataset class so you can fine-tune SLIViT on it. Dive in and see what you can discover!
 
 #### The 3D ultrasound video (EchoNet) dataset
 <img src="visuals/ultrasound.gif" width="750px"/><br>
