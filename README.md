@@ -100,7 +100,7 @@ Heads up! The 3D OCT datasets we used in this study aren't available because of 
 
 #### The 3D ultrasound video (EchoNet) dataset
 <img src="visuals/ultrasound.gif" width="750px"/><br>
-You can grab the EchoNet Ultrasound videos right <a href="https://stanfordaimi.azurewebsites.net/datasets/834e1cd1-92f7-4268-9daa-d359198b310a">here</a>. After you download the data, generate `meta/echonet.csv` to match where you've saved your videos. If you need a little help with that, `utils/get_echonet_csv.py` is there for you. Ready to fine-tune SLIViT on the EchoNet dataset? Just set `--dataset` to `us3d` .
+You can grab the EchoNet Ultrasound videos right <a href="https://stanfordaimi.azurewebsites.net/datasets/834e1cd1-92f7-4268-9daa-d359198b310a">here</a>. After you download the data, generate `meta/echonet.csv` to match where you've saved your videos. If you need a little help with that, `utils/get_echonet_csv.py` is there for you. Just set `--dataset` to `us3d` .
 
 For the binary classification task, you can use the following command:
 ```bash
