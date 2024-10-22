@@ -58,7 +58,7 @@ The general command to pre-train SLIViT is as follows:
 ```bash
 python pretrain.py --dataset <dataset type {oct2d,xray2d,custom2d}> --out_dir <out path> --meta <path to a meta file csv; ignore for a MedMNIST dataset> --label <comma separated label column names; ignore for a MedMNIST dataset>
 ```
-Just a heads-up: if you want to try another MedMNIST dataset, simply tweak `get_dataset_class`. Also, when using *any* MedMNIST dataset, you don't need to worry about providing a meta path or labels!
+If you want to try another MedMNIST dataset, simply tweak `get_dataset_class`. Also, when using *any* MedMNIST dataset, you don't need to worry about providing a meta path or labels!
 
 
 #### The 2D OCT (Kermany) dataset
