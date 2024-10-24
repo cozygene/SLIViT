@@ -26,7 +26,7 @@ Running SLIViT is straightforward, as detailed below. But first, please ensure y
 First, go ahead and clone the repository. Once that's done, let’s set up your conda environment:
 ```bash
 git clone https://github.com/cozygene/SLIViT
-conda create --name slivit python=3.9
+conda create --name slivit python=3.8
 ```
 Next up, activate your conda environment and light up the torch:
 ```bash
